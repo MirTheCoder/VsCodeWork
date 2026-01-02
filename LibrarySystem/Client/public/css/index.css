@@ -1,0 +1,44 @@
+.introContainer{
+        text-align: center; 
+    }
+    .intro{
+        font-size: 50px;
+        margin-top: 20px;
+        font-family: Playfair Display, serif;
+    }
+    .miniIntro{
+        font-size: 30px;
+        font-family: 'Luckiest Guy', cursive;
+    }
+    .Image1{
+        width: 300px;
+        height: 300px;
+    }
+    .welcome1{
+        display: inline-block;
+        margin-left: 120px;
+        padding: 10px;
+        background-color: gray;
+        border-radius: 3%;
+    }
+
+    .welcome2{
+        display: inline-block;
+        margin-left: 320px;
+        padding: 10px;
+        background-color: gray;
+        border-radius: 3%;
+    }
+
+    .welcome3{
+        display: inline-block;
+        margin-left: 380px;
+        padding: 10px;
+        background-color: gray;
+        border-radius: 3%;
+    }
+
+    a:hover {
+    color: blue;
+    text-shadow: 0 0 10px rgb(87, 121, 214), 0 0 20px rgb(74, 95, 211);
+    }

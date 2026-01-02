@@ -5,52 +5,46 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library System - Index Page</title>
+    <link href="css/index.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=MedievalSharp&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
 </head> 
-<body>
-    <nav style="background-color: beige;">
+<body style="background-color:#F2F2F2">
+    <nav style="background-color: beige; border:1px solid white;">
         <div>
-            <a id="home" href="#" style="margin-right: 20px;">Home</a>
-            <a id="login" href="#" style="margin-right: 20px;">Login</a>
-            <a id="register" href="#" style="margin-right: 20px;">Register</a>
+            <a id="login" href="login" style="margin-right: 20px;">Login</a>
+            <a id="register" href="register" style="margin-right: 20px;">Register</a>
             <a href="#" style="margin-right: 20px;">About Us</a>
-            <a href="#" id="contact">Contact Us</a>
+            <a href="#" id="contact" style="margin-right: 20px;">Contact Us</a>
+            <a href="#", id="account" style="margin-right: 20px;">My account</a>
         </div>
     </nav>
     <style>
-    .introContainer{
-        text-align: center; 
-    }
-    .intro{
-        font-size: 50px;
-        margin-top: 20px;
-        font-family: Playfair Display, serif;
-    }
-    .miniIntro{
-        font-size: 30px;
-        font-family: 'Luckiest Guy', cursive;
-    }
-    .Image1{
-        width: 300px;
-        height: 300px;
-    }
-    .welcome1{
-        display: inline-block;
-        margin-left: 60px;
-        padding: 10px;
-        background-color: gray;
-        border-radius: 3%;
-    }
+    
+    
     </style>
     <div class="introContainer">
     <h2 class="intro">Welcome To...</h2>
     <h3 class="miniIntro">Miracles Library System</h3>
     </div>
     
-    <div style="margin-top: 50px;" class="welcome1">
+    <div id="w1" style="margin-top: 50px;" class="welcome1">
         <img class="Image1" src="static/indexBooksLogo.png" alt="Library Image">
-        <p>Hello</p>
+        <p style="text-align: center;">Click to choose from a variety of books</p>
     </div>
-    <script src="indexPage.js"></script>
+    <div id="w2" style="margin-top: 50px;" class="welcome2">
+        <img class="Image1" src="static/indexBooksLogo.png" alt="Library Image">
+        <p style="text-align: center;">Click to see Reviews on your favorite books</p>
+    </div>
+    <div id="w3" style="margin-top: 50px;" class="welcome3">
+        <img class="Image1" src="static/indexBooksLogo.png" alt="Library Image">
+        <p style="text-align: center;">Click to donate a book (pdf only)</p>
+    </div>
+    <p style="font-size: 20px; text-align: center; margin-top: 60px;">Here are some quotes to start off you Journey <br> in the land of books...</p>
+
+    <p style="margin-top: 60px; text-align: center; font-size: 20px; font-family: Pacifico;">”A story can always break into pieces while it sits inside a book on a shelf; and, decades after we have read it even twenty times, it can open us up, by cut or caress, to a new truth.” - <br> Andre Dubus, Meditations from a Movable Chair</p>
+    <script src="./js/index.js"></script>
 </body>    
 </html>
