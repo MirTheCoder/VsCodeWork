@@ -14,14 +14,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); //to parse URL-encoded bodies  
 
 app.get('/', (req, res) => {
-    res.status(200).sendFile(path.join(clientRoot, 'indexPage.html'));
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'indexPage.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 })
 
-app.get('/indexPage.html', (req, res) => {
-    res.status(200).sendFile(path.join(clientRoot, 'indexPage.html'));
+app.get('/indexPage', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'indexPage.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });  
+
+app.get('/login', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'Login.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});
+
+app.get('/register', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'register.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+}); 
 
 
 

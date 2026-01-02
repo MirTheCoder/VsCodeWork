@@ -1,50 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Library System - Index Page</title>
-    <link href="css/index.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=MedievalSharp&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-</head> 
-<body style="background-color:#F2F2F2">
-    <nav style="background-color: beige; border:1px solid white;">
-        <div>
-            <a id="login" href="login" style="margin-right: 20px;">Login</a>
-            <a id="register" href="register" style="margin-right: 20px;">Register</a>
-            <a href="#" style="margin-right: 20px;">About Us</a>
-            <a href="#" id="contact" style="margin-right: 20px;">Contact Us</a>
-            <a href="#", id="account" style="margin-right: 20px;">My account</a>
-        </div>
-    </nav>
-    <style>
-    
-    
-    </style>
-    <div class="introContainer">
-    <h2 class="intro">Welcome To...</h2>
-    <h3 class="miniIntro">Miracles Library System</h3>
-    </div>
-    
-    <div id="w1" style="margin-top: 50px;" class="welcome1">
-        <img class="Image1" src="static/indexBooksLogo.png" alt="Library Image">
-        <p style="text-align: center;">Click to choose from a variety of books</p>
-    </div>
-    <div id="w2" style="margin-top: 50px;" class="welcome2">
-        <img class="Image1" src="static/indexBooksLogo.png" alt="Library Image">
-        <p style="text-align: center;">Click to see Reviews on your favorite books</p>
-    </div>
-    <div id="w3" style="margin-top: 50px;" class="welcome3">
-        <img class="Image1" src="static/indexBooksLogo.png" alt="Library Image">
-        <p style="text-align: center;">Click to donate a book (pdf only)</p>
-    </div>
-    <p style="font-size: 20px; text-align: center; margin-top: 60px;">Here are some quotes to start off you Journey <br> in the land of books...</p>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <p style="margin-top: 60px; text-align: center; font-size: 20px; font-family: Pacifico;">”A story can always break into pieces while it sits inside a book on a shelf; and, decades after we have read it even twenty times, it can open us up, by cut or caress, to a new truth.” - <br> Andre Dubus, Meditations from a Movable Chair</p>
-    <script src="./js/index.js"></script>
-</body>    
+  <title>Miracle's Library System</title>
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="login">Login</a>
+      <a href="register">Register</a>
+      <a href="#">About Us</a>
+      <a href="#">Contact Us</a>
+      <a href="#">My Account</a>
+    </div>
+  </nav>
+
+
+  <section class="introContainer">
+    <h2 class="intro">Welcome To</h2>
+    <h3 class="miniIntro">Miracle's Library System</h3>
+  </section>
+
+
+  <section class="features">
+    <div id="w1" class="feature-card">
+      <img src="static/indexBooksLogo.png" alt="Books" style="padding: 7px; background-color: gray; border-radius: 5px;">
+      <p>Choose from a variety of books</p>
+    </div>
+
+    <div id="w2" class="feature-card">
+      <img src="static/libraryReviewsImage.png" alt="Reviews" style="padding: 7px; background-color: gray; border-radius: 5px;">
+      <p>Read reviews on your favorite books</p>
+    </div>
+
+    <div id="w3" class="feature-card">
+      <img src="static/LibraryDonateLogo.png" alt="Donate" style="padding: 7px; background-color: gray; border-radius: 5px;">
+      <p>Donate a book (PDF only)</p>
+    </div>
+  </section>
+
+
+  <section class="quotes">
+    <p class="quote-intro">
+      Here are some quotes to start your journey<br>
+      in the land of books...
+    </p>
+
+    <p class="quote">
+      “A story can always break into pieces while it sits inside a book on a shelf; and, decades after we have read it even twenty times, it can open us up, by cut or caress, to a new truth.”
+      <span>— Andre Dubus</span>
+    </p>
+  </section>
+
+  <script src="./js/index.js"></script>
+</body>
 </html>

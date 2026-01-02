@@ -1,40 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <nav style="background-color: beige; border:1px solid white;">
-        <div>
-            <a id="home" href="indexPage" style="margin-right: 20px;">Home</a>
-            <a id="login" href="login" style="margin-right: 20px;">Login</a>
-            <a href="#" style="margin-right: 20px;">About Us</a>
-            <a href="#" id="contact" style="margin-right: 20px;">Contact Us</a>
-            <a href="#", id="account" style="margin-right: 20px;">My account</a>
-        </div>
-        </nav>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <h2 style="text-align: center; margin-top: 50px;">Register Here</h2>
-        <form style="display: flex; flex-direction: column; align-items: center; margin-top: 30px;">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required style="margin-bottom: 20px; padding: 5px; width: 200px;">
-            
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required style="margin-bottom: 20px; padding: 5px; width: 200px;">
+  <title>Library Register</title>
 
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required style="margin-bottom: 20px; padding: 5px; width: 200px;" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890">
-            
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required style="margin-bottom: 20px; padding: 5px; width: 200px;">
 
-            <label for="confirmPassword">Confirm Password:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" required style="margin-bottom: 20px; padding: 5px; width: 200px;">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
-            
-            
-            <button type="submit" style="padding: 10px 20px; background-color: beige; border: none; cursor: pointer; border-radius: 5px;">Register</button>
-        </form>
+
+  <link rel="stylesheet" href="css/registration.css">
+</head>
+
+<body>
+
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="indexPage">Home</a>
+      <a href="login">Login</a>
+      <a href="#">About Us</a>
+      <a href="#">Contact Us</a>
+      <a href="#">My Account</a>
+    </div>
+  </nav>
+
+  <main class="register-container">
+    <h2>Create an Account</h2>
+
+    <form class="register-form" id="register-form">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="phone">Phone Number</label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        required
+        placeholder="123-456-7890"
+      >
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required>
+      <button type="submit">Register</button>
+    </form>
+  </main>
+    <script src="js/register.js"></script>
+</body>
 </html>
