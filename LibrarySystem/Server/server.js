@@ -33,10 +33,10 @@ app.get('/register', (req, res) => {
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 }); 
 
-
-
-
-
+app.get('/about', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'aboutUs.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});
 
 //This will help us start our server along with connecting to the database
 app.listen(3000, async () => {
