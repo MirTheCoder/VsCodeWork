@@ -31,7 +31,18 @@ export async function validateUserLogin(req, res, next) {
     const {username, password} = req.body;
     let person = await usersList.findOne({username: username, password: password});
     if(person){
-        res.status(200).json({message: 'Login successful!', success: true});
+        
+        req.session.regenerate((err) => {
+            if(err){
+                console.error('Error regenerating session:', err);
+                res.status(500).json({error: 'Internal server error during session regeneration.', success: false});
+            } else {
+                res.status(200).json({message: 'Login successful!', success: true});
+            }
+        });
+        
+        req.session.user = username;
+        req.session.password = password;
     } else {
          res.status(200).json({error: 'Invalid username and/or password. Please try again.', success: false});
     } 
