@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>Library Register</title>
+  <link rel="icon" href="static/libraryIcon.png" type="image/png">
 
 
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -15,41 +16,42 @@
 </head>
 
 <body>
-
+  <!-- Navigation bar -->
   <nav class="navbar">
     <div class="nav-links">
       <a href="indexPage">Home</a>
       <a href="login">Login</a>
       <a href="about">About Us</a>
-      <a href="#">Contact Us</a>
       <a href="#">My Account</a>
     </div>
   </nav>
 
+    <!-- Form users can register with -->
   <main class="register-container">
     <h2>Create an Account</h2>
 
     <form class="register-form" id="register-form">
       <label for="username">Username</label>
-      <input type="text" id="username" name="username" required>
+      <input type="text" id="username" name="username" required placeholder="John123">
 
       <label for="email">Email</label>
-      <input type="email" id="email" name="email" required>
+      <input type="email" id="email" name="email" required placeholder="@example.com">
 
       <label for="phone">Phone Number</label>
       <input
         type="tel"
         id="phone"
         name="phone"
+        pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
         required
         placeholder="123-456-7890"
       >
 
       <label for="password">Password</label>
-      <input type="password" id="password" name="password" required>
+      <input type="password" id="password" name="password" required placeholder="password">
 
       <label for="confirmPassword">Confirm Password</label>
-      <input type="password" id="confirmPassword" name="confirmPassword" required>
+      <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="password">
       <button type="submit">Register</button>
     </form>
   </main>

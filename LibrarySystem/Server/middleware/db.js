@@ -4,7 +4,7 @@ import { MongoClient } from 'mongodb';
 
 // MongoDB connection URI
 const MONGO_URI = 'mongodb://localhost:27017';
-const DB_NAME = 'Project_3';
+const DB_NAME = 'Miracles_Library';
 
 // Singleton client instance
 let client = null;
@@ -32,4 +32,18 @@ export async function connect() {
         console.error('Error connecting to MongoDB:', err);
         throw err;
     }
+}
+
+//Allows us to get hold of the database, and will connect if not already connected
+export async function getDB(){
+    if(!db){
+        await connect();
+    }
+    return db;
+}
+
+//Allows us to get hold of a specific collection we desire from the database
+export async function getCollection(collectionName){
+    const database = await getDB();
+    return database.collection(collectionName);
 }

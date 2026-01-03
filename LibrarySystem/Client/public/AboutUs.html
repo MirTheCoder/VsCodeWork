@@ -6,35 +6,103 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>About Us</title>
+  <link rel="icon" href="static/libraryIcon.png" type="image/png">
 
-  <!-- Google Font -->
+  <!-- Google Font links -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/about.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Yellowtail&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Spectral+SC:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&family=Yellowtail&display=swap" rel="stylesheet">
 
 </head>
 <body>
+  <!-- This will be our navigation bar -->
   <nav class="navbar">
     <div class="nav-links">
       <a href="indexPage">Home</a>
       <a href="register">Register</a>
       <a href="login">Login</a>
-      <a href="#">Contact Us</a>
       <a href="#">My Account</a>
     </div>
   </nav>
-  <header class="section1">
+
+    <!-- This is our mini nav sections to various sections of this page-->
+  <section>
+    <div style="margin-top: 60px; display: flex; flex-direction: column;">
+      <a href="#who-are-we" class="option"><u>Who are we</u></a>
+      <a href="#our-mission" class="option"><u>Our Mission</u></a>
+      <a href="#how-you-can-help" class="option"><u>How You can Help</u></a>
+      <a href="#contact-us" class="option"><u>Contact Us</u></a>
+    </div>
+  </section>
+
+    <!-- This section contains content about us and our mission -->
+  <header class="header-section" id="who-are-we">
     <h1><b><u>Who Are We</u></b></h1>
   </header>
-  <div class="who-are-we">
+  <div class="content-answer">
     <img src="static/TeamImage.png" alt="About Us Image" style="width:300px;height:200px;">
     <p style="display: inline-block; padding: 7px; border-radius: 5px; background-color: gray; border: 5px solid rgb(36, 3, 3);">Miracle's Library System is a dedicated platform for managing and accessing library resources efficiently.
-      <br> We house various books, journals, and digital media to cater to the diverse interests of our users.  Bringing a house full
+      We house various books, journals, and digital media to cater to the diverse interests of our users.  Bringing a house full
       of knowledge to your fingertips! We were established in December 2025, with the intent to jumpstart our mission and purpose
-      for the new year of 2026. <br> Our team is passionate about fostering a love for reading and learning within our community.
+      for the new year of 2026. Our team is passionate about fostering a love for reading and learning within our community.
     </p> 
-  </div>  
+  </div>
+
+  <header class="header-section2" id="our-mission">
+    <h1><b><u>Our Mission</u></b></h1>
+  </header>  
+  <div class="content-answer2">
+    <img src="static/mission_image.jpg" alt="Mission Image" style="width:300px;height:200px;">
+    <p style="display: inline-block; padding: 7px; border-radius: 5px; background-color: gray; border: 5px solid rgb(36, 3, 3);">At Miracle's Library System, our mission is to provide seamless access to a vast array of knowledge and resources,
+      empowering individuals to explore, learn, and grow. We are committed to fostering a love for reading and lifelong learning
+      within our community by offering an intuitive platform that connects users with the materials they need, whenever they need them.
+      Through innovation and dedication, we strive to create an inclusive environment where everyone can discover the joy of reading
+      and the power of information.</p>
+  </div>
+
+   <header class="header-section3" id="how-you-can-help">
+    <h1><b><u>How You can Help </u></b></h1>
+  </header>  
+  <div class="content-answer3">
+    <img src="static/mission_image.jpg" alt="Mission Image" style="width:300px;height:200px;">
+    <p style="display: inline-block; padding: 7px; border-radius: 5px; background-color: gray; border: 5px solid rgb(36, 3, 3);">
+      You can support Miracle's Library System in several meaningful ways:
+      <br><br>
+      1. Spread the Word: Share our platform with friends, family, and colleagues to help us reach a wider audience.
+      <br><br>
+      2. Volunteer: Offer your time and skills to assist with events, outreach, or technical support.
+      <br><br>
+      3. Donate: Contribute financially to help us expand our collection and improve our services.
+      <br><br>
+      4. Provide Feedback: Share your thoughts and suggestions to help us enhance the user experience.
+      <br><br>
+      5. Participate in Events: Join our reading programs, workshops, and community events to foster a love for learning.
+      <br><br>
+      Together, we can make a significant impact on our community's access to knowledge and resources.
+    </p>
+  </div>
+
+    <!-- Ways you can contact us -->
+  <header class="header-section4" id="contact-us">
+    <h1><b><u>Contact Us </u></b></h1>
+  </header>  
+  <div class="content-answer4">
+    <img src="static/contactPic.jpg" alt="Mission Image" style="width:300px;height:200px;">
+    <p style="display: inline-block; padding: 7px; border-radius: 5px; background-color: gray; border: 5px solid rgb(36, 3, 3);">
+      <br><br>
+      Email: info@miracleslibrary.com
+      <br><br>
+      Phone: +1 (555) 123-4567
+      <br><br>
+      Address: 123 Library Lane, Booktown, BT 12345
+    </p>
+  </div>
+
+
 </body>
 </html>
