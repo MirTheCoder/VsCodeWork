@@ -113,3 +113,16 @@ body {
   font-size: 14px;
   opacity: 0.7;
 }
+
+.welcomeHolder {
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.Welcome {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  -webkit-text-stroke: 1px rgb(44, 44, 7);
+  color: #5B3E2B;
+  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);  
+}

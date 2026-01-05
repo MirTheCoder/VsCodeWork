@@ -1,4 +1,36 @@
 let registerForm = document.getElementById('register-form');
+
+//Here we will hcekc to see if the user is logged in or not and display a welcome message accordingly
+document.addEventListener('DOMContentLoaded', async function loginStatus(){
+    try{
+        await fetch('users/checkLogin', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.loggedIn){
+                //This assures that if the user is already logged in, we do not append multiple welcome messages
+                if(!document.getElementById('userWelcome')){
+                    let welcome = document.createElement('h2');
+                    welcomeBack.appendChild(welcome);
+                    welcome.textContent = `Welcome back, ${data.user}!`;
+                    welcome.id = "userWelcome";
+                    welcome.className = "Welcome";
+                }
+            } else {
+                if(document.getElementById('userWelcome')){
+                    document.getElementById('userWelcome').remove();
+                }
+            }
+        });
+    } catch (error) {
+        console.error('Error checking login status:', error);
+    }
+});
+
 // Here we are going to handle the register form submission
 registerForm.addEventListener('submit', async (e) => {
     try {

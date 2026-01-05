@@ -37,7 +37,7 @@ body {
 /* Login container */
 .login-container {
   max-width: 520px;
-  margin: 140px auto;
+  margin: 60px auto;
   background-color: #FFFFFF;
   padding: 40px;
   border-radius: 10px;
@@ -97,4 +97,18 @@ body {
   background-color: #73563F;
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
   transform: translateY(-1px);
+}
+
+.welcomeHolder {
+  margin-top: 20px;
+  margin-left: 20px;
+  text-align: center;
+}
+
+.Welcome {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  -webkit-text-stroke: 1px rgb(44, 44, 7);
+  color: #5B3E2B;
+  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);  
 }

@@ -20,7 +20,22 @@ let db = null;
 app.use(express.static(path.join(clientRoot, 'public')));
 // Used to allow us to parse and read json data and URL-encoded data
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); //to parse URL-encoded bodies  
+app.use(express.urlencoded({ extended: true })); //to parse URL-encoded bodies 
+
+//This is the format that will be used to generate each session 
+app.use(session({
+    secret: 'abc12345',
+    resave: false, //Don't save session if unmodified
+    saveUninitialized: true, //Save uninitialized session
+    store: MongoStore.create({
+        mongoUrl: 'mongodb://localhost:27017/Miracles_Library'  //Allows us to connect to our MongoDB database to store session data
+    }),
+    cookie: {
+        maxAge: 1000 * 60 * 30, //This will keep the session alive for 30 minutes
+        httpOnly: true, //Ensures that the cookie data can not be accessed via client-side scripts
+        secure: false //Set to true if using HTTPS
+    }
+}));
 
 //Here are the routes that we are listening for and the responses we will give
 app.get('/', (req, res) => {
@@ -50,21 +65,6 @@ app.get('/about', (req, res) => {
 
 //Any routes that start with /users will be handled in userRoutes.js (handles user related tasks)
 app.use('/users', userRoutes)
-
-//This is the format that will be used to generate each session 
-app.use(session({
-    secret: abc12345,
-    resave: false, //Don't save session if unmodified
-    saveUninitialized: true, //Save uninitialized session
-    store: MongoStore.create({
-        mongoUrl: 'mongodb://localhost:27017/Miracles_Library'  //Allows us to connect to our MongoDB database to store session data
-    }),
-    cookie: {
-        maxAge: 1000 * 60 * 30, //This will keep the session alive for 30 minutes
-        httpOnly: true, //Ensures that the cookie data can not be accessed via client-side scripts
-        secure: false //Set to true if using HTTPS
-    }
-}));
 
 //This will help us start our server along with connecting to the database
 app.listen(3000, async () => {

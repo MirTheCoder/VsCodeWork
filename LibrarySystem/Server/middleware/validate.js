@@ -2,7 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
-
+import {sessionLogin} from './sessionHandler.js';
+import bcrypt from 'bcryptjs';
 
 const usersList = await getCollection('Users');
 
@@ -31,20 +32,12 @@ export async function validateUserLogin(req, res, next) {
     const {username, password} = req.body;
     let person = await usersList.findOne({username: username, password: password});
     if(person){
-        
-        req.session.regenerate((err) => {
-            if(err){
-                console.error('Error regenerating session:', err);
-                res.status(500).json({error: 'Internal server error during session regeneration.', success: false});
-            } else {
-                res.status(200).json({message: 'Login successful!', success: true});
-            }
-        });
-        
-        req.session.user = username;
-        req.session.password = password;
-    } else {
-         res.status(200).json({error: 'Invalid username and/or password. Please try again.', success: false});
+        let response = sessionLogin(req, res, username, password, next); //This will generate a brand new session for the user when they login
+        if(response){
+            res.status(200).json({message: 'Login successful!', success: true});
+        } else {
+            res.status(200).json({error: 'Error creating session during login.', success: false});
+        }
     } 
     next();
 }  
