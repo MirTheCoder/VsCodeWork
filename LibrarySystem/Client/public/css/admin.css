@@ -1,33 +1,87 @@
+/* admin.css */
+
+/* Reset some defaults */
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f7fa; /* soft light background */
+  color: #333;
+}
+
+/* Headings */
+h1 {
+  text-align: center;
+  margin-top: 40px;
+  font-family: 'Playfair Display', serif;
+  font-size: 42px;
+  color: #2c3e50;
+}
+
+h2 {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 22px;
+  color: #34495e;
+}
+
+/* Features container */
 .features {
   display: flex;
   justify-content: center;
   gap: 40px;
-  margin-top: 80px;
+  margin-top: 60px;
   flex-wrap: wrap;
+  padding: 0 20px;
 }
 
+/* Feature cards */
 .feature-card {
-  background-color: #FFFFFF;
+  background-color: #fff;
   width: 260px;
-  padding: 25px;
-  border-radius: 12px;
+  padding: 25px 20px;
+  border-radius: 16px;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: transform 0.3s, box-shadow 0.3s, background-color 0.3s;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .feature-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.15);
+  background-color: #f0f4f8;
 }
 
 .feature-card img {
   width: 120px;
+  height: 120px;
+  object-fit: cover;
   margin-bottom: 15px;
+  border-radius: 12px;
 }
 
+/* Feature card text */
 .feature-card p {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
+  margin: 0;
+  color: #2c3e50;
+}
+
+/* Optional: make cards clickable area more obvious */
+.feature-card:hover p {
+  color: #2980b9; /* subtle hover effect on text */
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .features {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
 }

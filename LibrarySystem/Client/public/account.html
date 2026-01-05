@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>My Account</title>
+  <link rel="icon" href="static/libraryIcon.png" type="image/png">
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/account.css">
+</head>
+<body>
+  <!-- Navigation bar -->
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="indexPage">Home</a>
+      <a href="login">Login</a>
+      <a href="register">Register</a>
+      <a href="about">About Us</a>
+      <a href="#" id="logout">Log Out</a>
+    </div>
+  </nav>
+
+  <div id="welcomeBack" class="welcomeHolder">
+
+  </div>
+
+  <main class="account-container">
+    <h2>My Account</h2>
+
+    <section class="account-details">
+      <p><strong>Username:</strong> <span id="usernameDisplay"></span></p>
+      <p><strong>Email:</strong> <span id="emailDisplay"></span></p>
+      <p><strong>Member Since:</strong> <span id="memberSinceDisplay"></span></p>
+    </section>
+  </main>
+
+  <script src="js/account.js"></script>

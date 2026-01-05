@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
     }
 });
 
+
+
 // Adding event listeners to trigger respective acts when clicked
 welcome1.addEventListener('click', () => {
     alert("You choose to click to choose from a variety of books!");

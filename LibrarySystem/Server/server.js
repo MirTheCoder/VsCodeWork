@@ -73,8 +73,19 @@ app.get('/admin', (req, res) => {
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });
 
+//This will help us serve the account page to the user
+app.get('/account', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'account.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});
+
 //Any routes that start with /users will be handled in userRoutes.js (handles user related tasks)
 app.use('/users', userRoutes)
+
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(clientRoot, 'public', '404.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});
 
 //This will help us start our server along with connecting to the database
 app.listen(3000, async () => {

@@ -1,4 +1,7 @@
 let registerForm = document.getElementById('register-form');
+let logoutLink = document.getElementById('logout');
+let loginLink = document.getElementById('login');
+let accountLink = document.getElementById('Account');
 
 //Here we will hcekc to see if the user is logged in or not and display a welcome message accordingly
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
@@ -20,9 +23,27 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                     welcome.id = "userWelcome";
                     welcome.className = "Welcome";
                 }
+                if(loginLink){
+                    loginLink.style.visibility = "hidden";
+                }
+                if(accountLink){
+                    accountLink.style.visibility = "visible";
+                }
+                if(logoutLink){
+                    logoutLink.style.visibility = "visible";
+                }
             } else {
                 if(document.getElementById('userWelcome')){
                     document.getElementById('userWelcome').remove();
+                }
+                if(loginLink){
+                    loginLink.style.visibility = "visible";
+                }
+                if(accountLink){
+                    accountLink.style.visibility = "hidden";
+                }
+                if(logoutLink){
+                    logoutLink.style.visibility = "hidden";
                 }
             }
         });
