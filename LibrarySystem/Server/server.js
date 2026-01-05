@@ -43,23 +43,33 @@ app.get('/', (req, res) => {
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 })
 
+//This will help us serve the index page when requested
 app.get('/indexPage', (req, res) => {
     res.status(200).sendFile(path.join(clientRoot, 'public', 'indexPage.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });  
 
+//This will help us serve the login page when requested
 app.get('/login', (req, res) => {
     res.status(200).sendFile(path.join(clientRoot, 'public', 'Login.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });
 
+//This will help server the register page when requested
 app.get('/register', (req, res) => {
     res.status(200).sendFile(path.join(clientRoot, 'public', 'register.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 }); 
 
+//This will help us serve the about page to the user
 app.get('/about', (req, res) => {
     res.status(200).sendFile(path.join(clientRoot, 'public', 'aboutUs.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});
+
+//This will help us serve the admin page to the admin users
+app.get('/admin', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'admin.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });
 

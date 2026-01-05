@@ -2,6 +2,10 @@ let welcome1 = document.getElementById('w1');
 let welcome2 = document.getElementById('w2');
 let welcome3 = document.getElementById('w3');
 let welcomeBack = document.getElementById('welcomeBack');
+let welcome4 = document.getElementById('w4');
+let logoutLink = document.getElementById('logout');
+let loginLink = document.getElementById('login');
+let accountLink = document.getElementById('Account');
 
 //Here we will hcekc to see if the user is logged in or not and display a welcome message accordingly
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
@@ -23,9 +27,27 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                     welcome.id = "userWelcome";
                     welcome.className = "Welcome";
                 }
+                if(loginLink){
+                    loginLink.style.visibility = "hidden";
+                }
+                if(accountLink){
+                    accountLink.style.visibility = "visible";
+                }
+                if(logoutLink){
+                    logoutLink.style.visibility = "visible";
+                }
             } else {
                 if(document.getElementById('userWelcome')){
                     document.getElementById('userWelcome').remove();
+                }
+                if(loginLink){
+                    loginLink.style.visibility = "visible";
+                }
+                if(accountLink){
+                    accountLink.style.visibility = "hidden";
+                }
+                if(logoutLink){
+                    logoutLink.style.visibility = "hidden";
                 }
             }
         });
@@ -46,3 +68,10 @@ welcome2.addEventListener('click', () => {
 welcome3.addEventListener('click', () => {
     alert("You choose to click to donate a book (pdf only)!");
 });   
+
+
+//When this is clicked, it will take the user to the admin page
+welcome4.addEventListener('click', async () => {
+    alert("You choose to click to go to the Admin Page (for admins only)!");
+    window.location.href = "admin";
+});

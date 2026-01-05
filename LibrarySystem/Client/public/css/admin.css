@@ -1,0 +1,33 @@
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 80px;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background-color: #FFFFFF;
+  width: 260px;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 35px rgba(0, 0, 0, 0.12);
+}
+
+.feature-card img {
+  width: 120px;
+  margin-bottom: 15px;
+}
+
+.feature-card p {
+  font-size: 15px;
+  font-weight: 500;
+}
