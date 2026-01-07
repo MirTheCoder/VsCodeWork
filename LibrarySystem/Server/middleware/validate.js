@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
-import {sessionLogin} from './sessionHandler.js';
+import {sessionLogin, getSessionInfo} from './sessionHandler.js';
 import bcrypt from 'bcryptjs';
 
 const usersList = await getCollection('Users');
@@ -19,12 +19,12 @@ export async function validateUserRegistration(req, res, next) {
             username: username,
             password: password,
             email: email,
-            phone: phone
+            phone: phone,
+            DateCreated: new Date() // Store the date when the user was created
         };
         await usersList.insertOne(newUser);
         res.status(200).json({message: 'Registration successful!'});
     }
-    next();
 }    
 
 export async function validateUserLogin(req, res, next) {
@@ -38,6 +38,22 @@ export async function validateUserLogin(req, res, next) {
         } else {
             res.status(200).json({error: 'Error creating session during login.', success: false});
         }
-    } 
-    next();
+    } else {
+        res.status(200).json({error: 'Invalid username or password.', success: false});
+    }
 }  
+
+export async function getUserDetails(req, res, next) {
+    //Here we are going to try and get the info of the current user in session
+    let response = await getSessionInfo(req, res, next);
+
+    if(response.loggedIn){
+        let user = await usersList.findOne({username: response.username});
+        //We will return the user details if the user has been successfully found
+        if(user){
+            res.status(200).json({success: true, user: user.username ? user.username : null, role: user.role ? user.role : null, email:user.email ? user.email : null, phone:user.phone ? user.phone : null, memberSince: user.memberSince ? user.memberSince : null});
+        }
+    }   else {
+        res.status(200).json({success: false, message: 'User not logged in'});
+    }
+}    

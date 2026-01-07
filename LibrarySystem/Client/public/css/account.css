@@ -1,0 +1,124 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #F8F6F2;
+  color: #2B2B2B;
+  min-height: 100vh;
+}
+
+/* Navbar (exact match) */
+.navbar {
+  background-color: #EFE6D8;
+  border-bottom: 1px solid #DDD;
+  padding: 15px 40px;
+}
+
+.nav-links a {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #2B2B2B;
+  font-weight: 500;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.nav-links a:hover {
+  color: #5B3E2B;
+  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);
+}
+
+#logout {
+  font-weight: 600;
+}
+
+/* Welcome text (reuse index feel) */
+.welcomeHolder {
+  margin-top: 40px;
+  margin-left: 40px;
+}
+
+.welcomeHolder::before {
+  content: "Welcome back";
+  display: block;
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  color: #5B3E2B;
+  opacity: 0.9;
+  margin-bottom: 5px;
+}
+
+/* Account container */
+.account-container {
+  max-width: 520px;
+  margin: 80px auto;
+  background-color: #FFFFFF;
+  padding: 40px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  animation: fadeUp 0.8s ease forwards;
+}
+
+/* Title */
+.account-container h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 36px;
+  text-align: center;
+  color: #5B3E2B;
+  margin-bottom: 35px;
+}
+
+/* Account details */
+.account-details {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.account-details p {
+  font-size: 15px;
+  background-color: #F8F6F2;
+  padding: 14px 18px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-details strong {
+  font-weight: 600;
+  color: #2B2B2B;
+}
+
+.account-details span {
+  opacity: 0.8;
+}
+
+/* Animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .account-container {
+    margin: 50px 20px;
+    padding: 30px;
+  }
+
+  .welcomeHolder {
+    margin-left: 20px;
+  }
+}

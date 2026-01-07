@@ -97,3 +97,32 @@ loginForm.addEventListener('submit', async (e) => {
         console.log('Error submitting login form:', error);
     }
 });    
+
+//This is needed to avoid errors if the logout link is not present on the page
+if(logoutLink) {  
+//This function will handle the logout process if the logout link is clicked
+document.logoutLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+                await fetch('users/logout', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(async response => {
+                    if(response.status === 400){
+                        alert('You are not logged in!');
+                    } else {
+                        return await response.json();
+                    }
+                })
+                .then(data => {
+                    if(data.success){
+                        alert(`${data.message}`);
+                        window.location.href = "indexPage";
+                    } else {
+                        alert(`${data.message}`);
+                    }
+                });
+});  
+}

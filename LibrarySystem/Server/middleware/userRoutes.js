@@ -1,8 +1,8 @@
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import {validateUserRegistration, validateUserLogin} from './validate.js';
-import {checkIfLoggedIn} from './sessionHandler.js';
+import {validateUserRegistration, validateUserLogin, getUserDetails} from './validate.js';
+import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
 import express from 'express';
 const route = express.Router();
 
@@ -20,6 +20,14 @@ route.post('/login', async (req, res, next) => {
 route.get('/checkLogin', async (req, res, next) => {
     // Check if user is logged in
     await checkIfLoggedIn(req, res, next);
+});
+
+route.get('/logout', async (req, res, next) => {
+    await sessionLogout(req, res, next);
+}); 
+
+route.get('/details', async (req, res, next) => {
+    await getUserDetails(req, res, next);
 });
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
