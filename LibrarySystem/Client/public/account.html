@@ -30,7 +30,17 @@
 
   </div>
 
-  <main class="account-container">
+  <section>
+    <div style="margin-top: 60px; display: flex; flex-direction: column;">
+      <a href="#theAccount" class="option"><u>Account</u></a>
+      <a href="#theBooks" class="option"><u>My Books</u></a>
+      <a href="#theOverdue" class="option"><u>Overdue Books</u></a>
+      <a href="#theSoons" class="option"><u>Books Due Soon</u></a>
+      <a href="#theFines" class="option"><u>My Fines</u></a>
+    </div>
+  </section>
+
+  <main class="account-container" id="theAccount">
     <h2>My Account</h2>
 
     <section class="account-details">
@@ -38,11 +48,36 @@
       <p><strong>Email:</strong> <span id="emailDisplay"></span></p>
       <p><strong>Member Since:</strong> <span id="memberSinceDisplay"></span></p>
     </section>
+  </main>
 
-    <div>
-      <h3>Books Checked Out</h3>
-      
-    </div>
+  <main class="account-container" id="theBooks">
+      <h2>Books Checked Out</h2>
+      <div id="bookBag">
+      <section class="account-details">
+      <p style="text-align: center" id="booksHolder">You currently have no books checked out</p>
+      </section>
+      </div>      
+  </main>
+
+  <main class="account-container" id="theOverdue">
+      <h2>Overdue Books</h2>
+      <section class="account-details" id="books2">
+      <p style="text-align: center">You currently have no overdue books right now</p>
+      </section>      
+  </main>
+
+  <main class="account-container" id="theSoons">
+      <h2>Books Due Soon</h2>
+      <section class="account-details" id="books3">
+      <p style="text-align: center">You currently have no books due Soon</p>
+      </section>      
+  </main>
+
+  <main class="account-container" id="theFines">
+      <h2>Fines</h2>
+      <section class="account-details" id="books3">
+      <p style="text-align: center">You currently have no fines</p>
+      </section>      
   </main>
 
   <script src="js/account.js"></script>

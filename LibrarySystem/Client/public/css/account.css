@@ -122,3 +122,83 @@ body {
     margin-left: 20px;
   }
 }
+
+#bookBag,
+#books2,
+#books3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+#bookBag .account-details,
+#books2 .account-details,
+#books3 .account-details {
+  background-color: #FFFFFF;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  border-left: 5px solid #5B3E2B;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#bookBag .account-details:hover,
+#books2 .account-details:hover,
+#books3 .account-details:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
+}
+
+
+#bookBag .account-details p,
+#books2 .account-details p,
+#books3 .account-details p {
+  background-color: transparent;
+  padding: 6px 0;
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 14px;
+}
+
+
+.account-details.overdue {
+  border-left-color: #B83232;
+  background-color: #FFF5F5;
+}
+
+.account-details.due-soon {
+  border-left-color: #D4A017;
+  background-color: #FFFAF0;
+}
+
+
+#bookBag > p,
+#books2 > p,
+#books3 > p {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+.option {
+  margin-left: 45px;
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: "Spectral SC", serif;
+  letter-spacing: 0.12em;
+  color: #F8F6F2;
+  -webkit-text-stroke: 1px #3B2A1A;
+  text-decoration: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+  display: inline-block;
+}
+
+.option:hover {
+  color: #D4AF37;
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+html {
+  scroll-behavior: smooth;
+}
