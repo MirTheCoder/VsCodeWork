@@ -79,6 +79,12 @@ app.get('/account', (req, res) => {
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });
 
+//This will be used to render the page where users can checkout books
+app.get('/bookCheckout', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'BookCheckout.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});
+
 //Any routes that start with /users will be handled in userRoutes.js (handles user related tasks)
 app.use('/users', userRoutes)
 

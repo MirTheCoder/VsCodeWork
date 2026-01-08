@@ -1,17 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Page Not Found</title>
-  <link rel="icon" href="static/libraryIcon.png" type="image/png">
+  <title>404 | Page Not Found</title>
 
-  <!-- Google Font -->
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
 
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/404.css">
 </head>
+
 <body>
-    <h1 style="text-align: center;">Page Not Found</h1>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/about">About Us</a>
+      <a href="/login">Login</a>
+    </div>
+  </nav>
+
+  <main class="notfound-container">
+    <h1 class="error-code">404</h1>
+    <h2 class="error-title">Page Not Found</h2>
+
+    <p class="error-text">
+      It seems this page has been misplaced.<br>
+      Perhaps it was checked out, or shelved somewhere else.
+    </p>
+
+    <a href="/" class="home-button">Return to Library</a>
+  </main>
+
+  <footer class="footer-note">
+    <p>“Not all who wander are lost… but this page might be.”</p>
+  </footer>
 </body>
+</html>
