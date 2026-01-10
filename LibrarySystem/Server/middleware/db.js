@@ -20,9 +20,6 @@ export async function connect() {
     // to the database
 
     try{
-        if(client && client.isConnected()){
-            return client;
-        }
         client = new MongoClient(MONGO_URI);
         await client.connect();
         db = client.db(DB_NAME);

@@ -12,7 +12,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const clientRoot = __dirname + '/../Client';
-import userRoutes from './middleware/userRoutes.js';
+import userRoutes from './middleware/userRoutes.js'; //Includes the routes regarding the user processes
+import apiRoutes from './middleware/apiRoutes.js' //Includes the routes regarding the api processes
 //Let db start of as null
 let db = null;
 
@@ -92,6 +93,8 @@ app.use((req, res) => {
     res.status(404).sendFile(path.join(clientRoot, 'public', '404.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });
+
+app.use('/api', apiRoutes)
 
 //This will help us start our server along with connecting to the database
 app.listen(3000, async () => {
