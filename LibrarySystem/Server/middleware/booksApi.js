@@ -19,14 +19,15 @@ const Image = mongoose.model('BookImages', imageSchema); // Creates a model call
 //This will be used to check and see if there are books within the library
 export async function getBooks(req, res){
     try{
-        const books = booksList.find({ }).toArray() //Gets a list of all the books in the library
-        if(books){
-            return res.status(200).json({success: true, books: books})
+        const books = await booksList.find({ }).toArray() //Gets a list of all the books in the library
+        if(books.length > 0){ //Only return if there is at least one book that is found
+            res.status(200).json({success: true, books: books})
         } else {
-            return res.status(200).json({success: false})
+            res.status(200).json({success: false})
         }
     } catch(err){
-        console.log(err)
+        console.error(err)
+        res.status(500).json({success: false, error: 'Server error occurred'})
     }    
 }
 
@@ -34,8 +35,8 @@ export async function getBooks(req, res){
 //We will be using this function to upload images to the mongo database
 export async function saveBookImage (req, res) {
     try{
-        const imgData = fs.readFileSync(req.body.image); // Reads the image file as binary data
-        const type = await FileType.fromBuffer(imgData);
+        const imgData = fs.readFileSync(req.body.image); // Reads the image file as binary data/ turns image into binary data
+        const type = await FileType.fromBuffer(imgData); // Detects the file type (MIME type) from the binary data
 
         const img = new Image({
             name: req.body.name,  // Give your image a name

@@ -89,12 +89,12 @@ app.get('/bookCheckout', (req, res) => {
 //Any routes that start with /users will be handled in userRoutes.js (handles user related tasks)
 app.use('/users', userRoutes)
 
+app.use('/api', apiRoutes)
+
 app.use((req, res) => {
     res.status(404).sendFile(path.join(clientRoot, 'public', '404.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });
-
-app.use('/api', apiRoutes)
 
 //This will help us start our server along with connecting to the database
 app.listen(3000, async () => {

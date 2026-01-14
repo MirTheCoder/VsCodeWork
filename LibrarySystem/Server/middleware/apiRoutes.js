@@ -17,7 +17,7 @@ route.post('imageSave/:name', async (req, res, next) => {
 
 //We will use this to save images to the database
 route.get('/getBooks', async (req, res, next) => {
-    getBooks();
+    getBooks(req, res);
 });
 
 
