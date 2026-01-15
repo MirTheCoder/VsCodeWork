@@ -1,6 +1,8 @@
 import mongoose from "mongoose"
 import fs from 'fs'
 import { getCollection } from './db.js';
+import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
+import FileType from 'file-type';
 
 //Gets the Collection, list of books
 const booksList = await getCollection('books')
@@ -36,7 +38,7 @@ export async function getBooks(req, res){
 //We will be using this function to upload images to the mongo database
 export async function saveImageData(image, title) {
     try{
-        const imgData = fs.readFileSync(image); // Reads the image file as binary data/ turns image into binary data
+        const imgData = image.buffer; // Reads the image file as binary data/ turns image into binary data
         const type = await FileType.fromBuffer(imgData); // Detects the file type (MIME type) from the binary data
 
         const img = ({
@@ -61,17 +63,18 @@ export function getImage(req, res, name){
 
 //This function will be used to allow users to add books to the library
 export async function addBook(req, res){
+    const image = req.file //This gets the image that was uploaded and then stored in RAM temporarily by multer
     try{
         const newBook = {
             title: req.body.title,
             author: req.body.author,
         }
         await booksList.insertOne(newBook) //Inserts the new book into the collection
-        saveImageData(req.body.image, req.body.title) //Saves image to the database
+        saveImageData(image, req.body.title) //Saves image to the database
         res.status(200).json({success: true, message: 'Book added successfully'})
     } catch(err){
         console.error(err)
-        res.status(500).json({success: false, error: 'Server error occurred'})
+        res.status(200).json({success: false, error: 'Server error occurred'})
     }
 
 }

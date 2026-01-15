@@ -1,6 +1,17 @@
 import express from 'express';
 const route = express.Router();
-import {getBooks, saveImageData, getImage, } from './booksApi.js'
+import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
+import {getBooks, saveImageData, getImage, addBook} from './booksApi.js'
+
+
+
+//This creates a storage for which we store the uploaded images temporarily in memory before processing
+const upload = multer({
+    storage: multer.memoryStorage(), //Keeps the file or image in RAM temporarily before usage
+    limits: {
+        fileSize: 14 * 1024 * 1024 // 5MB becaue 1MB = 1024 * 1024 bytes
+    }
+});
 
 //This route will direct us to the booksApi file to get the requested image
 route.get('imageName/:name', async (req, res, next) => {
@@ -25,7 +36,12 @@ route.get('/getImage/:name', async (req, res, next) => {
 });
 
 route.post('/addBook', async (req, res, next) => {
-    await addBook(req, res);
+    upload.single('image')(req, res, async function (err) {
+        if (err) {
+            return res.status(400).json({ success: false, message: 'Image upload failed', error: err.message });
+        }
+        await addBook(req, res);
+    });
 });
 
 
