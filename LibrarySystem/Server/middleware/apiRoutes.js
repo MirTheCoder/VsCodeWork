@@ -1,6 +1,6 @@
 import express from 'express';
 const route = express.Router();
-import {getBooks, saveBookImage, getImage} from './booksApi.js'
+import {getBooks, saveImageData, getImage, } from './booksApi.js'
 
 //This route will direct us to the booksApi file to get the requested image
 route.get('imageName/:name', async (req, res, next) => {
@@ -20,7 +20,13 @@ route.get('/getBooks', async (req, res, next) => {
     getBooks(req, res);
 });
 
+route.get('/getImage/:name', async (req, res, next) => {    
+    await getImage(req, res, req.params.name); //We are going to pass the name put into the url to get the correct image
+});
 
+route.post('/addBook', async (req, res, next) => {
+    await addBook(req, res);
+});
 
 
 

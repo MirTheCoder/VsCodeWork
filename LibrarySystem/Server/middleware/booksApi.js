@@ -4,16 +4,17 @@ import { getCollection } from './db.js';
 
 //Gets the Collection, list of books
 const booksList = await getCollection('books')
+const bookImages = await getCollection('bookImages');
 
 
 //This is the schema for our image uploads, structuring how we will be uploading images to our database
-const imageSchema = new mongoose.Schema({
-  name: String,        // A simple name for the image
-  data: Buffer,        // Stores the actual binary image data
-  contentType: String  // Stores the MIME type (e.g., 'image/jpeg' or 'image/png')
-});
+//const imageSchema = new mongoose.Schema({
+    //name: String,        // A simple name for the image
+    //data: Buffer,        // Stores the actual binary image data
+    //contentType: String  // Stores the MIME type (e.g., 'image/jpeg' or 'image/png')
+//});
 
-const Image = mongoose.model('BookImages', imageSchema); // Creates a model called 'Image' using this schema
+//const Image = mongoose.model('BookImages', imageSchema); // Creates a model called 'Image' using this schema
 
 
 //This will be used to check and see if there are books within the library
@@ -33,30 +34,46 @@ export async function getBooks(req, res){
 
 
 //We will be using this function to upload images to the mongo database
-export async function saveBookImage (req, res) {
+export async function saveImageData(image, title) {
     try{
-        const imgData = fs.readFileSync(req.body.image); // Reads the image file as binary data/ turns image into binary data
+        const imgData = fs.readFileSync(image); // Reads the image file as binary data/ turns image into binary data
         const type = await FileType.fromBuffer(imgData); // Detects the file type (MIME type) from the binary data
 
-        const img = new Image({
-            name: req.body.name,  // Give your image a name
+        const img = ({
+            name: title,  // Give your image a name
             data: imgData,        // Store the binary data
             contentType: type.mime // Set the MIME type to whatever image has been uploaded
         });
 
-        await img.save();        // Save the document in MongoDB
-        console.log('Image saved!');
+        await bookImages.insertOne(img); //Saves the image to the database
+        
     } catch(error){
         console.log(error)
     }
 };
 
-//This will retrieve the image from the database to populate the image on the html page
-export async function getImage(req, res, name){
-    const img = await Image.findOne({ name: name });
-    //fs.writeFileSync('output.jpg', img.data);
-    res.contentType(img.contentType) //This is how we will let the browser know what type of image we are sending it 
-    res.send(img.data) //This sends the actaul binary data of the image
+export function getImage(req, res, name){
+    let image = bookImages.findOne({ name: name }) //This will get the image from the database that matches the provided name
+    res.contentType(image.contentType) //This is how we will let the browser know what type of image we are sending it
+    res.set('Content-Type', image.contentType); //Sets the content type of the response
+    res.send(image.data) //This sends the actaul binary data of the image
+}
+
+//This function will be used to allow users to add books to the library
+export async function addBook(req, res){
+    try{
+        const newBook = {
+            title: req.body.title,
+            author: req.body.author,
+        }
+        await booksList.insertOne(newBook) //Inserts the new book into the collection
+        saveImageData(req.body.image, req.body.title) //Saves image to the database
+        res.status(200).json({success: true, message: 'Book added successfully'})
+    } catch(err){
+        console.error(err)
+        res.status(500).json({success: false, error: 'Server error occurred'})
+    }
+
 }
 
 

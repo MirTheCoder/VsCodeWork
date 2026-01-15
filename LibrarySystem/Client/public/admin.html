@@ -26,7 +26,7 @@
     </div>
 
     <div id="a2" class="feature-card">
-      <img src="static/booksLogo.jpg" alt="Manage Books" style="padding: 7px; background-color: gray; border-radius: 5px;">
+      <img src="static/bookManage.jpg" alt="Manage Books" style="padding: 7px; background-color: gray; border-radius: 5px;">
       <p>Manage Books</p>
     </div>
 
@@ -36,9 +36,19 @@
     </div>
 
     <div id="a4" class="feature-card">
-      <img src="static/addUsersLogo.jpg" alt="add users" style="padding: 7px; background-color: gray; border-radius: 5px;">
+      <img src="static/addUserLogo.png" alt="add users" style="padding: 7px; background-color: gray; border-radius: 5px;">
       <p>Add Users</p>
     </div>
   </section>
+
+  <form id="bookForm">
+    <input type="text" id="title" name="title" placeholder="Book Title" required>
+    <input type="text" id="author" name="author" placeholder="Author" required>
+    <input type="text" id="genre" name="genre" placeholder="Genre" required>
+    <input type="number" id="year" name="year" placeholder="Publication Year" required>
+    <input type="file" id="image" name="image" accept="image/" required>
+    <button type="submit">Add Book</button>
+  </form>
+  <script src="./js/admin.js"></script>
 </body>
 </html>
