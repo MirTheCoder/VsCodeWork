@@ -2,7 +2,8 @@ import mongoose from "mongoose"
 import fs from 'fs'
 import { getCollection } from './db.js';
 import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
-import FileType from 'file-type';
+import { fileTypeFromBuffer, fileTypeFromFile, fileTypeFromStream } from 'file-type';
+import path from 'path';
 
 //Gets the Collection, list of books
 const booksList = await getCollection('books')
@@ -39,7 +40,7 @@ export async function getBooks(req, res){
 export async function saveImageData(image, title) {
     try{
         const imgData = image.buffer; // Reads the image file as binary data/ turns image into binary data
-        const type = await FileType.fromBuffer(imgData); // Detects the file type (MIME type) from the binary data
+        const type = await fileTypeFromBuffer(imgData); // Detects the file type (MIME type) from the binary data
 
         const img = ({
             name: title,  // Give your image a name
@@ -54,11 +55,19 @@ export async function saveImageData(image, title) {
     }
 };
 
-export function getImage(req, res, name){
-    let image = bookImages.findOne({ name: name }) //This will get the image from the database that matches the provided name
-    res.contentType(image.contentType) //This is how we will let the browser know what type of image we are sending it
-    res.set('Content-Type', image.contentType); //Sets the content type of the response
-    res.send(image.data) //This sends the actaul binary data of the image
+export async function getImage(req, res){
+    let name = decodeURIComponent(req.params.name); //This will get the name that is passed within the request, we dencode it for the mongodb to query it properly
+    let image = await bookImages.findOne({ name: name }) //This will get the image from the database that matches the provided name
+    if(image){
+        const buffer = Buffer.from(image.data.buffer); // Since mongo returns our image as a binary object, we need to convert it into a buffer in order to use it properly
+        console.log(buffer instanceof Buffer); // should print true
+        console.log(image.contentType); // should print "image/png" or "image/jpeg"
+        res.contentType(image.contentType) //This is how we will let the browser know what type of image we are sending it
+        res.set('Content-Type', image.contentType); //Sets the content type of the response
+        res.send(buffer) //This sends the actaul binary data of the image
+    } else {
+        res.sendFile(path.join('C:/Users/ABC/Downloads/VsCodeWork/LibrarySystem/Client/public', 'static', 'default.png')); //If there is no image found, we will send a default image back
+    }    
 }
 
 //This function will be used to allow users to add books to the library

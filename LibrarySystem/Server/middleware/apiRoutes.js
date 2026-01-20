@@ -32,17 +32,10 @@ route.get('/getBooks', async (req, res, next) => {
 });
 
 route.get('/getImage/:name', async (req, res, next) => {    
-    await getImage(req, res, req.params.name); //We are going to pass the name put into the url to get the correct image
+    await getImage(req, res); //We are going to pass the name put into the url to get the correct image
 });
 
-route.post('/addBook', async (req, res, next) => {
-    upload.single('image')(req, res, async function (err) {
-        if (err) {
-            return res.status(400).json({ success: false, message: 'Image upload failed', error: err.message });
-        }
-        await addBook(req, res);
-    });
-});
+route.post('/addBook', upload.single('image'), addBook);
 
 
 

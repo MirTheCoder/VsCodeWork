@@ -28,7 +28,7 @@ async function imgSources(books){
         books.forEach(element => {
             results.innerHTML += `<div class="book-item">
             <div class="book-cover">
-                <img src="/api/getImage/${element.title}" alt="${element.title}">
+                <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
             </div>
 
             <div class="book-info">
