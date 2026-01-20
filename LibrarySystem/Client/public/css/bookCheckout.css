@@ -148,7 +148,6 @@ body {
     gap: 10px;
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
     transition: transform 0.25s ease, box-shadow 0.25s ease;
-    cursor: pointer;
     margin-top: 20px;
 }
 
@@ -190,5 +189,39 @@ body {
     font-size: 0.8rem;
     color: #6B6B6B;
     margin-top: 4px;
+}
+
+.checkout-button {
+    padding: 10px 16px;
+    background-color: burlywood;
+    color: #FFF;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.25s, transform 0.2s;
+    align-self: center;
+}
+
+.checkout-button:hover {
+    background-color: #8b654e;
+    transform: translateY(-1px);
+}
+
+.return-button {
+    padding: 10px 16px;
+    background-color: burlywood;
+    color: #534843;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.25s, transform 0.2s;
+    align-self: center;
+}
+
+.return-button:hover {
+    background-color: #81221f;
+    transform: translateY(-1px);
 }
 

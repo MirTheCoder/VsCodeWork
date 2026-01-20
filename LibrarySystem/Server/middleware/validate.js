@@ -101,4 +101,14 @@ export async function getUserDetails(req, res, next) {
     }  else {
         res.status(200).json({success: false, message: 'User not logged in'});
     }
-}    
+} 
+
+//This function will be used soley to get the books checked out by the user in session
+export async function getUsersBooks(req, res){
+    let booksCheckedOut = await booksCheckedOutList.find({user: req.params.username}).toArray()
+    if(booksCheckedOut.length > 0){
+        res.status(200).json({success: true, books: booksCheckedOut})
+    } else {
+        res.status(200).json({success: false, message: 'No books found for this user'}) //We will return this if we have foudn no books
+    }
+}
