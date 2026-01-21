@@ -110,5 +110,6 @@ export async function getUsersBooks(req, res){
         res.status(200).json({success: true, books: booksCheckedOut})
     } else {
         res.status(200).json({success: false, message: 'No books found for this user'}) //We will return this if we have foudn no books
+        console.log('user has no books checked out as of right now');
     }
 }

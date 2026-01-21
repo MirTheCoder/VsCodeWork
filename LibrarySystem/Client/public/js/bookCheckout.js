@@ -61,5 +61,21 @@ async function imgSources(books){
     } catch(err){
         console.error("Error rendering books:", err);
     }
+    //If user has no books checked out, we will just render all books with checkout buttons
+    } else {
+        books.forEach(element => {
+            results.innerHTML += `<div class="book-item">
+            <div class="book-cover">
+                <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
+            </div>
+
+            <div class="book-info">
+                <h3>${element.title}</h3>
+                <p class="author">by ${element.author}</p>
+            </div>
+            <button class="checkout-button">Checkout</button>
+        </div>
+        `;
+        });
     }
 }
