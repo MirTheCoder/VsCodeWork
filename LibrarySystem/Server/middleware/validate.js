@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
-import {sessionLogin, getSessionInfo} from './sessionHandler.js';
+import {sessionLogin, getSessionInfo, getUsersName} from './sessionHandler.js';
 import bcrypt from 'bcryptjs';
 
 const usersList = await getCollection('Users');
@@ -105,7 +105,12 @@ export async function getUserDetails(req, res, next) {
 
 //This function will be used soley to get the books checked out by the user in session
 export async function getUsersBooks(req, res){
-    let booksCheckedOut = await booksCheckedOutList.find({user: req.params.username}).toArray()
+    let name = await getUsersName(req, res);
+    //We will onnly preform this operation if the user is logged in and has a valid session
+    if(!name){
+        return res.status(200).json({success: false, message: 'User not logged in'});
+    }
+    let booksCheckedOut = await booksCheckedOutList.find({user: name}).toArray()
     if(booksCheckedOut.length > 0){
         res.status(200).json({success: true, books: booksCheckedOut})
     } else {

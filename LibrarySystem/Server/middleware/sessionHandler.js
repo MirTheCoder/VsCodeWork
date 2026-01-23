@@ -63,3 +63,12 @@ export async function getSessionInfo(req, res, next) {
     }
 
 }
+
+//We wll use this to get the username of the current user in session 
+export async function getUsersName(req, res) {
+    if(req.session.user){
+        return req.session.user;
+    } else {
+        return null;
+    }
+}

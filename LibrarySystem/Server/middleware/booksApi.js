@@ -60,8 +60,6 @@ export async function getImage(req, res){
     let image = await bookImages.findOne({ name: name }) //This will get the image from the database that matches the provided name
     if(image){
         const buffer = Buffer.from(image.data.buffer); // Since mongo returns our image as a binary object, we need to convert it into a buffer in order to use it properly
-        console.log(buffer instanceof Buffer); // should print true
-        console.log(image.contentType); // should print "image/png" or "image/jpeg"
         res.contentType(image.contentType) //This is how we will let the browser know what type of image we are sending it
         res.set('Content-Type', image.contentType); //Sets the content type of the response
         res.send(buffer) //This sends the actaul binary data of the image
