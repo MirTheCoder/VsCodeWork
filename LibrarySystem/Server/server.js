@@ -91,6 +91,12 @@ app.use('/users', userRoutes)
 
 app.use('/api', apiRoutes)
 
+//This is the route to the manage books page for admins to access
+app.get('/ManageBooks', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'ManageBooks.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});
+
 app.use((req, res) => {
     res.status(404).sendFile(path.join(clientRoot, 'public', '404.html'));
     console.log(`Type: ${req.method} \n Url: ${req.url}`);

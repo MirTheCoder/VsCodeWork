@@ -25,8 +25,10 @@ export async function validateUserRegistration(req, res, next) {
             phone: phone,
             DateCreated: new Date() // Store the date when the user was created
         };
+        //If the username and password submitted are not already in use, then we will create a new user with those credentials
+        //and alert the user of a successful user creation
         await usersList.insertOne(newUser);
-        res.status(200).json({message: 'Registration successful!'});
+        res.status(200).json({message: 'Registration successful!', success: true});
     }
 }    
 
@@ -42,7 +44,7 @@ export async function validateUserLogin(req, res, next) {
             res.status(200).json({error: 'Error creating session during login.', success: false});
         }
     } else {
-        res.status(200).json({error: 'Username has already been taken', success: false});
+        res.status(200).json({error: 'Invalid Login credentials, please try again', success: false});
     }
 }  
 

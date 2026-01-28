@@ -1,0 +1,218 @@
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Body */
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F6F2;
+    color: #2B2B2B;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 70px;
+  }
+  
+  /* Page Title */
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    margin-bottom: 30px;
+    color: #5B3E2B;
+    letter-spacing: 0.4px;
+    text-shadow: 0 0 6px rgba(91, 62, 43, 0.25);
+  }
+  
+  /* Form Container */
+  #bookForm {
+    background-color: #FFFFFF;
+    width: 100%;
+    max-width: 520px;
+    padding: 34px 36px 38px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #DDD;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  
+  /* Inputs */
+  #bookForm input[type="text"],
+  #bookForm input[type="number"],
+  #bookForm input[type="file"] {
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid #DDD;
+    font-size: 14px;
+    background-color: #FAF9F7;
+    transition: border 0.25s ease, box-shadow 0.25s ease;
+  }
+  
+  #bookForm input::placeholder {
+    color: #7A6E66;
+  }
+  
+  /* Focus */
+  #bookForm input:focus {
+    outline: none;
+    border-color: #5B3E2B;
+    box-shadow: 0 0 0 3px rgba(91, 62, 43, 0.15);
+    background-color: #FFFFFF;
+  }
+  
+  /* File Input */
+  #bookForm input[type="file"] {
+    cursor: pointer;
+  }
+  
+  /* Button */
+  #bookForm button {
+    margin-top: 12px;
+    padding: 13px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #5B3E2B, #7A5439);
+    color: #FFFFFF;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 6px 14px rgba(91, 62, 43, 0.25);
+  }
+  
+  #bookForm button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(91, 62, 43, 0.35);
+  }
+  
+  #bookForm button:active {
+    transform: translateY(0);
+    box-shadow: 0 5px 12px rgba(91, 62, 43, 0.25);
+  }
+  
+  /* Mobile */
+  @media (max-width: 600px) {
+    #bookForm {
+      width: 90%;
+      padding: 26px;
+    }
+  
+    h2 {
+      font-size: 26px;
+    }
+  }
+
+  .addBook{
+    text-align: center;
+  }
+
+  /* Results Section */
+.resultList {
+    max-width: 900px;
+    margin: 0 auto 80px;
+    padding: 30px;
+    background-color: #FFFFFF;
+    border-radius: 16px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  }
+  
+  .resultList p {
+    text-align: center;
+    opacity: 0.6;
+    font-style: italic;
+  }
+  
+  .book-item {
+      width: 320px;
+      margin: auto;
+      background-color: #F8F6F2; /* parchment */
+      border: 1px solid #E2DED6;
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      margin-top: 20px;
+  }
+  
+  .book-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.12);
+  }
+  
+  .book-cover {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      border-radius: 8px;
+      background-color: #DDD8CF;
+  }
+  
+  .book-cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+  }
+  
+  .book-item:hover img {
+      transform: scale(1.05);
+  }
+  
+  .book-info h3 {
+      font-family: 'Merriweather', serif;
+      font-size: 0.95rem;
+      color: #2B2B2B;
+      line-height: 1.3;
+      margin: 0;
+      text-align: center;
+  }
+  
+  .book-info .author {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      color: #6B6B6B;
+      margin-top: 4px;
+  }
+  
+  .edit-button {
+      padding: 10px 16px;
+      background-color: burlywood;
+      color: #FFF;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.25s, transform 0.2s;
+      align-self: center;
+  }
+  
+  .edit-button:hover {
+      background-color: #8b654e;
+      transform: translateY(-1px);
+  }
+  
+  .delete-button {
+      padding: 10px 16px;
+      background-color: burlywood;
+      color: #534843;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.25s, transform 0.2s;
+      align-self: center;
+  }
+  
+  .delete-button:hover {
+      background-color: #81221f;
+      transform: translateY(-1px);
+  }

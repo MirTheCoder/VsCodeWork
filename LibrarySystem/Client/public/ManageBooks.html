@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Books</title>
+    <link rel="stylesheet" href="css/ManageBooks.css">
+</head>
+
+<body>
+    <form id="bookForm">
+        <h2 class="addBook">Add A Book</h2>
+        <input type="text" id="title" name="title" placeholder="Book Title" required>
+        <input type="text" id="author" name="author" placeholder="Author" required>
+        <input type="text" id="genre" name="genre" placeholder="Genre" required>
+        <input type="number" id="year" name="year" placeholder="Publication Year" required>
+        <input type="file" id="image" name="image" accept="image/" required placeholder="Book Cover Image">
+        <button type="submit">Add Book</button>
+      </form>
+    <script defer src="js/ManageBooks.js"></script>
+</body>
+</html>
