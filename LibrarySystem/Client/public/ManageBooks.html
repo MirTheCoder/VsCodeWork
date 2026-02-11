@@ -17,6 +17,26 @@
         <input type="file" id="image" name="image" accept="image/" required placeholder="Book Cover Image">
         <button type="submit">Add Book</button>
       </form>
+
+      <!-- This will be our pop up window for editing -->
+      <div class="overlay" id="overlay">
+        <div class="popup">
+          <h3>Edit Book</h3>
+          <form id="EditForm">
+            <input type="text" id="title" name="title" placeholder="Book Title" required>
+            <input type="text" id="author" name="author" placeholder="Author" required>
+            <input type="text" id="genre" name="genre" placeholder="Genre" required>
+            <input type="number" id="year" name="year" placeholder="Publication Year" required>
+            <input type="file" id="image" name="image" accept="image/" required placeholder="Book Cover Image">
+          </form>
+          <button id="saveEdits">Save</button>
+          <button id="closePopup">Close</button>
+        </div>
+      </div>
+
+    <div id="resultList">
+
+    </div>     
     <script defer src="js/ManageBooks.js"></script>
 </body>
 </html>

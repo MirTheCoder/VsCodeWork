@@ -1,13 +1,21 @@
 
 let results = document.getElementById('resultList')
+let searchBar = document.getElementById('searchBar')
+let filterForm = document.getElementById('filterForm')
+var searchTerm = ""
 
 document.addEventListener('DOMContentLoaded', async () => {
+    fetchBooks()
+})
+
+//Function we use to fetch books within our library database
+async function fetchBooks(){
     await fetch('/api/getBooks')
     .then(response => response.json())
     .then(async data => {
         if(data.success){
             alert("we have found some books, hooray")
-            await imgSources(data.books)
+            await checkBooksByTitle(data.books) //Used to check and see if the user is trying to filter through the books
         } else {
             alert("No books have been found at all")
             results.innerHTML = '<p>All results will appear here, feel free to use the filters to find a book</p>'
@@ -16,6 +24,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     .catch(error => {
         console.log(error)
     })
+}
+
+//With this, we will listen for any input changes within the search bar, and will filter based off
+//whatever the user input
+searchBar.addEventListener('input', async (event) => {
+    searchTerm = searchBar.value.trim().toLowerCase();
+    fetchBooks()
 })
 
 
@@ -77,5 +92,16 @@ async function imgSources(books){
         </div>
         `;
         });
+    }
+}
+
+async function checkBooksByTitle(books){
+    //We will display all the books if no filter is present
+    if (searchTerm === "" || searchTerm === null){
+        await imgSources(books)
+    } else {
+        //We will use this to only return the books that have the key word/term that the user has typed in.
+        let filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchTerm));
+        await imgSources(filteredBooks)
     }
 }

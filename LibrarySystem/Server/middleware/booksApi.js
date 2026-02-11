@@ -86,4 +86,23 @@ export async function addBook(req, res){
 
 }
 
+export async function deleteBook(req, res){
+    let title = req.body.title
+    //We wanna first see if the book exists before trying to delete it
+    let found = await booksList.findOne({title: title})
+    if(found){
+        try{
+            //We are deleting both the book and its corresponding image as well
+            await booksList.deleteOne({title: req.body.title})
+            await bookImages.deleteOne({name: req.body.title})
+            res.status(200).json({success: true, message: 'Book deleted successfully'})
+        } catch(err){
+            console.error(err)
+            res.status(200).json({success: false, error: 'Error occured while trying to delete book'})
+        }
+    } else {
+        res.status(200).json({success: false, error: 'Book not found in the database'})
+    }
+}
+
 

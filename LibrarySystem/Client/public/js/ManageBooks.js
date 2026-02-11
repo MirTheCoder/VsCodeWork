@@ -1,6 +1,28 @@
 const bookForm = document.getElementById('bookForm');
 let results = document.getElementById('resultList')
 
+const closeBtn = document.getElementById("closePopup");
+const overlay = document.getElementById("overlay");
+
+
+
+
+/*openBtn.addEventListener("click", () => {
+  overlay.classList.add("active");
+}); */
+
+closeBtn.addEventListener("click", () => {
+  overlay.classList.remove("active");
+});
+
+// If we click outside of the popup box, we will then close it
+/* overlay.addEventListener("click", (e) => {
+  if (e.target !== overlay) {
+    overlay.classList.remove("active");
+  }
+}); */
+
+
 //This will get the submission of a new book that is added to the database
 bookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -57,8 +79,10 @@ async function imgSources(books){
                   <h3>${element.title}</h3>
                   <p class="author">by ${element.author}</p>
               </div>
-              <button class="edit-button">Edit</button>
-              <button class="delete-button">Delete</button>
+              <div id="admin-buttons">
+              <button class="edit-button" id="edit">Edit</button>
+              <button class="delete-button" id="delete">Delete</button>
+              </div>
           </div>
           `;
           });
@@ -67,3 +91,35 @@ async function imgSources(books){
           console.error("Error rendering books:", err);
       }
   }
+
+  //We will add an event listener to the results list to see if the admin clicks edit or delete on
+  //any of the books
+  document.querySelector('#resultList').addEventListener('click', async (e) => {
+    //We will open the edit pop up screen if the admin selects pop up
+        if(e.target.id === 'edit'){
+            overlay.classList.add("active");
+        } else if(e.target.id === 'delete'){
+            //Used to get the closest book item div class to the delete button that was clicked
+            const bookItem = e.target.closest('.book-item');
+            //We look for the book title within the book item to see what book we ought to delete
+            const bookTitle = bookItem.querySelector('.book-info h3').textContent;
+            
+            try {
+                //fetch command used to delete the book from the database 
+                const response = await fetch('/api/deleteBook', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title: bookTitle }),
+                });
+    
+                const result = await response.json();
+                if(result){
+                    alert('result.message');
+                }
+            } catch (err) {
+                console.error('Error deleting book:', err);
+            }
+        };
+  });
