@@ -9,6 +9,7 @@ const usersList = await getCollection('Users');
 const booksCheckedOutList = await getCollection('booksCheckedOut')
 const overdueBooksList = await getCollection('overdueBooks')
 const finesList = await getCollection('fines')
+const userCollection = await getCollection('Users');
 
 // This will be used to validate user login and registration data
 export async function validateUserRegistration(req, res, next) {
@@ -119,4 +120,10 @@ export async function getUsersBooks(req, res){
         res.status(200).json({success: false, message: 'No books found for this user'}) //We will return this if we have foudn no books
         console.log('user has no books checked out as of right now');
     }
+}
+
+// This function will provide us with all the users within the database
+export async function collectUsers(req, res){
+    let users = await userCollection.find({}).toArray();
+    res.status(200).json(users);
 }

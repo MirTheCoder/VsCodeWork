@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import {validateUserRegistration, validateUserLogin, getUserDetails, getUsersBooks} from './validate.js';
+import {validateUserRegistration, validateUserLogin, getUserDetails, getUsersBooks, collectUsers} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
 import express from 'express';
 const route = express.Router();
@@ -33,6 +33,14 @@ route.get('/details', async (req, res, next) => {
 route.get('/currentBooks', async (req,res,next) => {
     getUsersBooks(req,res);
 })
+
+route.get('/allUsers', async (req, res) => {
+   try{
+        collectUsers(req, res);
+   } catch(err){
+        res.status(500).json({message: 'Error fetching users', error: err.message});
+   } 
+});
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
 export default route;

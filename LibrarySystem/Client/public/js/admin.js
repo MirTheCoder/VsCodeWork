@@ -9,3 +9,8 @@ let a4 = document.getElementById('a4')
 a2.addEventListener('click', () => {
     window.location.href = 'ManageBooks.html'
 });    
+
+//Brings us to a page where we can see all the users within our database
+a1.addEventListener('click', () => {
+    window.location.href = 'seeUsers.html'
+});
