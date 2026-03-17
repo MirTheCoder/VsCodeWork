@@ -3,27 +3,39 @@ import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
 import {sessionLogin, getSessionInfo, getUsersName} from './sessionHandler.js';
+import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines} from './booksApi.js';
 import bcrypt from 'bcryptjs';
+import { get } from 'http';
 
 const usersList = await getCollection('Users');
-const booksCheckedOutList = await getCollection('booksCheckedOut')
-const overdueBooksList = await getCollection('overdueBooks')
-const finesList = await getCollection('fines')
 const userCollection = await getCollection('Users');
 
 // This will be used to validate user login and registration data
 export async function validateUserRegistration(req, res, next) {
+    let idUnique = false;
     //Here we will get the registration inputs and see if they already exist in the database, if not then we will add the new user to the database 
     const {username, email, phone, password} = req.body;
     let person = await usersList.findOne({username: username, password: password});
     if(person){
         res.status(200).json({error: 'User already exists with the provided username and password.', success: false});
     } else {
+        //This will make sure that we do not have any user ID duplicates within the database
+        while(!idUnique){
+            let newId = await generateUserId();
+            let idCheck = await usersList.findOne({userId});
+            if(!idCheck){
+                idUnique = true;
+            }
+        }
+
         let newUser = {
+            userId: newId,
             username: username,
             password: password,
             email: email,
             phone: phone,
+            role: 'user', // Every User will automatically be assigned the role of 'user'
+            accountStatus: 'active', // We are including this field in order to give admins the ability to suspend an account if need be
             DateCreated: new Date() // Store the date when the user was created
         };
         //If the username and password submitted are not already in use, then we will create a new user with those credentials
@@ -56,12 +68,10 @@ export async function getUserDetails(req, res, next) {
     if(response.loggedIn){
         let user = await usersList.findOne({username: response.username});
         //Here we are going to use this to get the books, overdue warnings, and fines pertaining to the user in question
-        let booksCheckedOut = await booksCheckedOutList.find({user: response.username}).toArray()
+        let booksCheckedOut = await getBooks(req, res);
         //let overdueBooks = await overdueBooksList.find({user: response.username})
-        let overdueBooks = await booksCheckedOutList.aggregate([ //We are going to cypher through the books checked to see which books are past the Date
-            {$match: {dueDate: {$lt: new Date()}}} //This compares each due date of each book checked out with the current date
-        ]).toArray()
-        let fines = await finesList.find({user: response.username}).toArray()
+        let overdueBooks = await getOverdueBooks(req, res);
+        let fines = await getFines(req, res);
         //We will return the user details if the user has been successfully found
         //Setting success levels to numerical values to show how many categories are pertaining to the user in question
         if(user){
@@ -113,7 +123,7 @@ export async function getUsersBooks(req, res){
     if(!name){
         return res.status(200).json({success: false, message: 'User not logged in'});
     }
-    let booksCheckedOut = await booksCheckedOutList.find({user: name}).toArray()
+    let booksCheckedOut = await getBooks(req, res);
     if(booksCheckedOut.length > 0){
         res.status(200).json({success: true, books: booksCheckedOut})
     } else {
@@ -126,4 +136,16 @@ export async function getUsersBooks(req, res){
 export async function collectUsers(req, res){
     let users = await userCollection.find({}).toArray();
     res.status(200).json(users);
+}
+
+//This will be used to create a unique user ID for each user that registers
+async function generateUserId(){
+    let i = 0;
+    let num = '0';
+    let letter = random.choice(stringify.ascii_letters); // This will generate for us a random letter
+    for (i; i < 8; i++){
+        let randomId = Math.floor(Math.random() * 100000000); // Generate a random number between 0 and 99,999,999
+        num += randomId.toString();
+    }
+    return letter + num; 
 }

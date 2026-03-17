@@ -1,3 +1,6 @@
+//We will do our best to use this file for api calls for books and images. Anything
+//that requires info on books or book related attributes will be handled in here
+
 import mongoose from "mongoose"
 import fs from 'fs'
 import { getCollection } from './db.js';
@@ -8,6 +11,10 @@ import path from 'path';
 //Gets the Collection, list of books
 const booksList = await getCollection('books')
 const bookImages = await getCollection('bookImages');
+const overdueBooksList = await getCollection('overdueBooks')
+const booksCheckedOutList = await getCollection('booksCheckedOut')
+const finesList = await getCollection('fines')
+const usersList = await getCollection('users')
 
 
 //This is the schema for our image uploads, structuring how we will be uploading images to our database
@@ -86,6 +93,47 @@ export async function addBook(req, res){
 
 }
 
+export async function getOverdueBooks(req, res){
+    let overdueBooks = await booksCheckedOutList.aggregate([ //We are going to cypher through the books checked to see which books are past the Date
+            {$match: {dueDate: {$gt: new Date()}}} //This compares each due date of each book checked out with the current date
+        ]).toArray()
+    res.status(200).json({success: true, books: overdueBooks})
+}
+
+//This will get us all the fines that the user has currently accumulated
+export async function getFines(req, res){
+    let name = req.session.user;
+    let fines = await finesList.find({user: name}).toArray()
+    res.status(200).json({success: true, fines: fines})
+}
+
+//This function handles out checkout logic for when users checkout a book
+export async function checkOutBook(req, res){
+    try{
+        let name = req.session.user;
+        let person = await usersList.findOne({username: name})
+        let personId = person.userId
+        let personName = person.username
+        let bookTitle = req.body.title
+        let dueDate = new Date();
+        dueDate.setDate(dueDate.getDate() + 30); //Every User gets a 30 day time limit for every book they check out that starts from the moment they check out the book
+
+        let checkoutInfo = {
+            userId: personId,
+            username: personName,
+            title: bookTitle,
+            dueDate: dueDate
+        }
+
+        await booksCheckedOutList.insertOne(checkoutInfo)
+        res.status(200).json({success: true, message: `${bookTitle} has been checked out successfully!`})
+    } catch(err){
+        res.status(200).json({success: false, error: 'Error occurred while trying to checkout book, please try again later'})
+    }
+
+
+}
+
 export async function deleteBook(req, res){
     let title = req.body.title
     //We wanna first see if the book exists before trying to delete it
@@ -103,6 +151,12 @@ export async function deleteBook(req, res){
     } else {
         res.status(200).json({success: false, error: 'Book not found in the database'})
     }
+}
+
+export async function getSpecificUsersBooks(req, res){
+    let name = req.body.username
+    let books = await booksCheckedOutList.find({username: name}).toArray()
+    res.status(200).json({success: true, books: books})
 }
 
 

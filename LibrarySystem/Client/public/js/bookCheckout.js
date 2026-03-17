@@ -26,6 +26,38 @@ async function fetchBooks(){
     })
 }
 
+//This logic will handle book checkouts and adding the books to the users account
+document.querySelector('#checkout').addEventListener('click', async (e) => {
+    await fetch('/users/checkLogin')
+    .then(response => response.json())
+    .then(data => {
+        if(!data.loggedIn){
+            alert("You must be logged in to checkout a book, please either log in or create an account")
+            window.location.href = '/indexPage' //Users will be taken back to the index page if they are not logged in
+        }
+    })
+
+
+
+    let bookTitle = e.target.parentElement.querySelector('[name = "title"]').textContent; // We are using this to find the title belonging to
+    //the book that is being check out
+    fetch('/users/checkout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application.json'
+        },
+        body: JSON.stringify({title: bookTitle})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            alert(`${bookTitle}, has been checked out successfully!`)
+        } else {
+            alert(`Sorry, there was an error checking out ${bookTitle}, please try again later`)
+        }
+    })
+})
+
 //With this, we will listen for any input changes within the search bar, and will filter based off
 //whatever the user input
 searchBar.addEventListener('input', async (event) => {
@@ -54,7 +86,7 @@ async function imgSources(books){
                 <h3>${element.title}</h3>
                 <p class="author">by ${element.author}</p>
             </div>
-            <button class="checkout-button">Checkout</button>
+            <button class="checkout-button" id='checkout'>Checkout</button>
         </div>
         `;
         //We will add a option to return a book if the user already has it checked out
@@ -65,7 +97,7 @@ async function imgSources(books){
             </div>
 
             <div class="book-info">
-                <h3>${element.title}</h3>
+                <h3 name='title'>${element.title}</h3>
                 <p class="author">by ${element.author}</p>
             </div>
             <button class="return-button">Return</button>
@@ -85,10 +117,10 @@ async function imgSources(books){
             </div>
 
             <div class="book-info">
-                <h3>${element.title}</h3>
+                <h3 name='title'>${element.title}</h3>
                 <p class="author">by ${element.author}</p>
             </div>
-            <button class="checkout-button">Checkout</button>
+            <button class="checkout-button" id='checkout'>Checkout</button>
         </div>
         `;
         });
