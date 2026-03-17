@@ -6,12 +6,14 @@ import {sessionLogin, getSessionInfo, getUsersName} from './sessionHandler.js';
 import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines} from './booksApi.js';
 import bcrypt from 'bcryptjs';
 import { get } from 'http';
+import random from 'random';
 
 const usersList = await getCollection('Users');
 const userCollection = await getCollection('Users');
 
 // This will be used to validate user login and registration data
 export async function validateUserRegistration(req, res, next) {
+    var newId = '';
     let idUnique = false;
     //Here we will get the registration inputs and see if they already exist in the database, if not then we will add the new user to the database 
     const {username, email, phone, password} = req.body;
@@ -21,8 +23,8 @@ export async function validateUserRegistration(req, res, next) {
     } else {
         //This will make sure that we do not have any user ID duplicates within the database
         while(!idUnique){
-            let newId = await generateUserId();
-            let idCheck = await usersList.findOne({userId});
+            newId = await generateUserId();
+            let idCheck = await usersList.findOne({userId: newId});
             if(!idCheck){
                 idUnique = true;
             }
@@ -140,12 +142,10 @@ export async function collectUsers(req, res){
 
 //This will be used to create a unique user ID for each user that registers
 async function generateUserId(){
-    let i = 0;
-    let num = '0';
-    let letter = random.choice(stringify.ascii_letters); // This will generate for us a random letter
-    for (i; i < 8; i++){
-        let randomId = Math.floor(Math.random() * 100000000); // Generate a random number between 0 and 99,999,999
+    let num = '';
+    for (let i=0; i < 8; i++){
+        let randomId = Math.floor(Math.random() * 10); // Generate a random number between 0 and 99,999,999
         num += randomId.toString();
     }
-    return letter + num; 
+    return parseInt(num); 
 }
