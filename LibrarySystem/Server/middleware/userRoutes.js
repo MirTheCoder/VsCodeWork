@@ -3,6 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import {validateUserRegistration, validateUserLogin, getUserDetails, getUsersBooks, collectUsers} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
+import { checkOutBook } from './booksApi.js';
 import express from 'express';
 const route = express.Router();
 
@@ -34,12 +35,12 @@ route.get('/details', async (req, res, next) => {
 
 //This is used to get the books under the user that is currently logged in
 route.get('/currentBooks', async (req,res,next) => {
-    getUsersBooks(req,res);
-})
+    await getUsersBooks(req,res,next);
+});
 
 //This will be used to get a specific user's log of books
 route.post('/currentBooks', async (req,res,next) => {
-    getSpecificUsersBooks(req,res);
+    await getSpecificUsersBooks(req,res,next);
 });
 
 //Used to get all the users within the database (for admin use only)
@@ -53,8 +54,8 @@ route.get('/allUsers', async (req, res) => {
 
 //Used to handle book checkouts by users
 route.post('/checkout', async (req, res) => {
-    
-})
+    await checkOutBook(req, res);
+});
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
 export default route;

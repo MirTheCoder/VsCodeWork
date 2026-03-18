@@ -7,6 +7,7 @@ import { getCollection } from './db.js';
 import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
 import { fileTypeFromBuffer, fileTypeFromFile, fileTypeFromStream } from 'file-type';
 import path from 'path';
+import random from 'random';
 
 //Gets the Collection, list of books
 const booksList = await getCollection('books')
@@ -77,11 +78,25 @@ export async function getImage(req, res){
 
 //This function will be used to allow users to add books to the library
 export async function addBook(req, res){
+    let isValid = false; //We will have it initially false until the isbn num we generated is proven to be unique
     const image = req.file //This gets the image that was uploaded and then stored in RAM temporarily by multer
     try{
+        let isbn = generateISBN()
+        //Ensures that we keep generting isbn numbers until we get a unique one that isn't found within the database
+        while (!isValid){
+            let isbnFound = await booksList.foundOne({isbn: isbn})
+            if(isbnFound){
+                isbn = generateISBN() //If we found a book with the same isbn, then we will generate a new one and check again until we find a unique one
+            } else {
+                isValid = true; //We have found a unique isbn, so we can exit the loop
+            }
+        }
         const newBook = {
+            isbn: isbn,
             title: req.body.title,
             author: req.body.author,
+            genre: req.body.genre,
+            year: req.body.year
         }
         await booksList.insertOne(newBook) //Inserts the new book into the collection
         saveImageData(image, req.body.title) //Saves image to the database
@@ -157,6 +172,16 @@ export async function getSpecificUsersBooks(req, res){
     let name = req.body.username
     let books = await booksCheckedOutList.find({username: name}).toArray()
     res.status(200).json({success: true, books: books})
+}
+
+//Every book will be assigned a unique ISBN number when it is added to the library
+function generateISBN(){
+    let isbn = '';
+    for(let i = 0; i < 13; i++){
+        let randomNum = Math.floor(Math.random() * 10);
+        isbn += randomNum.toString();
+    }
+    return parseInt(isbn);
 }
 
 

@@ -26,37 +26,6 @@ async function fetchBooks(){
     })
 }
 
-//This logic will handle book checkouts and adding the books to the users account
-document.querySelector('#checkout').addEventListener('click', async (e) => {
-    await fetch('/users/checkLogin')
-    .then(response => response.json())
-    .then(data => {
-        if(!data.loggedIn){
-            alert("You must be logged in to checkout a book, please either log in or create an account")
-            window.location.href = '/indexPage' //Users will be taken back to the index page if they are not logged in
-        }
-    })
-
-
-
-    let bookTitle = e.target.parentElement.querySelector('[name = "title"]').textContent; // We are using this to find the title belonging to
-    //the book that is being check out
-    fetch('/users/checkout', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application.json'
-        },
-        body: JSON.stringify({title: bookTitle})
-    })
-    .then(response => response.json())
-    .then(data => {
-        if(data.success){
-            alert(`${bookTitle}, has been checked out successfully!`)
-        } else {
-            alert(`Sorry, there was an error checking out ${bookTitle}, please try again later`)
-        }
-    })
-})
 
 //With this, we will listen for any input changes within the search bar, and will filter based off
 //whatever the user input
@@ -105,6 +74,8 @@ async function imgSources(books){
         `;
         }
         });
+        checkOutBook() //We are calling the function here tio make sure that the event listeners
+        //are added after the checkout buttons are rendered on the page
     } catch(err){
         console.error("Error rendering books:", err);
     }
@@ -135,5 +106,44 @@ async function checkBooksByTitle(books){
         //We will use this to only return the books that have the key word/term that the user has typed in.
         let filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchTerm));
         await imgSources(filteredBooks)
+    }
+}
+
+function checkOutBook(){
+    //Make sure that this only takes place if there is a checkout button present on the page
+    if(document.querySelector('.checkout-button')){
+    console.log("Checkout button found, adding event listener for book checkouts")
+    //This logic will handle book checkouts and adding the books to the users account
+    document.querySelector('.checkout-button').addEventListener('click', async (e) => {
+        await fetch('/users/checkLogin')
+        .then(response => response.json())
+        .then(data => {
+            if(!data.loggedIn){
+                alert("You must be logged in to checkout a book, please either log in or create an account")
+                window.location.href = '/indexPage' //Users will be taken back to the index page if they are not logged in
+            }
+        })
+
+
+        let bookTitle = e.target.parentElement.querySelector('h3[name = "title"]').textContent; // We are using this to find the title belonging to
+        //the book that is being check out
+        fetch('/users/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({title: bookTitle})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success){
+                alert(`${bookTitle}, has been checked out successfully!`)
+            } else {
+                alert(`Sorry, there was an error checking out ${bookTitle}, please try again later`)
+            }
+        })
+    })
+    } else {
+        console.log("No checkout button found, checkout event listener will not be added")
     }
 }
