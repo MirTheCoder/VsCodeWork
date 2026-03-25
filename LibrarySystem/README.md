@@ -20,3 +20,7 @@ mongodb
 - Run 'brew install mongodb-community' to install the latest version of mongodb-community
 - Run 'brew services start mongodb-community' in order to actually run the mongodb so that you can begin connecting to the database
 - Use'brew services list" to check and make sure that the mongodb is running on your device
+
+
+SIDE NOTES
+- The login process is acting a little weird as you have to login twice in order to have an actual session 

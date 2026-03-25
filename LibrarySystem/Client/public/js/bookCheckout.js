@@ -4,9 +4,34 @@ let searchBar = document.getElementById('searchBar')
 let filterForm = document.getElementById('filterForm')
 var searchTerm = ""
 
+//This will reset our event listeners so that we don't have duplicate event listeners for the same buttons
+//If they happened to be rendered multiple times at one time for some reason
 document.addEventListener('DOMContentLoaded', async () => {
-    fetchBooks()
+    //We will make sure to remove any previous event listeners from the checkout
+    //or return buttons before adding new ones
+    let buttons = document.querySelectorAll('.checkout-button');
+    if(buttons.length > 0){ 
+        console.log("Checkout buttons found, adding event listeners");
+
+        buttons.forEach(button => {
+            button.removeEventListener('click', checkOutBook);
+        });
+    }
+    
+    let returns = document.querySelectorAll('.return-button');
+    if(returns.length > 0){ 
+        console.log("Return buttons found, adding event listeners");
+        try{
+        returns.forEach(button => {
+            button.removeEventListener('click', returnBook);
+        });
+    } catch(err){
+        console.error("Error removing return button event listeners: ", err);
+    }
+    }  
+    fetchBooks() // we will use this to fetch all the books in the database  
 })
+
 
 //Function we use to fetch books within our library database
 async function fetchBooks(){
@@ -38,6 +63,7 @@ searchBar.addEventListener('input', async (event) => {
 
 async function imgSources(books){
     let usersBooks = await fetch('/users/currentBooks');
+    usersBooks = await usersBooks.json() //We are gonna parse the users books here
     if(usersBooks.success){
         results.innerHTML = '' //Clear any previous results
 
@@ -68,35 +94,45 @@ async function imgSources(books){
 
             <div class="book-info">
                 <h3 name='title'>${element.title}</h3>
-                <p class="author">by ${element.author}</p>
+                <p class="author">${element.author}</p>
             </div>
+            <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
             <button class="return-button">Return</button>
         </div>
         `;
         }
         });
-        checkOutBook() //We are calling the function here tio make sure that the event listeners
+        checkOutBook() //We are calling the function here to make sure that the event listeners
         //are added after the checkout buttons are rendered on the page
+        returnBook() //We are calling this function here to make sure that the event listeners for the return buttons are added after they are rendered on the page
     } catch(err){
         console.error("Error rendering books:", err);
     }
     //If user has no books checked out, we will just render all books with checkout buttons
     } else {
-        books.forEach(element => {
-            results.innerHTML += `<div class="book-item">
-            <div class="book-cover">
-                <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
-            </div>
+        results.innerHTML = ``
+        try{
+            books.forEach(element => {
+                results.innerHTML += `<div class="book-item">
+                <div class="book-cover">
+                    <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
+                </div>
 
-            <div class="book-info">
-                <h3 name='title'>${element.title}</h3>
-                <p class="author">by ${element.author}</p>
+                <div class="book-info">
+                    <h3 name='title'>${element.title}</h3>
+                    <p class="author">${element.author}</p>
+                </div>
+                <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
+                <button class="checkout-button" id='checkout'>Checkout</button>
             </div>
-            <button class="checkout-button" id='checkout'>Checkout</button>
-        </div>
-        `;
-        });
-    }
+            `;
+            });
+            checkOutBook() //Calling this function to make sure we add the event listeners only after everything renders
+            returnBook() //We are calling this function here to make sure that the event listeners for the return buttons are added after they are rendered on the page, even though in this case there won't be any return buttons rendered since the user has no books checked out
+        } catch(err){
+            console.error("Error rendering books:", err);
+        }
+    }    
 }
 
 async function checkBooksByTitle(books){
@@ -158,3 +194,41 @@ function checkOutBook(){
         console.log("No checkout buttons found");
     }
 }
+
+//This will be used to allow users to return books that they have checked out
+function returnBook(){
+let returns = document.querySelectorAll('.return-button');
+    if(returns.length > 0){ 
+        console.log("Return buttons found, adding event listeners");
+
+        returns.forEach(button => {
+            button.addEventListener('click', async(e) => {
+                try{
+                //We need to first make sure that the user is first logged in before we allow
+                //them to return a book
+                await fetch('/users/checkLogin')
+                .then(response => response.json())
+                .then(data => {
+                    if(!data.loggedIn){
+                        alert("You must be logged in to checkout a book");
+                        window.location.href = '/indexPage';
+                    }
+                });
+
+                let bookISBN = e.target.parentElement.querySelector('p[name="isbn"]').textContent;
+                await fetch('/users/returnBook', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ isbn: bookISBN})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message) //This will let the user know the results of their return attempt
+                })
+            } catch(err){
+                console.error("Error returning book: ", err);
+            }
+            })
+        });
+    }  
+}   

@@ -16,7 +16,7 @@ const bookImages = await getCollection('bookImages');
 const overdueBooksList = await getCollection('overdueBooks')
 const booksCheckedOutList = await getCollection('booksCheckedOut')
 const finesList = await getCollection('fines')
-const usersList = await getCollection('users')
+const usersList = await getCollection('Users')
 
 
 //This is the schema for our image uploads, structuring how we will be uploading images to our database
@@ -127,6 +127,8 @@ export async function getFines(req, res){
 export async function checkOutBook(req, res){
     try{
         let name = await getUsersName(req, res);
+        name = name ? name.replace(/['"]+/g, '').trim() : null;
+        console.log("User checking out book: ", name);//Using this for debugging purposes
         let person = await usersList.findOne({username: name})
         let personId = person.userId
         let personName = person.username
@@ -149,6 +151,7 @@ export async function checkOutBook(req, res){
         await booksCheckedOutList.insertOne(checkoutInfo)
         res.status(200).json({success: true, message: `${bookTitle} has been checked out successfully!`})
     } catch(err){
+        console.error("Error while checking out book: ", err);
         res.status(200).json({success: false, error: 'Error occurred while trying to checkout book, please try again later'})
     }
 
@@ -196,6 +199,26 @@ export async function getSpecificUsersBooks(req, res){
     let name = req.body.username
     let books = await booksCheckedOutList.find({username: name}).toArray()
     res.status(200).json({success: true, books: books})
+}
+
+//This will handle the book return logic and process for users returning books
+export async function returnBook(req, res){
+    try{
+        let name = await getUsersName(req, res);
+        name = name ? name.replace(/['"]+/g, '').trim() : null;
+        let bookISBN = req.body.isbn
+        //Wanna make sure that the book is actaully in their position before we return it
+        let checkedOutBook = await booksCheckedOutList.findOne({username: name, isbn: bookISBN});
+        if(checkedOutBook){
+            await booksCheckedOutList.deleteOne({username: name, isbn: bookISBN})
+            res.status(200).json({success: true, message: 'Book returned successfully'})
+        } else {
+            return res.status(200).json({success: false, message: 'No record of this book being checked out by this user'})
+        }
+    } catch(err){
+        console.error("Error returning book: ", err);
+        res.status(200).json({success: false, message: 'Error occurred while trying to return book, please try again later'})
+    }
 }
 
 //Every book will be assigned a unique ISBN number when it is added to the library
