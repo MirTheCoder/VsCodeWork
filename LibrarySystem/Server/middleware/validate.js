@@ -118,22 +118,6 @@ export async function getUserDetails(req, res, next) {
     }
 } 
 
-//This function will be used soley to get the books checked out by the user in session
-export async function getUsersBooks(req, res){
-    let name = await getUsersName(req, res);
-    //We will onnly preform this operation if the user is logged in and has a valid session
-    if(!name){
-        return res.status(200).json({success: false, message: 'User not logged in'});
-    }
-    let booksCheckedOut = await getBooks(req, res);
-    if(booksCheckedOut.length > 0){
-        res.status(200).json({success: true, books: booksCheckedOut})
-    } else {
-        res.status(200).json({success: false, message: 'No books found for this user'}) //We will return this if we have foudn no books
-        console.log('user has no books checked out as of right now');
-    }
-}
-
 // This function will provide us with all the users within the database
 export async function collectUsers(req, res){
     let users = await userCollection.find({}).toArray();

@@ -6,6 +6,7 @@ import fs from 'fs'
 import { getCollection } from './db.js';
 import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
 import { fileTypeFromBuffer, fileTypeFromFile, fileTypeFromStream } from 'file-type';
+import { getUsersName } from "./sessionHandler.js"; //This will allow us to get the name of the user in session
 import path from 'path';
 import random from 'random';
 
@@ -117,7 +118,7 @@ export async function getOverdueBooks(req, res){
 
 //This will get us all the fines that the user has currently accumulated
 export async function getFines(req, res){
-    let name = req.session.user;
+    let name = await getUsersName(req, res);
     let fines = await finesList.find({user: name}).toArray()
     res.status(200).json({success: true, fines: fines})
 }
@@ -125,18 +126,23 @@ export async function getFines(req, res){
 //This function handles out checkout logic for when users checkout a book
 export async function checkOutBook(req, res){
     try{
-        let name = req.session.user;
+        let name = await getUsersName(req, res);
         let person = await usersList.findOne({username: name})
         let personId = person.userId
         let personName = person.username
         let bookTitle = req.body.title
+        let bookAuthor = req.body.author
+        let bookISBN = req.body.isbn
         let dueDate = new Date();
         dueDate.setDate(dueDate.getDate() + 30); //Every User gets a 30 day time limit for every book they check out that starts from the moment they check out the book
 
+        //The info we will log for each checkout
         let checkoutInfo = {
             userId: personId,
             username: personName,
             title: bookTitle,
+            author: bookAuthor,
+            isbn: bookISBN,
             dueDate: dueDate
         }
 
@@ -146,7 +152,25 @@ export async function checkOutBook(req, res){
         res.status(200).json({success: false, error: 'Error occurred while trying to checkout book, please try again later'})
     }
 
+}
 
+//This function will be used soley to get the books checked out by the user in session
+export async function getUsersBooks(req, res){
+    try{
+        let name = await getUsersName(req, res);
+        //We will onnly preform this operation if the user is logged in and has a valid session
+        if(!name){
+            return res.status(200).json({success: false, message: 'User not logged in'});
+        }
+        let booksCheckedOut = await booksCheckedOutList.find({username: name}).toArray();
+        if(booksCheckedOut.length > 0){
+            res.status(200).json({success: true, books: booksCheckedOut})
+        } else {
+            res.status(200).json({success: false, message: 'No books found for this user'}) //We will return this if we have foudn no books
+        }
+    } catch (err){
+        console.log("Error with getting users books: ", err)
+    }
 }
 
 export async function deleteBook(req, res){

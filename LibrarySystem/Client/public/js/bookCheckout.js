@@ -53,9 +53,10 @@ async function imgSources(books){
 
             <div class="book-info">
                 <h3>${element.title}</h3>
-                <p class="author">by ${element.author}</p>
+                <p class="author" name="author">${element.author}</p>
             </div>
-            <button class="checkout-button" id='checkout'>Checkout</button>
+            <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
+            <button class="checkout-button">Checkout</button>
         </div>
         `;
         //We will add a option to return a book if the user already has it checked out
@@ -109,41 +110,51 @@ async function checkBooksByTitle(books){
     }
 }
 
+//This will handle checking out books to our users, we will add event listeners to each checkout button that is rendered
 function checkOutBook(){
-    //Make sure that this only takes place if there is a checkout button present on the page
-    if(document.querySelector('.checkout-button')){
-    console.log("Checkout button found, adding event listener for book checkouts")
-    //This logic will handle book checkouts and adding the books to the users account
-    document.querySelector('.checkout-button').addEventListener('click', async (e) => {
-        await fetch('/users/checkLogin')
-        .then(response => response.json())
-        .then(data => {
-            if(!data.loggedIn){
-                alert("You must be logged in to checkout a book, please either log in or create an account")
-                window.location.href = '/indexPage' //Users will be taken back to the index page if they are not logged in
-            }
-        })
+    let buttons = document.querySelectorAll('.checkout-button');
 
+    if(buttons.length > 0){ 
+        console.log("Checkout buttons found, adding event listeners");
 
-        let bookTitle = e.target.parentElement.querySelector('h3[name = "title"]').textContent; // We are using this to find the title belonging to
-        //the book that is being check out
-        fetch('/users/checkout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({title: bookTitle})
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success){
-                alert(`${bookTitle}, has been checked out successfully!`)
-            } else {
-                alert(`Sorry, there was an error checking out ${bookTitle}, please try again later`)
-            }
-        })
-    })
+        buttons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+
+                await fetch('/users/checkLogin')
+                .then(response => response.json())
+                .then(data => {
+                    if(!data.loggedIn){
+                        alert("You must be logged in to checkout a book");
+                        window.location.href = '/indexPage';
+                    }
+                });
+
+                let bookTitle = e.target.parentElement.querySelector('h3').textContent;
+                let bookAuthor = e.target.parentElement.querySelector('.author').textContent;
+                let bookISBN = e.target.parentElement.querySelector('p[name="isbn"]').textContent;
+
+                fetch('/users/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: bookTitle,
+                        author: bookAuthor,
+                        isbn: bookISBN
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success){
+                        alert(`${bookTitle} has been checked out successfully!`);
+                    } else {
+                        alert(`Error checking out ${bookTitle}`);
+                    }
+                });
+
+            });
+        });
+
     } else {
-        console.log("No checkout button found, checkout event listener will not be added")
+        console.log("No checkout buttons found");
     }
 }

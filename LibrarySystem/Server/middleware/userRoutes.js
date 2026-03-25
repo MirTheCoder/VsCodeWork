@@ -1,9 +1,9 @@
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import {validateUserRegistration, validateUserLogin, getUserDetails, getUsersBooks, collectUsers} from './validate.js';
+import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
-import { checkOutBook } from './booksApi.js';
+import { checkOutBook, getUsersBooks, getSpecificUsersBooks } from './booksApi.js';
 import express from 'express';
 const route = express.Router();
 

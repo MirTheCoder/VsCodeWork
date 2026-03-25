@@ -14,15 +14,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });   
     
 //We will use this function to get the catalog of books under each users name
-async function getUsersBooks(user){
-    fetch('/users/currentBooks', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({username: user})
-    })
-}    
+async function getUsersBooks(username){
+    try {
+        const response = await fetch('/users/currentBooks', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username })
+        });
+
+        const data = await response.json();
+        if (data.success && Array.isArray(data.books)) {
+            return data.books;
+        }
+        return [];
+    } catch (error) {
+        console.error('Error fetching books for user', username, error);
+        return [];
+    }
+}
 
 
  //This is the function that we will use to display all the users within the database   
@@ -39,11 +50,22 @@ async function showAllUsers(users){
                 <p>Role: ${user.role}</p>
                 <p>Account Status: ${user.accountStatus}</p>
                 <p>Member Since: ${new Date(user.DateCreated).toLocaleDateString()}</p>
-                <h3><b>Books Checked Out:</b></h3>
-                <ul>
-                    ${books.map(book => `<li>${book.title} by ${book.author} (Due: ${new Date(book.dueDate).toLocaleDateString()})</li>`).join('')}
-                </ul>
-            `;
+                `
+                let usersBooks = document.createElement('div');
+                usersBooks.innerHTML = ``
+                if(books.length > 0){
+                    books.forEach(book => {
+                    usersBooks += `
+                    <h3><b>Books Checked Out:</b></h3>
+                    <p>Title: ${book.title}</p> 
+                    <p>Author: ${book.author}</p>
+                    <p>ISBN: ${book.isbn}</p>
+                    <p>Due Date: ${book.dueDate.toLocaleDateString()}</p>`
+                    });
+                } else {
+                    usersBooks += `<p>No books checked out</p>`
+                }    
             userList.appendChild(userElement);
-        });
-}
+            userList.appendChild(usersBooks);
+        })
+    };
