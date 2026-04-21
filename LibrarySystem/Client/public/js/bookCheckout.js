@@ -3,6 +3,7 @@ let results = document.getElementById('resultList')
 let searchBar = document.getElementById('searchBar')
 let filterForm = document.getElementById('filterForm')
 var searchTerm = ""
+let searchButton = document.getElementById('searchButton')
 
 //This will reset our event listeners so that we don't have duplicate event listeners for the same buttons
 //If they happened to be rendered multiple times at one time for some reason
@@ -20,7 +21,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     let returns = document.querySelectorAll('.return-button');
     if(returns.length > 0){ 
-        console.log("Return buttons found, adding event listeners");
         try{
         returns.forEach(button => {
             button.removeEventListener('click', returnBook);
@@ -39,7 +39,6 @@ async function fetchBooks(){
     .then(response => response.json())
     .then(async data => {
         if(data.success){
-            alert("we have found some books, hooray")
             await checkBooksByTitle(data.books) //Used to check and see if the user is trying to filter through the books
         } else {
             alert("No books have been found at all")
@@ -52,9 +51,12 @@ async function fetchBooks(){
 }
 
 
+
+
+
 //With this, we will listen for any input changes within the search bar, and will filter based off
 //whatever the user input
-searchBar.addEventListener('input', async (event) => {
+searchButton.addEventListener('click', async (event) => {
     searchTerm = searchBar.value.trim().toLowerCase();
     fetchBooks()
 })
@@ -62,6 +64,11 @@ searchBar.addEventListener('input', async (event) => {
 
 
 async function imgSources(books){
+    if(books.length === 0){
+        alert("No books have been found with that title")
+        return; //If no books are found then will will just end the function here
+    }  
+    alert("we have found some books, hooray")
     let usersBooks = await fetch('/users/currentBooks');
     usersBooks = await usersBooks.json() //We are gonna parse the users books here
     if(usersBooks.success){
@@ -137,11 +144,12 @@ async function imgSources(books){
 
 async function checkBooksByTitle(books){
     //We will display all the books if no filter is present
-    if (searchTerm === "" || searchTerm === null){
+    //We trim the search to ensure that we are not comparing white spaces
+    if (searchTerm.trim() === "" || searchTerm === null){
         await imgSources(books)
     } else {
         //We will use this to only return the books that have the key word/term that the user has typed in.
-        let filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchTerm));
+        let filteredBooks = books.filter(book => book.title.toLowerCase().includes(searchTerm.trim()));
         await imgSources(filteredBooks)
     }
 }
@@ -151,8 +159,6 @@ function checkOutBook(){
     let buttons = document.querySelectorAll('.checkout-button');
 
     if(buttons.length > 0){ 
-        console.log("Checkout buttons found, adding event listeners");
-
         buttons.forEach(button => {
             button.addEventListener('click', async (e) => {
 
@@ -190,8 +196,6 @@ function checkOutBook(){
             });
         });
 
-    } else {
-        console.log("No checkout buttons found");
     }
 }
 
@@ -199,8 +203,6 @@ function checkOutBook(){
 function returnBook(){
 let returns = document.querySelectorAll('.return-button');
     if(returns.length > 0){ 
-        console.log("Return buttons found, adding event listeners");
-
         returns.forEach(button => {
             button.addEventListener('click', async(e) => {
                 try{

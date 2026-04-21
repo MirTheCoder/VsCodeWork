@@ -28,8 +28,14 @@
             <input type="text" id="genre" name="genre" placeholder="Genre" required>
             <input type="number" id="year" name="year" placeholder="Publication Year" required>
             <input type="file" id="image" name="image" accept="image/" required placeholder="Book Cover Image">
+            <div class="availability">
+            <input type="radio" id="available" name="availability" value="available">
+            <label for="available">Available</label>
+            <input type="radio" id="unavailable" name="availability" value="unavailable">
+            <label for="unavailable">Unavailable</label>
+            </div>
           </form>
-          <button id="saveEdits">Save</button>
+          <button id="saveEdits" type="submit">Save</button>
           <button id="closePopup">Close</button>
         </div>
       </div>

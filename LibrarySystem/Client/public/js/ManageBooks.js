@@ -3,6 +3,7 @@ let results = document.getElementById('resultList')
 
 const closeBtn = document.getElementById("closePopup");
 const overlay = document.getElementById("overlay");
+const bookEditor = document.getElementById("EditForm");
 
 
 
@@ -10,6 +11,17 @@ const overlay = document.getElementById("overlay");
 /*openBtn.addEventListener("click", () => {
   overlay.classList.add("active");
 }); */
+
+function addEditorListener(){
+    if(bookEditor){
+        //We will add the edits if the admin clicks the save button
+        bookEditor.addEventListener('submit', async (e) => {
+            let formObj = new FormData(bookEditor);
+            let formData = Object.fromEntries(formObj.entries());
+        });
+    }
+}    
+
 
 closeBtn.addEventListener("click", () => {
   overlay.classList.remove("active");
@@ -27,7 +39,7 @@ closeBtn.addEventListener("click", () => {
 bookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
   
-    const formData = new FormData(bookForm); // 👈 keep it as FormData
+    const formData = new FormData(bookForm); // keep it as FormData
   
     try {
       await fetch('/api/addBook', {
@@ -79,6 +91,7 @@ async function imgSources(books){
                   <h3>${element.title}</h3>
                   <p class="author">by ${element.author}</p>
               </div>
+              <p class="book-isbn"><small>ISBN: ${element.isbn}</small></p>
               <div id="admin-buttons">
               <button class="edit-button" id="edit">Edit</button>
               <button class="delete-button" id="delete">Delete</button>
@@ -97,7 +110,9 @@ async function imgSources(books){
   document.querySelector('#resultList').addEventListener('click', async (e) => {
     //We will open the edit pop up screen if the admin selects pop up
         if(e.target.id === 'edit'){
+            e.closest('.book-item').querySelector('.book-isbn').value; //Used to get the isbn of the book
             overlay.classList.add("active");
+            addEditorListener(); // We will add the event listener to the edit form once the popup is open so that we can capture the edits that the admin makes to the book details
         } else if(e.target.id === 'delete'){
             //Used to get the closest book item div class to the delete button that was clicked
             const bookItem = e.target.closest('.book-item');

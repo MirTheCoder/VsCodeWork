@@ -85,7 +85,7 @@ export async function addBook(req, res){
         let isbn = generateISBN()
         //Ensures that we keep generting isbn numbers until we get a unique one that isn't found within the database
         while (!isValid){
-            let isbnFound = await booksList.foundOne({isbn: isbn})
+            let isbnFound = await booksList.findOne({isbn: isbn})
             if(isbnFound){
                 isbn = generateISBN() //If we found a book with the same isbn, then we will generate a new one and check again until we find a unique one
             } else {
@@ -97,7 +97,8 @@ export async function addBook(req, res){
             title: req.body.title,
             author: req.body.author,
             genre: req.body.genre,
-            year: req.body.year
+            year: req.body.year,
+            available: true //Used to see whether or not the books is currently available
         }
         await booksList.insertOne(newBook) //Inserts the new book into the collection
         saveImageData(image, req.body.title) //Saves image to the database
@@ -126,6 +127,7 @@ export async function getFines(req, res){
 //This function handles out checkout logic for when users checkout a book
 export async function checkOutBook(req, res){
     try{
+        let bookRequested = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: false}}) // This will change the availability of the book in question to false so that users will know that it is not available
         let name = await getUsersName(req, res);
         name = name ? name.replace(/['"]+/g, '').trim() : null;
         console.log("User checking out book: ", name);//Using this for debugging purposes
@@ -204,8 +206,9 @@ export async function getSpecificUsersBooks(req, res){
 //This will handle the book return logic and process for users returning books
 export async function returnBook(req, res){
     try{
+        let bookReturned = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: true}}) // This will change the availability of the book in question to true so that users will know that it is now available
         let name = await getUsersName(req, res);
-        name = name ? name.replace(/['"]+/g, '').trim() : null;
+        name = name ? name.replace(/['"]+/g, '').trim() : null; //We want to make sure that we are trimming any white spaces and removing any quotes from the users name to ensure that we can properly query the database for the books they have checked out
         let bookISBN = req.body.isbn
         //Wanna make sure that the book is actaully in their position before we return it
         let checkedOutBook = await booksCheckedOutList.findOne({username: name, isbn: bookISBN});
@@ -229,6 +232,10 @@ function generateISBN(){
         isbn += randomNum.toString();
     }
     return parseInt(isbn);
+}
+
+export async function editBook(req, res){
+    let {title, author, genre, year, availability} = req.body;
 }
 
 
