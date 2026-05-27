@@ -103,7 +103,7 @@ app.use((req, res) => {
 });
 
 //This will help us start our server along with connecting to the database
-app.listen(3000, async () => {
+app.listen(3000, "0.0.0.0" ,async () => { //This will start the server on port 3000 and listen for incoming requests
     console.log('Server is running on http://localhost:3000');
     try{
         db = await getDB();

@@ -127,6 +127,8 @@ export async function getFines(req, res){
 //This function handles out checkout logic for when users checkout a book
 export async function checkOutBook(req, res){
     try{
+        let isBookCheckedOut = await booksCheckedOutList.findOne({isbn: req.body.isbn}) //We will first check to see if the book is already checked out by another user
+        if(!isBookCheckedOut){
         let bookRequested = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: false}}) // This will change the availability of the book in question to false so that users will know that it is not available
         let name = await getUsersName(req, res);
         name = name ? name.replace(/['"]+/g, '').trim() : null;
@@ -152,6 +154,9 @@ export async function checkOutBook(req, res){
 
         await booksCheckedOutList.insertOne(checkoutInfo)
         res.status(200).json({success: true, message: `${bookTitle} has been checked out successfully!`})
+        } else {
+            res.status(200).json({success: false, message: 'Book is already checked out by another user'}) //Let the user know that the book is already checked out
+        }
     } catch(err){
         console.error("Error while checking out book: ", err);
         res.status(200).json({success: false, error: 'Error occurred while trying to checkout book, please try again later'})
@@ -236,6 +241,37 @@ function generateISBN(){
 
 export async function editBook(req, res){
     let {title, author, genre, year, availability} = req.body;
+    let bookImage = req.file //This will grab the new image for the file
+
+    try{
+        //We must first locate the book that we want to edit within the database
+        console.log("ISBN of book to edit: ", req.body.isbn); //Using this for debugging purposes to ensure we are getting the correct isbn from the request
+        let bookToEdit = await booksList.findOne({isbn: req.body.isbn});
+        let theBookImage = await bookImages.findOne({name: bookToEdit.title}) //We will also need to find the corresponding image for the book in order to update it as well
+        let oldTitle = bookToEdit.title; //We will need the old title in order to find the corresponding image for the book since we named our images after the title of the book
+        if(bookToEdit){
+            //We will use this to ensure that we edit the respective fields only if there has been data provided for those fields
+            bookTitle = title ? title : bookToEdit.title;
+            bookAuthor = author ? author : bookToEdit.author;
+            bookGenre = genre ? genre : bookToEdit.genre;
+            bookYear = year ? year : bookToEdit.year;
+            availability = availability !== undefined ? availability : bookToEdit.available; //We want to make sure that if the availability is not provided in the request, then we will just keep it as whatever it currently is in the database
+            //We will update the book's information with the new info provided by the admin
+            await booksList.updateOne({isbn: req.body.isbn}, {$set: {title: bookTitle, author: bookAuthor, genre: bookGenre, year: bookYear, available: availability}})
+            //If there is a new image provided, we will update the image as well
+            if(bookImage){
+                //We will add the new image if a new one is indeed provided
+                await bookImages.updateOne({name: oldTitle}, {$set: {name: title, data: bookImage.buffer, contentType: bookImage.mimetype}})
+            } else {
+                await bookImages.updateOne({name: oldTitle}, {$set: {name: title, data: theBookImage.data, contentType: theBookImage.contentType}})
+            }
+            res.status(200).json({success: true, message: 'Book edited successfully'})
+        } else {
+            res.status(200).json({success: false, message: 'Book not found'})
+        }
+    } catch(err){
+        console.error("Error finding book to edit: ", err); 
+    }
 }
 
 

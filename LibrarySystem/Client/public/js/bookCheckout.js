@@ -76,6 +76,7 @@ async function imgSources(books){
 
     //This will render every book that is found within the database
     try{
+        //Do something about the checkout rendering if a book has already been checked out
         books.forEach(element => {
             //We will only add a checkout button if the user doesn't already have the book checked out
             if(!usersBooks.books.find(book => book.title === element.title)){
@@ -157,6 +158,8 @@ async function checkBooksByTitle(books){
 //This will handle checking out books to our users, we will add event listeners to each checkout button that is rendered
 function checkOutBook(){
     let buttons = document.querySelectorAll('.checkout-button');
+    let isLoggedIn = false //This will be our checker to see whether or not a usser is logged in
+    //before we proceeed with the act of checking out a book for them
 
     if(buttons.length > 0){ 
         buttons.forEach(button => {
@@ -167,10 +170,15 @@ function checkOutBook(){
                 .then(data => {
                     if(!data.loggedIn){
                         alert("You must be logged in to checkout a book");
+                        isLoggedIn = false
                         window.location.href = '/indexPage';
+                    } else {
+                        isLoggedIn = true
                     }
                 });
-
+                
+                //We will check out the book only if the user is logged in
+                if(isLoggedIn){
                 let bookTitle = e.target.parentElement.querySelector('h3').textContent;
                 let bookAuthor = e.target.parentElement.querySelector('.author').textContent;
                 let bookISBN = e.target.parentElement.querySelector('p[name="isbn"]').textContent;
@@ -188,10 +196,12 @@ function checkOutBook(){
                 .then(data => {
                     if(data.success){
                         alert(`${bookTitle} has been checked out successfully!`);
+                        window.location.reload()
                     } else {
                         alert(`Error checking out ${bookTitle}`);
                     }
                 });
+            }
 
             });
         });
@@ -227,6 +237,7 @@ let returns = document.querySelectorAll('.return-button');
                 .then(data => {
                     alert(data.message) //This will let the user know the results of their return attempt
                 })
+                window.location.reload() //This will reload the page for us so that we can see the up to date results after the user has made a return action 
             } catch(err){
                 console.error("Error returning book: ", err);
             }
