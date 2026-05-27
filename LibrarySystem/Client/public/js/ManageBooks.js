@@ -16,10 +16,9 @@ const bookEditor = document.getElementById("EditForm");
 function addEditorListener(isbnNum){
     if(bookEditor){
         //We will add the edits if the admin clicks the save button
-        bookEditor.addEventListener('submit', async (e, isbnNum) => {
-            let formObj = new FormData(bookEditor);
-            let formData = Object.fromEntries(formObj.entries());
-            formData.append('isbn', isbnNum); //We will append the isbn number to the form data
+        bookEditor.addEventListener('submit', async (e) => {
+            let formObj = new FormData(bookEditor); //Keep this as form data in order to easily append the isbn number to it
+            formObj.append('isbn', isbnNum); //We will append the isbn number to the form data
 
             await fetch('/api/editBook', {
                 method: 'POST',
@@ -36,6 +35,7 @@ function addEditorListener(isbnNum){
             })
             .catch(err => {
                 console.error('Error editing book:', err);
+                alert('An error occurred while editing the book. Please try again.'); //Giving the admin feedback to let them know that the edit of said book was unsuccesful
             });
         });
     }
@@ -71,7 +71,7 @@ bookForm.addEventListener('submit', async (e) => {
     }
   
     alert('Book added successfully');
-    bookForm.reset();
+    window.location.reload(); //This assures that the users sees the most up to date results after adding a book
   });
 
 
@@ -129,7 +129,7 @@ async function imgSources(books){
   document.querySelector('#resultList').addEventListener('click', async (e) => {
     //We will open the edit pop up screen if the admin selects pop up
         if(e.target.id === 'edit'){
-            let isbnNum = e.target.closest('.book-item').querySelector('.book-isbn').value; //Used to get the isbn of the book
+            let isbnNum = e.target.closest('.book-item').querySelector('.book-isbn small').textContent.replace('ISBN: ', '').trim(); // Use textContent on a <p> element, not .value, this will allow us to extract the isbn number from the selected book
             overlay.classList.add("active");
             addEditorListener(isbnNum); // We will add the event listener to the edit form once the popup is open so that we can capture the edits that the admin makes to the book details
         } else if(e.target.id === 'delete'){

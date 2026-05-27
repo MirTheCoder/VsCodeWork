@@ -245,30 +245,49 @@ export async function editBook(req, res){
 
     try{
         //We must first locate the book that we want to edit within the database
-        console.log("ISBN of book to edit: ", req.body.isbn); //Using this for debugging purposes to ensure we are getting the correct isbn from the request
-        let bookToEdit = await booksList.findOne({isbn: req.body.isbn});
-        let theBookImage = await bookImages.findOne({name: bookToEdit.title}) //We will also need to find the corresponding image for the book in order to update it as well
-        let oldTitle = bookToEdit.title; //We will need the old title in order to find the corresponding image for the book since we named our images after the title of the book
-        if(bookToEdit){
-            //We will use this to ensure that we edit the respective fields only if there has been data provided for those fields
-            bookTitle = title ? title : bookToEdit.title;
-            bookAuthor = author ? author : bookToEdit.author;
-            bookGenre = genre ? genre : bookToEdit.genre;
-            bookYear = year ? year : bookToEdit.year;
-            availability = availability !== undefined ? availability : bookToEdit.available; //We want to make sure that if the availability is not provided in the request, then we will just keep it as whatever it currently is in the database
-            //We will update the book's information with the new info provided by the admin
-            await booksList.updateOne({isbn: req.body.isbn}, {$set: {title: bookTitle, author: bookAuthor, genre: bookGenre, year: bookYear, available: availability}})
-            //If there is a new image provided, we will update the image as well
-            if(bookImage){
-                //We will add the new image if a new one is indeed provided
-                await bookImages.updateOne({name: oldTitle}, {$set: {name: title, data: bookImage.buffer, contentType: bookImage.mimetype}})
-            } else {
-                await bookImages.updateOne({name: oldTitle}, {$set: {name: title, data: theBookImage.data, contentType: theBookImage.contentType}})
-            }
-            res.status(200).json({success: true, message: 'Book edited successfully'})
-        } else {
-            res.status(200).json({success: false, message: 'Book not found'})
+        console.log("ISBN of book to edit: ", req.body.isbn);
+        const isbn = Number(req.body.isbn);
+        console.log("ISBN after conversion to number: ", isbn);
+
+        if (!req.body.isbn || Number.isNaN(isbn)) {
+            return res.status(400).json({ success: false, message: 'Invalid ISBN provided' });
         }
+
+        let bookToEdit = await booksList.findOne({ isbn });
+        console.log("Book we want to edit: ", bookToEdit);
+        if (!bookToEdit) {
+            return res.status(404).json({ success: false, message: 'Book not found' });
+        }
+
+        console.log("Original book title: ", bookToEdit.title);
+        let theBookImage = await bookImages.findOne({ name: bookToEdit.title });
+        let oldTitle = bookToEdit.title;
+
+        const bookTitle = title ? title : bookToEdit.title;
+        const bookAuthor = author ? author : bookToEdit.author;
+        const bookGenre = genre ? genre : bookToEdit.genre;
+        const bookYear = year ? year : bookToEdit.year;
+        const bookAvailability = availability !== undefined ? availability : bookToEdit.available;
+
+        await booksList.updateOne(
+            { isbn },
+            { $set: { title: bookTitle, author: bookAuthor, genre: bookGenre, year: bookYear, available: bookAvailability } }
+        );
+
+        const imageName = title || bookToEdit.title;
+        if (bookImage) {
+            await bookImages.updateOne(
+                { name: oldTitle },
+                { $set: { name: imageName, data: bookImage.buffer, contentType: bookImage.mimetype } }
+            );
+        } else if (theBookImage) {
+            await bookImages.updateOne(
+                { name: oldTitle },
+                { $set: { name: imageName, data: theBookImage.data, contentType: theBookImage.contentType } }
+            );
+        }
+
+        res.status(200).json({ success: true, message: 'Book edited successfully' });
     } catch(err){
         console.error("Error finding book to edit: ", err); 
     }
