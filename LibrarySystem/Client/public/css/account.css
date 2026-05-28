@@ -127,8 +127,14 @@ body {
 #books2,
 #books3 {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  /* Keeps them wrapping naturally, but locked at exactly 360px wide */
+  grid-template-columns: repeat(auto-fill, 360px); 
   gap: 20px;
+
+  /* Crucial for vertical scrolling */
+  max-height: 200px;     /* max height before scrolling begins */
+  overflow-y: auto;      /* Adds a vertical scrollbar only when content overflows */
+  padding-right: 10px;   /* Gives breathing room so the scrollbar doesn't cover your text/cards */
 }
 
 #bookBag .account-details,

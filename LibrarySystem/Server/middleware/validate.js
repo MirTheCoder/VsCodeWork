@@ -7,9 +7,11 @@ import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines} from './book
 import bcrypt from 'bcryptjs';
 import { get } from 'http';
 import random from 'random';
+import { Int32 } from 'mongodb';
 
 const usersList = await getCollection('Users');
 const userCollection = await getCollection('Users');
+const booksCheckedOutList = await getCollection('booksCheckedOut')
 
 // This will be used to validate user login and registration data
 export async function validateUserRegistration(req, res, next) {
@@ -31,7 +33,7 @@ export async function validateUserRegistration(req, res, next) {
         }
 
         let newUser = {
-            userId: newId,
+            userId: newId, //This will ensure that our newId is in double type format which makes it easier for java to parse
             username: username,
             password: password,
             email: email,
@@ -70,10 +72,11 @@ export async function getUserDetails(req, res, next) {
     if(response.loggedIn){
         let user = await usersList.findOne({username: response.username});
         //Here we are going to use this to get the books, overdue warnings, and fines pertaining to the user in question
-        let booksCheckedOut = await getBooks(req, res);
+        console.log("userId: " + user.userId);
+        let booksCheckedOut = await booksCheckedOutList.find({userId: new Int32(user.userId)}).toArray(); //Changing value to int32 based in order to match the numerical type within our database
         //let overdueBooks = await overdueBooksList.find({user: response.username})
-        let overdueBooks = await getOverdueBooks(req, res);
-        let fines = await getFines(req, res);
+        let overdueBooks = await getOverdueBooks(user.username);
+        let fines = await getFines(user.username);
         //We will return the user details if the user has been successfully found
         //Setting success levels to numerical values to show how many categories are pertaining to the user in question
         if(user){
@@ -131,5 +134,5 @@ async function generateUserId(){
         let randomId = Math.floor(Math.random() * 10); // Generate a random number between 0 and 99,999,999
         num += randomId.toString();
     }
-    return parseInt(num); 
+    return Number(num); //Makes sure that we are passing or returning a number and not a string
 }

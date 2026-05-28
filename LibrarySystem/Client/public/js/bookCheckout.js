@@ -12,8 +12,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     //or return buttons before adding new ones
     let buttons = document.querySelectorAll('.checkout-button');
     if(buttons.length > 0){ 
-        console.log("Checkout buttons found, adding event listeners");
-
         buttons.forEach(button => {
             button.removeEventListener('click', checkOutBook);
         });
@@ -90,6 +88,7 @@ async function imgSources(books){
                 <p class="author" name="author">${element.author}</p>
             </div>
             <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
+            <p><small>Availability: ${element.availability}</small></p> <!-- We will allow the user to see if the book is available or not -->
             <button class="checkout-button">Checkout</button>
         </div>
         `;
@@ -131,6 +130,7 @@ async function imgSources(books){
                     <p class="author">${element.author}</p>
                 </div>
                 <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
+                ${element.available ? `<p><small>Availability: available </small></p>` : `<p><small>Availability: unavailable </small></p>`} <!-- Allows us o properly render results based off of whether or not the book is truly available -->
                 <button class="checkout-button" id='checkout'>Checkout</button>
             </div>
             `;

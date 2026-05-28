@@ -34,13 +34,14 @@ export async function getBooks(req, res){
     try{
         const books = await booksList.find({ }).toArray() //Gets a list of all the books in the library
         if(books.length > 0){ //Only return if there is at least one book that is found
-            res.status(200).json({success: true, books: books})
+                res.status(200).json({success: true, books: books}); //This will return all the books within our library
         } else {
-            res.status(200).json({success: false})
+                res.status(200).json({success: false, books: []}); //This will notify the system that there are no books within our library
         }
     } catch(err){
         console.error(err)
-        res.status(500).json({success: false, error: 'Server error occurred'})
+            res.status(500).json({success: false, error: 'Server error occurred'})
+        return false;
     }    
 }
 
@@ -110,18 +111,23 @@ export async function addBook(req, res){
 
 }
 
-export async function getOverdueBooks(req, res){
-    let overdueBooks = await booksCheckedOutList.aggregate([ //We are going to cypher through the books checked to see which books are past the Date
-            {$match: {dueDate: {$gt: new Date()}}} //This compares each due date of each book checked out with the current date
-        ]).toArray()
-    res.status(200).json({success: true, books: overdueBooks})
+export async function getOverdueBooks(user) {
+    let overdueBooks = await booksCheckedOutList.aggregate([
+        {
+            $match: {
+                username: user,
+                dueDate: { $lt: new Date() }   // Finds dates in the past (overdue)
+            }
+        }
+    ]).toArray();
+
+    return overdueBooks; 
 }
 
 //This will get us all the fines that the user has currently accumulated
-export async function getFines(req, res){
-    let name = await getUsersName(req, res);
-    let fines = await finesList.find({user: name}).toArray()
-    res.status(200).json({success: true, fines: fines})
+export async function getFines(user){
+    let fines = await finesList.find({user: user}).toArray()
+    return fines; //This returns a list of fines that the user has proccured 
 }
 
 //This function handles out checkout logic for when users checkout a book

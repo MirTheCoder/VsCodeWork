@@ -57,11 +57,16 @@ document.addEventListener('DOMContentLoaded', async function accountStatus(){
         if(data.success === 1){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
-            msdisplay.textContent = data.memberSince ? data.memberSince : "None"
+            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
         } else if(data.success === 2){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
-            msdisplay.textContent = data.memberSince ? data.memberSince : "None"
+            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
+            addYourBooks(data.yourBooks) //Used to insert the books that the user has checked out
+        } else if(data.success === 3){
+            udisplay.textContent = data.user ? data.user : "None"
+            edisplay.textContent = data.email ? data.email : "None"
+            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
             addYourBooks(data.yourBooks)
         }
     })    
@@ -70,9 +75,10 @@ document.addEventListener('DOMContentLoaded', async function accountStatus(){
 async function addYourBooks(books){ 
     books1.innerHTML = ``
     books.forEach(element => {
-        books1.innerHTML += `<section class="account-details">
-      <p><strong>Name:</strong> <span>${element.name}</span></p>
+        books1.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+      <p><strong>Name:</strong> <span>${element.title}</span></p>
       <p><strong>Author:</strong><span>${element.author}</span></p>
+      <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
     </section>`
     });
 }
