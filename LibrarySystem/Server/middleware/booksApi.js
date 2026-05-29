@@ -111,7 +111,7 @@ export async function addBook(req, res){
 
 }
 
-export async function getOverdueBooks(user) {
+export async function getOverdueBooks(user, req, res, returnRes = false) {
     let overdueBooks = await booksCheckedOutList.aggregate([
         {
             $match: {
@@ -125,14 +125,76 @@ export async function getOverdueBooks(user) {
 }
 
 //This will get us all the fines that the user has currently accumulated
-export async function getFines(user){
+export async function getFines(user, req, res, returnRes = false){
     let fines = await finesList.find({user: user}).toArray()
-    return fines; //This returns a list of fines that the user has proccured 
+    if(returnRes){
+        res.status(200).json({success: true, fines: fines})
+    } else {
+        return fines; //This returns a list of fines that the user has proccured 
+    }
+}
+
+export async function addFine(req, res, next){
+    let response = await getSessionInfo(req, res, next);
+    let overdueList = await getOverdueBooks(response.username, req, res); //Gets list of overdue books pertianing to the user in session
+    let user = await usersList.findOne({username: response.username})
+    let today = new Date();
+
+    try{
+    
+    //We will repeat the process within this segement for each overduebook tha tthe user has checked out
+    overdueList.forEach(async (book) => {
+        let timeDiff = today.getTime() - book.dueDate.getTime();
+        let daysOverdue = Math.floor(timeDiff / (1000 * 3600 * 24)); //Converts the time difference from milliseconds to days and rounds down to the nearest whole number
+    if(daysOverdue > 5){    
+        let findFine = await fineLists.findOne({userId: user.userId, isbn: book.isbn}) //This is how we will check to see if there are any fines on the book already    
+        //We will only add a fine if the book is overdue by more than 5 days, this is to give users a grace period in case they forget about a book or are unable to return it on time for some reason
+        let fineAmount = 15 * (daysOverdue - 5); //Accounts for the 5 day grace period we give users
+        //Only cretae a fine if one does not exist for the particular book that is overdue
+        if(!findFine){
+        let fineInfo = {
+            userId: user.userId,
+            user: user.username,
+            bookTitle: book.title,
+            isbn: book.isbn,
+            bookAuthor: book.author,
+            amount: fineAmount,
+            fineDate: new Date() //Used to register when the fine was given
+        }
+        await finesList.insertOne(fineInfo) //This will add the fine to the fines collection for us to see and keep track of
+        //If the book does have a fine attached, we will just update its content to refelect the new fine amount
+        } else {
+            await finesList.updateOne({userId: user.userId, isbn: book.isbn}, {$set: {amount: fineAmount, fineDate: new Date()}}) //This will update the fine amount and date to reflect the new fine amount and when the fine was updated
+        }
+    }
+    })
+    return res.status(200).json({success: true, message: 'Fines updated successfully', fines: await finesList.find({userId: user.userId})}) //After we have added all the necessary fines, we will return a response to the user to let them know that their fines have been updated and also give them a list of their current fines
+    } catch (error) {
+        console.error('Error adding fine:', error);
+        res.status(500).json({success: false, message: 'Error adding fine'});
+    }
+}
+
+//This function will return all the books for the user that are due within 5 days
+export async function dueSoon(user,req,res, returnRes = false){
+    let today = new Date();
+    const booksChedkedOut = await booksCheckedOutList.find({username: user}).toArray();
+    let dueSoonBooks = booksChedkedOut.filter(book => {
+        let timeDiff = book.dueDate.getTime() - today.getTime();
+        let daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24)); //Converts the time difference from milliseconds to days and rounds down to the nearest whole number
+        return daysDiff > 0 && daysDiff <= 5; //We want to return books that are due within the next 5 days
+    });
+    //Determines whether or not we return a response back to the user or instead just return a value
+    if(returnRes){
+        res.status(200).json({success: true, dueSoonBooks: dueSoonBooks})
+    } else {
+        return dueSoonBooks;
+    }
 }
 
 //This function handles out checkout logic for when users checkout a book
 export async function checkOutBook(req, res){
-    try{
+    try{getFines
         let isBookCheckedOut = await booksCheckedOutList.findOne({isbn: req.body.isbn}) //We will first check to see if the book is already checked out by another user
         if(!isBookCheckedOut){
         let bookRequested = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: false}}) // This will change the availability of the book in question to false so that users will know that it is not available

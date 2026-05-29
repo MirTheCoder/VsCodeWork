@@ -7,6 +7,7 @@ let loginLink = document.getElementById('login');
 let books1 = document.getElementById('bookBag')
 let books1Holder = document.getElementById('booksHolder')
 let welcomeBack = document.getElementById('welcomeBack')
+let finesHolder = document.getElementById('theFines')
 
 
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
@@ -42,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                 window.location.href = "login" //If the user is not logged in, then we will send them to the login page
             }
         });
+        updateDetails();
     } catch (error) {
         console.error('Error checking login status:', error);
     }
@@ -81,4 +83,31 @@ async function addYourBooks(books){
       <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
     </section>`
     });
+}
+
+//This will have our system check to see if any fines need to be added to hte users account
+function updateFines(){
+    await fetch('books/addFine')
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            await showFines(data.fines); //We will use this to display all of the users fines
+        }
+    })
+}
+
+//This function will display all of the users fines in a readable format
+async function showFines(fines){
+    if(fines.length > 0){
+    finesHolder.innerHTML = ``;
+     fines.forEach(element => {
+        finesHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+      <p><strong>Book Name:</strong> <span>${element.bookTitle}</span></p>
+      <p><strong>Book Author:</strong><span>${element.bookAuthor}</span></p>
+      <p><strong>Fine Amount:</strong><span>${element.amount}</span></p>
+      <p><strong>Date Fined:</strong><span>${new Date(element.fineDate).toLocaleDateString()}</span></p>
+      <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
+    </section>`
+    });
+    }
 }

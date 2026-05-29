@@ -3,7 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
 import {sessionLogin, getSessionInfo, getUsersName} from './sessionHandler.js';
-import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines} from './booksApi.js';
+import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines, dueSoon} from './booksApi.js';
 import bcrypt from 'bcryptjs';
 import { get } from 'http';
 import random from 'random';
@@ -75,8 +75,9 @@ export async function getUserDetails(req, res, next) {
         console.log("userId: " + user.userId);
         let booksCheckedOut = await booksCheckedOutList.find({userId: new Int32(user.userId)}).toArray(); //Changing value to int32 based in order to match the numerical type within our database
         //let overdueBooks = await overdueBooksList.find({user: response.username})
-        let overdueBooks = await getOverdueBooks(user.username);
-        let fines = await getFines(user.username);
+        let overdueBooks = await getOverdueBooks(user.username, req, res);
+        let fines = await getFines(user.username, req, res);
+        let dueSoonBooks = await dueSoon(user.username, req, res); //Gets us all the books the user has checked out that are due in five days or less
         //We will return the user details if the user has been successfully found
         //Setting success levels to numerical values to show how many categories are pertaining to the user in question
         if(user){
