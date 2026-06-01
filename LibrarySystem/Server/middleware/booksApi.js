@@ -6,7 +6,7 @@ import fs from 'fs'
 import { getCollection } from './db.js';
 import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
 import { fileTypeFromBuffer, fileTypeFromFile, fileTypeFromStream } from 'file-type';
-import { getUsersName } from "./sessionHandler.js"; //This will allow us to get the name of the user in session
+import { getUsersName, getSessionInfo } from "./sessionHandler.js"; //This will allow us to get the name of the user in session
 import path from 'path';
 import random from 'random';
 
@@ -111,6 +111,7 @@ export async function addBook(req, res){
 
 }
 
+//This function will get us all the overdue books pertaining to the user that requested it
 export async function getOverdueBooks(user, req, res, returnRes = false) {
     let overdueBooks = await booksCheckedOutList.aggregate([
         {
@@ -130,16 +131,25 @@ export async function getOverdueBooks(user, req, res, returnRes = false) {
 
 //This will get us all the fines that the user has currently accumulated
 export async function getFines(user, req, res, returnRes = false){
-    let fines = await finesList.find({user: user}).toArray()
-    if(returnRes){
-        res.status(200).json({success: true, fines: fines})
+    let response = await getSessionInfo(req, res, next);
+    //Insurance in case the user turns out to not be logged in for some reason
+    if(!response.loggedIn){
+        return res.status(200).json({success: false, message: 'User not logged in'});
     } else {
-        return fines; //This returns a list of fines that the user has proccured 
+        let fines = await finesList.find({user: user}).toArray()
+        if(returnRes){
+            res.status(200).json({success: true, fines: fines})
+        } else {
+            return fines; //This returns a list of fines that the user has proccured 
+        }
     }
 }
 
 export async function addFine(req, res, next){
     let response = await getSessionInfo(req, res, next);
+    if(!response.loggedIn){
+        return res.status(200).json({success: false, message: 'User not logged in'});
+    } else {
     let overdueList = await getOverdueBooks(response.username, req, res); //Gets list of overdue books pertianing to the user in session
     let user = await usersList.findOne({username: response.username})
     let today = new Date();
@@ -172,15 +182,22 @@ export async function addFine(req, res, next){
         }
     }
     })
-    return res.status(200).json({success: true, message: 'Fines updated successfully', fines: await finesList.find({userId: user.userId})}) //After we have added all the necessary fines, we will return a response to the user to let them know that their fines have been updated and also give them a list of their current fines
+    const fines = await finesList.find({userId: user.userId}).toArray(); //After we have added all the necessary fines, we will get an updated list of fines for the user in question to return back to them
+    return res.status(200).json({success: true, message: 'Fines updated successfully', fines: fines}) 
     } catch (error) {
         console.error('Error adding fine:', error);
         res.status(500).json({success: false, message: 'Error adding fine'});
+    }
     }
 }
 
 //This function will return all the books for the user that are due within 5 days
 export async function dueSoon(user,req,res, returnRes = false){
+    let response = await getSessionInfo(req, res, next);
+    //Helps to ensure that we don't permit a non logged in user to access this function or trigger it by accident
+    if(!response.loggedIn){
+        return res.status(200).json({success: false, message: 'User not logged in'});
+    } else {
     let today = new Date();
     const booksChedkedOut = await booksCheckedOutList.find({username: user}).toArray();
     let dueSoonBooks = booksChedkedOut.filter(book => {
@@ -194,11 +211,13 @@ export async function dueSoon(user,req,res, returnRes = false){
     } else {
         return dueSoonBooks;
     }
+    }
 }
 
 //This function handles out checkout logic for when users checkout a book
 export async function checkOutBook(req, res){
-    try{getFines
+    try{
+        let response = await getSessionInfo(req, res, next);
         let isBookCheckedOut = await booksCheckedOutList.findOne({isbn: req.body.isbn}) //We will first check to see if the book is already checked out by another user
         if(!isBookCheckedOut){
         let bookRequested = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: false}}) // This will change the availability of the book in question to false so that users will know that it is not available

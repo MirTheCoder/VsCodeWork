@@ -8,6 +8,8 @@ let books1 = document.getElementById('bookBag')
 let books1Holder = document.getElementById('booksHolder')
 let welcomeBack = document.getElementById('welcomeBack')
 let finesHolder = document.getElementById('theFines')
+let overdueHolder = document.getElementById('theOverdue')
+let dueSoonHolder = document.getElementById('theSoons')
 
 
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
@@ -76,6 +78,34 @@ document.addEventListener('DOMContentLoaded', async function accountStatus(){
     })    
 }) 
 
+if(logoutLink) {
+//This function will handle the logout process if the logout link is clicked    
+    document.logoutLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+                await fetch('users/logout', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(async response => {
+                    if(response.status === 400){
+                        alert('You are not logged in!');
+                    } else {
+                        return await response.json();
+                    }
+                })
+                .then(data => {
+                    if(data.success){
+                        alert(`${data.message}`);
+                        window.location.href = "indexPage";
+                    } else {
+                        alert(`${data.message}`);
+                    }
+                });
+    });  
+}
+
 async function addYourBooks(books){ 
     books1.innerHTML = ``
     books.forEach(element => {
@@ -93,7 +123,7 @@ async function updateFines(){
     .then(response => response.json())
     .then(data => {
         if(data.success){
-            await showFines(data.fines); //We will use this to display all of the users fines
+            showFines(data.fines); //We will use this to display all of the users fines
         }
     })
 }
@@ -103,7 +133,7 @@ async function getOverdueBooks(){
     .then(response => response.json())
     .then(data => {
         if(data.success){
-            await showOverdueBooks(data.books); //We will use this to display all of the users overdue books
+            showOverdueBooks(data.books); //We will use this to display all of the users overdue books
         }
     })
 }
@@ -114,7 +144,7 @@ async function dueSoon(){
     .then(response => response.json())
     .then(data => {
         if(data.success){
-            await showBooksDueSoon(data.books); //We will use this to display all of the users overdue books
+            showBooksDueSoon(data.books); //We will use this to display all of the users overdue books
         }
     })
 }
@@ -137,26 +167,27 @@ async function showFines(fines){
     }
 }
 
+
+//This will allow us tor ender the books that are already overdue
 async function showOverdueBooks(books){
 if(books.length > 0){
-    finesHolder.innerHTML = ``;
+    overdueHolder.innerHTML = ``;
      books.forEach(element => {
-        finesHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
-      <p><strong>Book Name:</strong> <span>${element.bookTitle}</span></p>
-      <p><strong>Book Author:</strong><span>${element.bookAuthor}</span></p>
-      <p><strong>Fine Amount:</strong><span>${element.amount}</span></p>
-      <p><strong>Date Fined:</strong><span>${new Date(element.fineDate).toLocaleDateString()}</span></p>
+        overdueHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+      <p><strong>Book Name:</strong> <span>${element.title}</span></p>
+      <p><strong>Book Author:</strong><span>${element.author}</span></p>
       <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
     </section>`
     });
     }
 }
 
+//This will allow us tor ender the books that are due soon
 async function showBooksDueSoon(books){
 if(books.length > 0){
-    finesHolder.innerHTML = ``;
+    dueSoonHolder.innerHTML = ``;
      books.forEach(element => {
-        finesHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+        dueSoonHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
       <p><strong>Book Name:</strong> <span>${element.title}</span></p>
       <p><strong>Book Author:</strong><span>${element.author}</span></p>
       <p><strong>Fine Amount:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
