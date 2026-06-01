@@ -120,8 +120,12 @@ export async function getOverdueBooks(user, req, res, returnRes = false) {
             }
         }
     ]).toArray();
-
-    return overdueBooks; 
+    //Wed distinguish whether or not we want to return a response back to the client
+    if(returnRes){
+        res.status(200).json({success: true, books: overdueBooks})
+    } else {
+        return overdueBooks; //This returns a list of books that are overdue for the user in question
+    }
 }
 
 //This will get us all the fines that the user has currently accumulated
@@ -186,7 +190,7 @@ export async function dueSoon(user,req,res, returnRes = false){
     });
     //Determines whether or not we return a response back to the user or instead just return a value
     if(returnRes){
-        res.status(200).json({success: true, dueSoonBooks: dueSoonBooks})
+        res.status(200).json({success: true, books: dueSoonBooks})
     } else {
         return dueSoonBooks;
     }

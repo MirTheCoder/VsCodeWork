@@ -3,7 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
-import { checkOutBook, getUsersBooks, getSpecificUsersBooks, returnBook, addFine} from './booksApi.js';
+import { checkOutBook, getUsersBooks, getSpecificUsersBooks, returnBook, addFine, dueSoon} from './booksApi.js';
 import express from 'express';
 const route = express.Router();
 
@@ -64,6 +64,15 @@ route.post('/returnBook', async (req,res) => {
 
 route.get('/addFine', async (req, res, next) => {
     await addFine(req, res, next);
+});
+
+route.get('/getOverdueBooks', async (req, res, next) => {
+    await getOverdueBooks(req.session.user,req, res, true); //We make sure to pass the user name and to let the function know that we want to return a response back to the user/client
+});
+
+//This will call the function to get the books due soon for the requesting user
+route.get('/dueSoon', async (req, res, next) => {
+    await dueSoon(req.session.user,req, res, true); //We make sure to pass the user name and to let the function know that we want to return a response back to the user/client
 });
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly

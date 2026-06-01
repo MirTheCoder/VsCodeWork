@@ -43,7 +43,9 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                 window.location.href = "login" //If the user is not logged in, then we will send them to the login page
             }
         });
-        updateDetails();
+        dueSoon();
+        getOverdueBooks();
+        updateFines();
     } catch (error) {
         console.error('Error checking login status:', error);
     }
@@ -86,8 +88,8 @@ async function addYourBooks(books){
 }
 
 //This will have our system check to see if any fines need to be added to hte users account
-function updateFines(){
-    await fetch('books/addFine')
+async function updateFines(){
+    await fetch('users/addFine')
     .then(response => response.json())
     .then(data => {
         if(data.success){
@@ -95,6 +97,29 @@ function updateFines(){
         }
     })
 }
+
+async function getOverdueBooks(){
+    await fetch('users/getOverdueBooks')
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            await showOverdueBooks(data.books); //We will use this to display all of the users overdue books
+        }
+    })
+}
+
+//Function will retrieve the books that the user checked out that are due soon
+async function dueSoon(){
+    await fetch('users/dueSoon')
+    .then(response => response.json())
+    .then(data => {
+        if(data.success){
+            await showBooksDueSoon(data.books); //We will use this to display all of the users overdue books
+        }
+    })
+}
+
+
 
 //This function will display all of the users fines in a readable format
 async function showFines(fines){
@@ -107,6 +132,34 @@ async function showFines(fines){
       <p><strong>Fine Amount:</strong><span>${element.amount}</span></p>
       <p><strong>Date Fined:</strong><span>${new Date(element.fineDate).toLocaleDateString()}</span></p>
       <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
+    </section>`
+    });
+    }
+}
+
+async function showOverdueBooks(books){
+if(books.length > 0){
+    finesHolder.innerHTML = ``;
+     books.forEach(element => {
+        finesHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+      <p><strong>Book Name:</strong> <span>${element.bookTitle}</span></p>
+      <p><strong>Book Author:</strong><span>${element.bookAuthor}</span></p>
+      <p><strong>Fine Amount:</strong><span>${element.amount}</span></p>
+      <p><strong>Date Fined:</strong><span>${new Date(element.fineDate).toLocaleDateString()}</span></p>
+      <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
+    </section>`
+    });
+    }
+}
+
+async function showBooksDueSoon(books){
+if(books.length > 0){
+    finesHolder.innerHTML = ``;
+     books.forEach(element => {
+        finesHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+      <p><strong>Book Name:</strong> <span>${element.title}</span></p>
+      <p><strong>Book Author:</strong><span>${element.author}</span></p>
+      <p><strong>Fine Amount:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
     </section>`
     });
     }
