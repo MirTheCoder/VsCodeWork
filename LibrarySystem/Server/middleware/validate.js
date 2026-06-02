@@ -76,6 +76,10 @@ export async function getUserDetails(req, res, next) {
         let booksCheckedOut = await booksCheckedOutList.find({userId: new Int32(user.userId)}).toArray(); //Changing value to int32 based in order to match the numerical type within our database
         //let overdueBooks = await overdueBooksList.find({user: response.username})
         let overdueBooks = await getOverdueBooks(user.username, req, res, next);
+        //Safety measure put in place in case we don't get overdue books back as an array
+        if(!Array.isArray(overdueBooks)){
+            overdueBooks = await overdueBooks.toArray();
+        }
         let fines = await getFines(user.username, req, res, next);
         let dueSoonBooks = await dueSoon(user.username, req, res, next); //Gets us all the books the user has checked out that are due in five days or less
         //We will return the user details if the user has been successfully found
@@ -90,7 +94,9 @@ export async function getUserDetails(req, res, next) {
                             role: user.role ? user.role : null, email:user.email ? user.email : null, 
                             phone:user.phone ? user.phone : null, 
                             memberSince: user.memberSince ? user.memberSince : null,
+                            dueSoonBooks: dueSoonBooks,
                             yourBooks: booksCheckedOut,
+                            yourOverdueBooks: overdueBooks,
                             yourFines : fines });
                             
                         } else {
@@ -99,6 +105,8 @@ export async function getUserDetails(req, res, next) {
                             role: user.role ? user.role : null, email:user.email ? user.email : null, 
                             phone:user.phone ? user.phone : null, 
                             memberSince: user.memberSince ? user.memberSince : null,
+                            dueSoonBooks: dueSoonBooks,
+                            yourOverdueBooks: overdueBooks,
                             yourBooks: booksCheckedOut}); 
                         }   
                 } else { 
@@ -108,6 +116,7 @@ export async function getUserDetails(req, res, next) {
                         role: user.role ? user.role : null, email:user.email ? user.email : null, 
                         phone:user.phone ? user.phone : null, 
                         memberSince: user.memberSince ? user.memberSince : null,
+                        dueSoonBooks: dueSoonBooks,
                         yourBooks: booksCheckedOut});
                     }    
             } else {

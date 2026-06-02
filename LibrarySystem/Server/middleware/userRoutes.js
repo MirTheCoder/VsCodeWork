@@ -53,13 +53,13 @@ route.get('/allUsers', async (req, res) => {
 });
 
 //Used to handle book checkouts by users
-route.post('/checkout', async (req, res) => {
-    await checkOutBook(req, res);
+route.post('/checkout', async (req, res, next) => {
+    await checkOutBook(req, res, next);
 });
 
 //This will be the route that handles users book returns 
-route.post('/returnBook', async (req,res) => {
-    returnBook(req, res);
+route.post('/returnBook', async (req,res, next) => {
+    returnBook(req, res, next);
 })
 
 route.get('/addFine', async (req, res, next) => {

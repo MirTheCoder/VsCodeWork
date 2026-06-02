@@ -4,12 +4,12 @@ let edisplay = document.getElementById('emailDisplay')
 let msdisplay = document.getElementById('memberSinceDisplay')
 let logoutLink = document.getElementById('logout');
 let loginLink = document.getElementById('login');
-let books1 = document.getElementById('bookBag')
+let books1 = document.getElementById('books1')
 let books1Holder = document.getElementById('booksHolder')
 let welcomeBack = document.getElementById('welcomeBack')
-let finesHolder = document.getElementById('theFines')
-let overdueHolder = document.getElementById('theOverdue')
-let dueSoonHolder = document.getElementById('theSoons')
+let finesHolder = document.getElementById('books4')
+let overdueHolder = document.getElementById('books2')
+let dueSoonHolder = document.getElementById('books3')
 
 
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
@@ -45,8 +45,6 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                 window.location.href = "login" //If the user is not logged in, then we will send them to the login page
             }
         });
-        dueSoon();
-        getOverdueBooks();
         updateFines();
         accountStatus();
     } catch (error) {
@@ -71,11 +69,22 @@ async function accountStatus(){
             edisplay.textContent = data.email ? data.email : "None"
             msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
             addYourBooks(data.yourBooks) //Used to insert the books that the user has checked out
+            dueSoon(data.dueSoonBooks); //Used to insert the books that are due soon for the user
         } else if(data.success === 3){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
             msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
             addYourBooks(data.yourBooks)
+            showOverdueBooks(data.yourOverdueBooks);
+            dueSoon(data.dueSoonBooks);
+        } else if(data.success === 4){
+            udisplay.textContent = data.user ? data.user : "None"
+            edisplay.textContent = data.email ? data.email : "None"
+            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
+            addYourBooks(data.yourBooks)
+            showOverdueBooks(data.yourOverdueBooks);
+            showFines(data.yourFines);
+            showBooksDueSoon(data.dueSoonBooks);
         }
     })    
 }
@@ -125,28 +134,7 @@ async function updateFines(){
     .then(response => response.json())
     .then(data => {
         if(data.success){
-            showFines(data.fines); //We will use this to display all of the users fines
-        }
-    })
-}
-
-async function getOverdueBooks(){
-    await fetch('users/getOverdueBooks')
-    .then(response => response.json())
-    .then(data => {
-        if(data.success){
-            showOverdueBooks(data.books); //We will use this to display all of the users overdue books
-        }
-    })
-}
-
-//Function will retrieve the books that the user checked out that are due soon
-async function dueSoon(){
-    await fetch('users/dueSoon')
-    .then(response => response.json())
-    .then(data => {
-        if(data.success){
-            showBooksDueSoon(data.books); //We will use this to display all of the users overdue books
+            console.log('Fines updated successfully.');
         }
     })
 }

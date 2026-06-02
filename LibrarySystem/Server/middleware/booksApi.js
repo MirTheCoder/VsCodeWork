@@ -215,7 +215,7 @@ export async function dueSoon(user,req,res, next, returnRes = false){
 }
 
 //This function handles out checkout logic for when users checkout a book
-export async function checkOutBook(req, res){
+export async function checkOutBook(req, res, next){
     try{
         let response = await getSessionInfo(req, res, next);
         let isBookCheckedOut = await booksCheckedOutList.findOne({isbn: req.body.isbn}) //We will first check to see if the book is already checked out by another user
@@ -300,7 +300,12 @@ export async function getSpecificUsersBooks(req, res){
 }
 
 //This will handle the book return logic and process for users returning books
-export async function returnBook(req, res){
+export async function returnBook(req, res, next){
+    let response = await getSessionInfo(req, res, next);
+    if(!response.loggedIn){
+        return res.status(200).json({success: false, message: 'User not logged in'});
+    } else {
+
     try{
         let bookReturned = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: true}}) // This will change the availability of the book in question to true so that users will know that it is now available
         let name = await getUsersName(req, res);
@@ -317,6 +322,7 @@ export async function returnBook(req, res){
     } catch(err){
         console.error("Error returning book: ", err);
         res.status(200).json({success: false, message: 'Error occurred while trying to return book, please try again later'})
+    }
     }
 }
 
