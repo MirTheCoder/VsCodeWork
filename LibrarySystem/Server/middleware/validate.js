@@ -75,9 +75,9 @@ export async function getUserDetails(req, res, next) {
         console.log("userId: " + user.userId);
         let booksCheckedOut = await booksCheckedOutList.find({userId: new Int32(user.userId)}).toArray(); //Changing value to int32 based in order to match the numerical type within our database
         //let overdueBooks = await overdueBooksList.find({user: response.username})
-        let overdueBooks = await getOverdueBooks(user.username, req, res);
-        let fines = await getFines(user.username, req, res);
-        let dueSoonBooks = await dueSoon(user.username, req, res); //Gets us all the books the user has checked out that are due in five days or less
+        let overdueBooks = await getOverdueBooks(user.username, req, res, next);
+        let fines = await getFines(user.username, req, res, next);
+        let dueSoonBooks = await dueSoon(user.username, req, res, next); //Gets us all the books the user has checked out that are due in five days or less
         //We will return the user details if the user has been successfully found
         //Setting success levels to numerical values to show how many categories are pertaining to the user in question
         if(user){

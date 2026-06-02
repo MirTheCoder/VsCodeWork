@@ -48,12 +48,14 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
         dueSoon();
         getOverdueBooks();
         updateFines();
+        accountStatus();
     } catch (error) {
         console.error('Error checking login status:', error);
     }
 });
 
-document.addEventListener('DOMContentLoaded', async function accountStatus(){
+//This function will handle getting the user details for us pertaining to the user who is requesting the details
+async function accountStatus(){
     fetch('users/details', {
         method: 'GET',
         headers: {'Content-Type': 'application/json'}   
@@ -76,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async function accountStatus(){
             addYourBooks(data.yourBooks)
         }
     })    
-}) 
+}
 
 if(logoutLink) {
 //This function will handle the logout process if the logout link is clicked    

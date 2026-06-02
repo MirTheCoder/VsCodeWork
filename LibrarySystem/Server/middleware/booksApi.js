@@ -112,7 +112,7 @@ export async function addBook(req, res){
 }
 
 //This function will get us all the overdue books pertaining to the user that requested it
-export async function getOverdueBooks(user, req, res, returnRes = false) {
+export async function getOverdueBooks(user, req, res, next, returnRes = false) {
     let overdueBooks = await booksCheckedOutList.aggregate([
         {
             $match: {
@@ -130,7 +130,7 @@ export async function getOverdueBooks(user, req, res, returnRes = false) {
 }
 
 //This will get us all the fines that the user has currently accumulated
-export async function getFines(user, req, res, returnRes = false){
+export async function getFines(user, req, res, next, returnRes = false){
     let response = await getSessionInfo(req, res, next);
     //Insurance in case the user turns out to not be logged in for some reason
     if(!response.loggedIn){
@@ -161,7 +161,7 @@ export async function addFine(req, res, next){
         let timeDiff = today.getTime() - book.dueDate.getTime();
         let daysOverdue = Math.floor(timeDiff / (1000 * 3600 * 24)); //Converts the time difference from milliseconds to days and rounds down to the nearest whole number
     if(daysOverdue > 5){    
-        let findFine = await fineLists.findOne({userId: user.userId, isbn: book.isbn}) //This is how we will check to see if there are any fines on the book already    
+        let findFine = await finesList.findOne({userId: user.userId, isbn: book.isbn}) //This is how we will check to see if there are any fines on the book already    
         //We will only add a fine if the book is overdue by more than 5 days, this is to give users a grace period in case they forget about a book or are unable to return it on time for some reason
         let fineAmount = 15 * (daysOverdue - 5); //Accounts for the 5 day grace period we give users
         //Only cretae a fine if one does not exist for the particular book that is overdue
@@ -192,7 +192,7 @@ export async function addFine(req, res, next){
 }
 
 //This function will return all the books for the user that are due within 5 days
-export async function dueSoon(user,req,res, returnRes = false){
+export async function dueSoon(user,req,res, next, returnRes = false){
     let response = await getSessionInfo(req, res, next);
     //Helps to ensure that we don't permit a non logged in user to access this function or trigger it by accident
     if(!response.loggedIn){

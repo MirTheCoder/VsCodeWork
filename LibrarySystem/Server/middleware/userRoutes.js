@@ -67,12 +67,12 @@ route.get('/addFine', async (req, res, next) => {
 });
 
 route.get('/getOverdueBooks', async (req, res, next) => {
-    await getOverdueBooks(req.session.user,req, res, true); //We make sure to pass the user name and to let the function know that we want to return a response back to the user/client
+    await getOverdueBooks(req.session.user,req, res, next, true); //We make sure to pass the user name and to let the function know that we want to return a response back to the user/client
 });
 
 //This will call the function to get the books due soon for the requesting user
 route.get('/dueSoon', async (req, res, next) => {
-    await dueSoon(req.session.user,req, res, true); //We make sure to pass the user name and to let the function know that we want to return a response back to the user/client
+    await dueSoon(req.session.user,req, res, next, true); //We make sure to pass the user name and to let the function know that we want to return a response back to the user/client
 });
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
