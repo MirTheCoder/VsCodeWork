@@ -124,7 +124,9 @@ body {
 }
 
 #bookBag,
+#books1,
 #books2,
+#books4,
 #books3 {
   display: grid;
   /* Keeps them wrapping naturally, but locked at exactly 360px wide */
@@ -138,7 +140,9 @@ body {
 }
 
 #bookBag .account-details,
+#books1 .account-details,
 #books2 .account-details,
+#books4 .account-details,
 #books3 .account-details {
   background-color: #FFFFFF;
   padding: 22px;
@@ -150,6 +154,8 @@ body {
 
 #bookBag .account-details:hover,
 #books2 .account-details:hover,
+#books1 .account-details:hover,
+#books4 .account-details:hover,
 #books3 .account-details:hover {
   transform: translateY(-4px);
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
@@ -158,6 +164,8 @@ body {
 
 #bookBag .account-details p,
 #books2 .account-details p,
+#books1 .account-details p,
+#books4 .account-details p,
 #books3 .account-details p {
   background-color: transparent;
   padding: 6px 0;
@@ -180,6 +188,8 @@ body {
 
 #bookBag > p,
 #books2 > p,
+#books1 > p,
+#books4 > p,
 #books3 > p {
   grid-column: 1 / -1;
   text-align: center;

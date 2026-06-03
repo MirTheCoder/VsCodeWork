@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 if(logoutLink) {
 //This function will handle the logout process if the logout link is clicked    
-    document.logoutLink.addEventListener('click', async (e) => {
+    logoutLink.addEventListener('click', async (e) => {
     e.preventDefault();
                 await fetch('users/logout', {
                     method: 'GET',

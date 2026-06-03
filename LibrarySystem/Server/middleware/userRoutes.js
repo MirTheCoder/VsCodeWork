@@ -46,7 +46,7 @@ route.post('/currentBooks', async (req,res,next) => {
 //Used to get all the users within the database (for admin use only)
 route.get('/allUsers', async (req, res) => {
    try{
-        collectUsers(req, res);
+        await collectUsers(req, res);
    } catch(err){
         res.status(500).json({message: 'Error fetching users', error: err.message});
    } 

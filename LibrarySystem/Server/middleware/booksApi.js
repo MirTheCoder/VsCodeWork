@@ -9,6 +9,9 @@ import { fileTypeFromBuffer, fileTypeFromFile, fileTypeFromStream } from 'file-t
 import { getUsersName, getSessionInfo } from "./sessionHandler.js"; //This will allow us to get the name of the user in session
 import path from 'path';
 import random from 'random';
+import { fileURLToPath } from 'url';
+
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 //Gets the Collection, list of books
 const booksList = await getCollection('books')
@@ -74,7 +77,7 @@ export async function getImage(req, res){
         res.set('Content-Type', image.contentType); //Sets the content type of the response
         res.send(buffer) //This sends the actaul binary data of the image
     } else {
-        res.sendFile(path.join('C:/Users/ABC/Downloads/VsCodeWork/LibrarySystem/Client/public', 'static', 'default.png')); //If there is no image found, we will send a default image back
+        res.sendFile(path.resolve(__dirname, '../../Client/public/static/default.png')); //If there is no image found, we will send a default image back
     }    
 }
 
@@ -307,13 +310,13 @@ export async function returnBook(req, res, next){
     } else {
 
     try{
-        let bookReturned = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: true}}) // This will change the availability of the book in question to true so that users will know that it is now available
         let name = await getUsersName(req, res);
         name = name ? name.replace(/['"]+/g, '').trim() : null; //We want to make sure that we are trimming any white spaces and removing any quotes from the users name to ensure that we can properly query the database for the books they have checked out
         let bookISBN = req.body.isbn
         //Wanna make sure that the book is actaully in their position before we return it
         let checkedOutBook = await booksCheckedOutList.findOne({username: name, isbn: bookISBN});
         if(checkedOutBook){
+            let bookReturned = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: true}}) // This will change the availability of the book in question to true so that users will know that it is now available
             await booksCheckedOutList.deleteOne({username: name, isbn: bookISBN})
             res.status(200).json({success: true, message: 'Book returned successfully'})
         } else {

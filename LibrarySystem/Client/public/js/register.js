@@ -99,7 +99,7 @@ registerForm.addEventListener('submit', async (e) => {
 //This is needed to avoid errors if the logout link is not present on the page
 if(logoutLink) {
 //This function will handle the logout process if the logout link is clicked
-document.logoutLink.addEventListener('click', async (e) => {
+    logoutLink.addEventListener('click', async (e) => {
                 await fetch('users/logout', {
                     method: 'GET',
                     headers: {

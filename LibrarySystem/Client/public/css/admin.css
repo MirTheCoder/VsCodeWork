@@ -85,3 +85,23 @@ h2 {
     gap: 30px;
   }
 }
+
+/* Navbar */
+.navbar {
+  background-color: #EFE6D8;
+  border-bottom: 1px solid #DDD;
+  padding: 15px 40px;
+}
+
+.nav-links a {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #2B2B2B;
+  font-weight: 500;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.nav-links a:hover {
+  color: #5B3E2B;
+  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);
+}

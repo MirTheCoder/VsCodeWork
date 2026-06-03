@@ -134,7 +134,7 @@ export async function getUserDetails(req, res, next) {
 // This function will provide us with all the users within the database
 export async function collectUsers(req, res){
     let users = await userCollection.find({}).toArray();
-    res.status(200).json(users);
+    res.status(200).json({success: true, users: users});
 }
 
 //This will be used to create a unique user ID for each user that registers
