@@ -1,26 +1,175 @@
-/* Body */
-body {
-  font-family: 'Inter', sans-serif;
-  background-color: #F8F6F2;
+/* ==========================================================================
+   5. User Item Cards & Elements (Grid Layout for Extended Data)
+   ========================================================================== */
+
+.user-item {
+  width: 100%;
+  background-color: #F8F6F2; 
+  border: 1px solid #E2DED6;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.user-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+/* Card Header Section */
+.user-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed #C9BFB5;
+  padding-bottom: 12px;
+}
+
+.user-main-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.user-item .username {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
   color: #2B2B2B;
+  font-weight: 700;
 }
 
-/* Navbar */
-.navbar {
-  background-color: #EFE6D8;
-  border-bottom: 1px solid #DDD;
-  padding: 15px 40px;
+.user-item .userid {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #8B6A4F;
+  font-weight: 600;
 }
 
-.nav-links a {
-  margin-right: 20px;
-  text-decoration: none;
+/* Account Status Badges */
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.status-active {
+  background-color: #E2ECD8; /* Soft green */
+  color: #3E602B;
+}
+
+.status-badge.status-suspended {
+  background-color: #F2E3E3; /* Soft red */
+  color: #81221f;
+}
+
+/* Details Grid Setup (Distributes Email, Phone, Role, and Date nicely) */
+.user-details-grid {
+  display: grid;
+  grid-template-columns: 2fr 1.5fr 1fr 1.5fr;
+  gap: 15px;
+  align-items: center;
+}
+
+.detail-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #8C8276;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.detail-value {
+  font-size: 0.9rem;
   color: #2B2B2B;
   font-weight: 500;
-  transition: color 0.3s, text-shadow 0.3s;
+  word-break: break-all; /* Keeps long emails from breaking layouts */
 }
 
-.nav-links a:hover {
+/* Role Badge Specifics */
+.user-role-badge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
   color: #5B3E2B;
-  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);
+  background-color: #EFE6D8;
+  padding: 4px 10px;
+  border-radius: 6px;
+  width: fit-content;
+  justify-self: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Actions Bottom Row */
+.user-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+/* Buttons styling unchanged to keep branding integrity */
+.user-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.2s;
+}
+
+.user-btn:hover {
+  transform: translateY(-1px);
+}
+
+.user-btn.edit {
+  background-color: #5B3E2B;
+  color: #FFF;
+}
+
+.user-btn.edit:hover {
+  background-color: #4A2F1E;
+}
+
+.user-btn.delete {
+  background-color: #FFF;
+  color: #81221f;
+  border: 1px solid #E2DED6;
+}
+
+.user-btn.delete:hover {
+  background-color: #81221f;
+  color: #FFF;
+  border-color: #81221f;
+}
+
+/* Responsive adjustment for narrower screens */
+@media (max-width: 768px) {
+  .user-details-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .text-right {
+    text-align: left;
+  }
+  .user-role-badge {
+    justify-self: start;
+  }
 }

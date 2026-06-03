@@ -144,18 +144,40 @@ async function showAllUsers(users){
             userList.appendChild(usersBooks); */
             
             //We will use this to add each user instance to the see users page
-            const userElement = document.createElement('div');
-            userElement.innerHTML = `
-                style="margin-top: 20px;" <!-- This will help to add some spacing between each user rendering -->
-                <h2><b>User Details</b></h2>
-                <h3>${user.userID}</h3>
-                <h3>${user.username}</h3>
-                <p>Email: ${user.email}</p>
-                <p>Phone: ${user.number}</p>
-                <p>Role: ${user.role}</p>
-                <p>Account Status: ${user.accountStatus}</p>
-                <p>Member Since: ${new Date(user.DateCreated).toLocaleDateString()}</p>
-                `
-            userList.appendChild(userElement);
+            const userCardHTML = document.createElement('div');
+            userCardHTML.innerHTML = `
+        <div class="user-item">
+            <div class="user-card-header">
+                <div class="user-main-meta">
+                    <span class="username">${user.username}</span>
+                    <span class="userid">${user.userId}</span>
+                </div>
+                <span class="status-badge status-active">Active</span> 
+                </div>
+            
+            <div class="user-details-grid">
+                <div class="detail-group">
+                    <span class="detail-label">$Email</span>
+                    <span class="detail-value">${user.email}</span>
+                </div>
+                <div class="detail-group">
+                    <span class="detail-label">Phone</span>
+                    <span class="detail-value">${user.phone}</span>
+                </div>
+                <span class="user-role-badge">Admin</span>
+                <div class="detail-group text-right">
+                    <span class="detail-label">Created</span>
+                    <span class="detail-value">${new Date(user.DateCreated).toLocaleDateString()}</span>
+                </div>
+            </div>
+
+            <div class="user-actions">
+                <button class="user-btn edit">Edit User</button>
+                <button class="user-btn delete">Delete</button>
+                <button class="user-btn" style="background-color: #686847; color: #FFF;">See Details</button>
+            </div>
+        </div>
+        `;
+            userList.appendChild(userCardHTML);
         })
     };
