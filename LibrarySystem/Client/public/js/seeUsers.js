@@ -174,10 +174,33 @@ async function showAllUsers(users){
             <div class="user-actions">
                 <button class="user-btn edit">Edit User</button>
                 <button class="user-btn delete">Delete</button>
-                <button class="user-btn" style="background-color: #686847; color: #FFF;">See Details</button>
+                <button class="user-btn" id="seeDetails" style="background-color: #686847; color: #FFF;">See Details</button>
             </div>
         </div>
         `;
             userList.appendChild(userCardHTML);
         })
+        showUserDetails(); //We use this to add event listeners to each users page so that the admin can see more detils about the user if need be
     };
+
+    //We will use this function to show the details of the user that the admin has chosen to view
+    async function showUserDetails(){
+        if(document.querySelectorAll('#seeDetails').length > 0){
+            document.querySelectorAll('#seeDetails').forEach(button => {
+                button.addEventListener('click', async (e) => {
+                    let userDetails = e.target.closest('.user-item').querySelector('.userid').textContent; //Extracts the users ID from the user Card
+                    console.log('Here is the users Details: ', userDetails); //We are gonna use this to test and see if we do get to see the users details
+                    fillOverlay(userDetails); //We pass the user ID over to this function so that it can render an populate the overlay with the users details
+                })
+            })
+        } else {
+            console.log('No see details buttons found');
+        }
+    }
+
+    async function fillOverlay(details){
+        alert('User ID has been successfullt extracted and recieved: ', details);
+        
+    }
+    
+        
