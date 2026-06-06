@@ -2,7 +2,9 @@ let userList = document.getElementById('userList');
 let logoutLink = document.getElementById('logout');
 let loginLink = document.getElementById('login');
 let accountLink = document.getElementById('Account');
+let overlay = document.getElementById('overlay');
 let overlayDetails = document.getElementById('userDetails');
+let closePopup = document.getElementById('closePopup');
 
 
 
@@ -40,8 +42,9 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                 window.location.href = "indexPage"; //Send user back to home page if they are not logged in
             }
         });
-         if(overlayDetails.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
-            overlayDetails.classList.remove('active'); //This will make the overlay invisible on the page
+        overlayDetails.innerHTML = ''; //Clear the overlay of any previous data that may be there from a previous user that the admin may have viewed
+         if(overlay && overlay.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
+            overlay.classList.remove('active'); //This will make the overlay invisible on the page
         }
     } catch (error) {
         console.error('Error checking login status:', error);
@@ -238,7 +241,7 @@ async function showAllUsers(users){
                 <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
             }
 
-            if(!user.dueSoonBooks.length === 0){
+            if(user.dueSoonBooks.length !== 0){
             for(let book of user.dueSoonBooks){
                 dueSoonBooks.innerHTML += `
                 <h3><b>Books Due Soon:</b></h3>
@@ -261,7 +264,7 @@ async function showAllUsers(users){
                 <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
             }
 
-             if(!user.dueSoonBooks.length === 0){
+             if(user.dueSoonBooks.length !== 0){
             for(let book of user.dueSoonBooks){
                 dueSoonBooks.innerHTML += `
                 <h3><b>Books Due Soon:</b></h3>
@@ -292,7 +295,7 @@ async function showAllUsers(users){
                 <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
             }
 
-             if(!user.dueSoonBooks.length === 0){
+             if(user.dueSoonBooks.length !== 0){
             for(let book of user.dueSoonBooks){
                 dueSoonBooks.innerHTML += `
                 <h3><b>Books Due Soon:</b></h3>
@@ -317,9 +320,9 @@ async function showAllUsers(users){
             for(let fine of user.yourFines){
                 userFines.innerHTML += `
                 <h3><b>Fines:</b></h3>
-                <p>Title: ${book.bookTitle}</p> 
-                <p>Author: ${book.bookAuthor}</p>
-                <p>ISBN: ${book.isbn}</p>
+                <p>Title: ${fine.bookTitle}</p> 
+                <p>Author: ${fine.bookAuthor}</p>
+                <p>ISBN: ${fine.isbn}</p>
                 <p>Amount: $${fine.amount}</p> 
                 <p>Date Issued: ${new Date(fine.fineDate).toLocaleDateString()}</p>`;
             }
@@ -333,8 +336,19 @@ async function showAllUsers(users){
         overlayDetails.appendChild(userFines);
 
         //Want to add the active class only if the overlay does not already have it
-        if(!overlayDetails.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
-            overlayDetails.classList.add('active'); //This will make the overlay visible on the page
+        if(overlay && !overlay.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
+            overlay.classList.add('active'); //This will make the overlay visible on the page
+        }
+
+        //This will first check and see if the close popup button has rendered, and if so, we will add an event
+        //listener that will close the popup and clear the data from the popup overlay
+        if(closePopup){
+            closePopup.addEventListener('click', () => {
+                if(overlay && overlay.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
+                    overlay.classList.remove('active'); //This will make the overlay invisible on the page
+                }
+                overlayDetails.innerHTML = ''; //Clear the overlay of any previous data that may be there from a previous user that the admin may have viewed
+            })
         }
     }
     
@@ -352,14 +366,14 @@ async function accountStatus(details){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: data.DateCreated,
+                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
                 success: 1
             };
         } else if(data.success === 2){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: data.DateCreated,
+                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
                 yourBooks: data.yourBooks,
                 dueSoonBooks: data.dueSoonBooks,
                 success: 2
@@ -368,7 +382,7 @@ async function accountStatus(details){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: data.DateCreated,
+                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
                 yourBooks: data.yourBooks,
                 dueSoonBooks: data.dueSoonBooks,
                 yourOverdueBooks: data.yourOverdueBooks,
@@ -378,7 +392,7 @@ async function accountStatus(details){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: data.DateCreated,
+                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
                 yourBooks: data.yourBooks,
                 dueSoonBooks: data.dueSoonBooks,
                 yourOverdueBooks: data.yourOverdueBooks,

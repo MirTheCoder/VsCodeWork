@@ -262,6 +262,8 @@
   margin-bottom: 25px;
   font-family: 'Inter', sans-serif;
   color: #2B2B2B;
+  height: 300px;
+  overflow-y: auto; /* Allows scrolling if content exceeds height */
 }
 
 /* Close Button styled identically to your other secondary buttons */
