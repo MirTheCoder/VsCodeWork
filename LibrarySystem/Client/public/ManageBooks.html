@@ -8,6 +8,17 @@
 </head>
 
 <body>
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="login" id="login">Login</a>
+      <a href="register">Register</a>
+      <a href="about">About Us</a>
+      <a href="account" id="Account">My Account</a>
+      <a id="logout">Logout</a> <!-- Logout functionality will be handled by hte js file accompanied to this file -->
+    </div>
+  </nav>
+
+
     <form id="bookForm">
         <h2 class="addBook">Add A Book</h2>
         <input type="text" id="title" name="title" placeholder="Book Title" required>
@@ -40,7 +51,7 @@
         </div>
       </div>
 
-    <div id="resultList">
+    <div id="resultList" class="resultList">
 
     </div>     
     <script defer src="js/ManageBooks.js"></script>

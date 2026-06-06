@@ -1,8 +1,19 @@
+body{
+  margin-top: 70px;
+}
+
 /* Navbar */
 .navbar {
+  position: fixed;     /* Fixed to the viewport */
+  top: 0;              /* Stick it to the very top */
+  left: 0;             /* Aligns it to the left edge */
+  width: 100%;         /* Forces it to span the entire width of the screen */
+  z-index: 100;        /* Keeps it on top of other elements while scrolling */
+  
   background-color: #EFE6D8;
   border-bottom: 1px solid #DDD;
   padding: 15px 40px;
+  box-sizing: border-box; /* Ensures padding doesn't push the navbar past 100% width */
 }
 
 .nav-links a {
@@ -25,6 +36,7 @@
 
 .user-item {
   width: 100%;
+  margin-top: 20px;
   background-color: #F8F6F2; 
   border: 1px solid #E2DED6;
   border-radius: 12px;
@@ -284,4 +296,59 @@
 #closePopup:hover {
   background-color: #E3D5C4;
   transform: translateY(-1px);
+}
+
+/* ==========================================================================
+   7. User Popup - Book History Items
+   ========================================================================== */
+
+.book-item {
+  background-color: #F8F6F2;       /* Warm parchment color to stand out against the white popup */
+  border: 1px solid #E2DED6;
+  border-left: 4px solid #5B3E2B;  /* A nice leather-brown accent bar on the left edge */
+  border-radius: 6px;
+  padding: 12px 16px;
+  
+  /* Spacing: Ensures a clean gap below each book card in the loop */
+  margin-bottom: 12px; 
+  
+  /* Sets up a clean layout for the text inside */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  transition: background-color 0.2s ease;
+}
+
+/* Subtle feedback if the admin hovers over a book log */
+.book-item:hover {
+  background-color: #EFE6D8;
+}
+
+/* Remove the margin-bottom on the very last item so it doesn't create awkward extra space at the bottom of the container */
+.book-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Styling the dynamic text fields inside the book card */
+.book-item p {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  color: #555555;
+  margin: 0; /* Clear default paragraph spacing */
+  line-height: 1.4;
+}
+
+/* Emphasizing the data labels (Title, Author, etc.) */
+.book-item p strong {
+  color: #2B2B2B;
+  font-weight: 600;
+}
+
+/* Highlight the due date uniquely so it grabs the admin's attention */
+.book-item p:last-child {
+  margin-top: 2px;
+  font-size: 0.8rem;
+  color: #8B6A4F; 
+  font-weight: 500;
 }

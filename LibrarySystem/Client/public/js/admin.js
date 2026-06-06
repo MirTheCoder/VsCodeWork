@@ -15,6 +15,10 @@ a1.addEventListener('click', () => {
     window.location.href = 'seeUsers.html'
 });
 
+a4.addEventListener('click', () => {
+    window.location.href = 'addUser.html'
+})
+
 let userList = document.getElementById('userList');
 let logoutLink = document.getElementById('logout');
 let loginLink = document.getElementById('login');

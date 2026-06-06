@@ -215,7 +215,6 @@ async function showAllUsers(users){
         let dueSoonBooks = document.createElement('div');
         let userFines = document.createElement('div');
         userDetails.innerHTML = `
-        <h2><b>User Details</b></h2>
         <h3>${user.username}</h3>
         <p>Email: ${user.email}</p>
         <p>Member Since: ${new Date(user.DateCreated).toLocaleDateString()}</p>
@@ -225,106 +224,148 @@ async function showAllUsers(users){
         //We will traverse through various scenarios to see how we want to display our data and what data we have to display in the first place.
         if(user.success === 1){
             //This means that we only have the users details and no books to show
-            userBooks.innerHTML = `<p>No books checked out</p>`;
-            dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
-            overdueBooks.innerHTML = `<p>No overdue books</p>`;
-            userFines.innerHTML = `<p>No fines</p>`;
+            userBooks.innerHTML = `
+            <h3><b>Books Checked Out<b></h3>
+            <p>No books checked out</p>`;
+            dueSoonBooks.innerHTML = `
+            <h3><b>Books Due Soon:</b></h3>
+            <p>No books due soon</p>`;
+            overdueBooks.innerHTML = `
+            <h3><b>Overdue Books<b></h3>
+            <p>No overdue books</p>`;
+            userFines.innerHTML = `
+                <h3><b>Fines</b></h3>
+                <p>No Fines</p>
+            `
         } else if(user.success === 2){
-            overdueBooks.innerHTML = `<p>No overdue books</p>`;
-            userFines.innerHTML = `<p>No fines</p>`;
+            overdueBooks.innerHTML = `
+            <h3><b>Overdue Books</b></h3>
+            <p>No overdue books</p>`;
+            userFines.innerHTML = `
+                <h3><b>Fines</b></h3>
+                <p>No Fines</p>
+            `
+            userBooks.innerHTML = `<h3><b>Books Checked Out</b></h3>`;
             for(let book of user.yourBooks){
                 userBooks.innerHTML += `
-                <h3><b>Books Checked Out:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
 
             if(user.dueSoonBooks.length !== 0){
+                dueSoonBooks.innerHTML = `<h3><b>Books Due Soon</b></h3>`; //We want to make sure to add the header for this section before we populate it with the books that are due soon
             for(let book of user.dueSoonBooks){
                 dueSoonBooks.innerHTML += `
-                <h3><b>Books Due Soon:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
             } else {
-                dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
+                dueSoonBooks.innerHTML = `
+            <h3><b>Books Due Soon</b></h3>
+            <p>No books due soon</p>`;
             }
         } else if(user.success === 3){
-            userFines.innerHTML = `<p>No fines</p>`;
+            userBooks.innerHTML = `<h3>Books Checked Out</h3>`;
             for(let book of user.yourBooks){
                 userBooks.innerHTML += `
-                <h3><b>Books Checked Out:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
 
              if(user.dueSoonBooks.length !== 0){
+                dueSoonBooks.innerHTML = `<h3><b>Books Due Soon</b></h3>`; //We want to make sure to add the header for this section before we populate it with the books that are due soon
             for(let book of user.dueSoonBooks){
                 dueSoonBooks.innerHTML += `
-                <h3><b>Books Due Soon:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
             } else {
-                dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
+                dueSoonBooks.innerHTML = `
+            <h3><b>Books Due Soon</b></h3>
+            <p>No books due soon</p>`;
             }
 
+            overdueBooks.innerHTML = `<h3><b>Overdue Books</b></h3>`;
             for(let book of user.yourOverdueBooks){
                 overdueBooks.innerHTML += `
-                <h3><b>Overdue Books:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
+
+            userFines.innerHTML = `
+            <h3><b>Fines</b></h3>
+            <p>No Fines</p>
+            `
         } else if(user.success === 4){
+            userBooks.innerHTML = `<h3><b>Books Checked Out</b></h3>`;
             for(let book of user.yourBooks){
                 userBooks.innerHTML += `
-                <h3><b>Books Checked Out:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
 
              if(user.dueSoonBooks.length !== 0){
+                dueSoonBooks.innerHTML = `<h3><b>Books Due Soon</b></h3>`; //We want to make sure to add the header for this section before we populate it with the books that are due soon
             for(let book of user.dueSoonBooks){
                 dueSoonBooks.innerHTML += `
-                <h3><b>Books Due Soon:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
             } else {
-                dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
+                dueSoonBooks.innerHTML = `
+            <h3><b>Books Due Soon</b></h3>
+            <p>No books due soon</p>`;
             }
 
+            overdueBooks.innerHTML = `<h3><b>Overdue Books</b></h3>`;
              for(let book of user.yourOverdueBooks){
                 overdueBooks.innerHTML += `
-                <h3><b>Overdue Books:</b></h3>
+                <div class="book-item">
                 <p>Title: ${book.title}</p> 
                 <p>Author: ${book.author}</p>
                 <p>ISBN: ${book.isbn}</p>
-                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>
+                </div>`;
             }
 
+            userFines.innerHTML = `<h3><b>Fines</b></h3>`;
             for(let fine of user.yourFines){
                 userFines.innerHTML += `
-                <h3><b>Fines:</b></h3>
+                <div class="book-item">
                 <p>Title: ${fine.bookTitle}</p> 
                 <p>Author: ${fine.bookAuthor}</p>
                 <p>ISBN: ${fine.isbn}</p>
                 <p>Amount: $${fine.amount}</p> 
-                <p>Date Issued: ${new Date(fine.fineDate).toLocaleDateString()}</p>`;
+                <p>Date Issued: ${new Date(fine.fineDate).toLocaleDateString()}</p>
+                </div>`;
             }
         }
 
@@ -366,14 +407,14 @@ async function accountStatus(details){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
+                DateCreated: new Date(data.memberSince).toLocaleDateString(),
                 success: 1
             };
         } else if(data.success === 2){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
+                DateCreated: new Date(data.memberSince).toLocaleDateString(),
                 yourBooks: data.yourBooks,
                 dueSoonBooks: data.dueSoonBooks,
                 success: 2
@@ -382,7 +423,7 @@ async function accountStatus(details){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
+                DateCreated: new Date(data.memberSince).toLocaleDateString(),
                 yourBooks: data.yourBooks,
                 dueSoonBooks: data.dueSoonBooks,
                 yourOverdueBooks: data.yourOverdueBooks,
@@ -392,7 +433,7 @@ async function accountStatus(details){
             userItems = {
                 username: data.user,
                 email: data.email,
-                DateCreated: new Date(data.DateCreated).toLocaleDateString(),
+                DateCreated: new Date(data.memberSince).toLocaleDateString(),
                 yourBooks: data.yourBooks,
                 dueSoonBooks: data.dueSoonBooks,
                 yourOverdueBooks: data.yourOverdueBooks,

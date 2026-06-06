@@ -116,10 +116,13 @@
 .resultList {
     max-width: 900px;
     margin: 0 auto 80px;
-    padding: 30px;
+    margin-top: 50px;
+    padding: 20px;
     background-color: #FFFFFF;
     border-radius: 16px;
     box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    max-height: 500px;
+    overflow-y: auto;
   }
   
   .resultList p {
@@ -262,4 +265,31 @@
         font-size: 20px;
         color: #5B3E2B;
         text-align: center;
-    }  
+    }
+    
+/* CSS styling for the navbar */
+.navbar {
+  position: fixed;     /* Fixed to the viewport */
+  top: 0;              /* Stick it to the very top */
+  left: 0;             /* Aligns it to the left edge */
+  width: 100%;         /* Forces it to span the entire width of the screen */
+  z-index: 100;        /* Keeps it on top of other elements while scrolling */
+  
+  background-color: #EFE6D8;
+  border-bottom: 1px solid #DDD;
+  padding: 15px 40px;
+  box-sizing: border-box; /* Ensures padding doesn't push the navbar past 100% width */
+}
+
+.nav-links a {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #2B2B2B;
+  font-weight: 500;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.nav-links a:hover {
+  color: #5B3E2B;
+  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);
+}

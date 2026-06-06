@@ -33,8 +33,9 @@ route.get('/details', async (req, res, next) => {
     await getUserDetails(req, res, next);
 });
 
+//This will get the user and relevant details pertianing to the specific user in question
 route.post('/details', async (req, res, next) => {
-    await getUserDetails(req, res, next, req.body.userId);
+    await getSpecifiedUserDetails(req, res, next, req.body.userId);
 });
 
 //This is used to get the books under the user that is currently logged in
@@ -81,10 +82,6 @@ route.get('/dueSoon', async (req, res, next) => {
 
 route.post('/getUser', async (req, res, next) => {
     await findAUser(req, res, next, req.body.userId);
-});
-
-route.post('/getSpecifiedUserDetails', async (req, res, next) => {
-    await getSpecifiedUserDetails(req, res, next, req.body.userId);
 });
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly

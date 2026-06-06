@@ -345,21 +345,16 @@ export async function editBook(req, res){
 
     try{
         //We must first locate the book that we want to edit within the database
-        console.log("ISBN of book to edit: ", req.body.isbn);
         const isbn = Number(req.body.isbn);
-        console.log("ISBN after conversion to number: ", isbn);
 
         if (!req.body.isbn || Number.isNaN(isbn)) {
             return res.status(400).json({ success: false, message: 'Invalid ISBN provided' });
         }
 
         let bookToEdit = await booksList.findOne({ isbn });
-        console.log("Book we want to edit: ", bookToEdit);
         if (!bookToEdit) {
             return res.status(404).json({ success: false, message: 'Book not found' });
         }
-
-        console.log("Original book title: ", bookToEdit.title);
         let theBookImage = await bookImages.findOne({ name: bookToEdit.title });
         let oldTitle = bookToEdit.title;
 
