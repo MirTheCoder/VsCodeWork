@@ -131,10 +131,24 @@ export async function getUserDetails(req, res, next) {
     }
 } 
 
+
 // This function will provide us with all the users within the database
 export async function collectUsers(req, res){
     let users = await userCollection.find({}).toArray();
     res.status(200).json({success: true, users: users});
+}
+
+export async function findAUser(req,res,next,userId){
+    let response = await getSessionInfo(req, res, next); //We use this to check and see if the user is logged in or not
+    if(response.loggedIn){
+        try{
+            res.status(200).json({success: true, user: await userCollection.findOne({userId: new Int32(userId)})}); //We will return the user that matches the userId provided in the request parameters
+        } catch(error){
+            res.status(500).json({success: false, message: 'Error fetching user'});
+        }
+    } else {
+        res.status(200).json({success: false, message: 'User not logged in'});
+    }
 }
 
 //This will be used to create a unique user ID for each user that registers
@@ -146,3 +160,68 @@ async function generateUserId(){
     }
     return Number(num); //Makes sure that we are passing or returning a number and not a string
 }
+
+//This will allow us to get all relevant details pertaining to a specific user
+export async function getSpecifiedUserDetails(req, res, next, userId) {
+    //Here we are going to try and get the info of the current user in session
+    let response = await getSessionInfo(req, res, next);
+    if(response.loggedIn){
+        let user = await usersList.findOne({userId: new Int32(userId)}); //Getting the user via userId
+        //Here we are going to use this to get the books, overdue warnings, and fines pertaining to the user in question
+        let booksCheckedOut = await booksCheckedOutList.find({userId: new Int32(user.userId)}).toArray(); //Changing value to int32 based in order to match the numerical type within our database
+        //let overdueBooks = await overdueBooksList.find({user: response.username})
+        let overdueBooks = await getOverdueBooks(user.username, req, res, next);
+        //Safety measure put in place in case we don't get overdue books back as an array
+        if(!Array.isArray(overdueBooks)){
+            overdueBooks = await overdueBooks.toArray();
+        }
+        let fines = await getFines(user.username, req, res, next);
+        let dueSoonBooks = await dueSoon(user.username, req, res, next); //Gets us all the books the user has checked out that are due in five days or less
+        //We will return the user details if the user has been successfully found
+        //Setting success levels to numerical values to show how many categories are pertaining to the user in question
+        if(user){
+            if(booksCheckedOut.length > 0){
+                //Overdue books is just an aggregation of booksCheckedOut to see if any of them have a due date that is less than the 
+                //current date
+                if(overdueBooks.length > 0){
+                        if(fines.length > 0){
+                            res.status(200).json({success: 4, user: user.username ? user.username : null, 
+                            role: user.role ? user.role : null, email:user.email ? user.email : null, 
+                            phone:user.phone ? user.phone : null, 
+                            memberSince: user.memberSince ? user.memberSince : null,
+                            dueSoonBooks: dueSoonBooks,
+                            yourBooks: booksCheckedOut,
+                            yourOverdueBooks: overdueBooks,
+                            yourFines : fines });
+                            
+                        } else {
+                            //We will send this if no fines are found
+                        res.status(200).json({success: 3, user: user.username ? user.username : null, 
+                            role: user.role ? user.role : null, email:user.email ? user.email : null, 
+                            phone:user.phone ? user.phone : null, 
+                            memberSince: user.memberSince ? user.memberSince : null,
+                            dueSoonBooks: dueSoonBooks,
+                            yourOverdueBooks: overdueBooks,
+                            yourBooks: booksCheckedOut}); 
+                        }   
+                } else { 
+                        
+                    //This will send only the user info and books checked out if that is all that we find
+                    res.status(200).json({success: 2, user: user.username ? user.username : null, 
+                        role: user.role ? user.role : null, email:user.email ? user.email : null, 
+                        phone:user.phone ? user.phone : null, 
+                        memberSince: user.memberSince ? user.memberSince : null,
+                        dueSoonBooks: dueSoonBooks,
+                        yourBooks: booksCheckedOut});
+                    }    
+            } else {
+                    res.status(200).json({success: 1, user: user.username ? user.username : null, role: user.role ? user.role : null, email:user.email ? user.email : null, phone:user.phone ? user.phone : null, memberSince: user.memberSince ? user.memberSince : null});    
+            }    
+        } else {
+                //If Just the users info is found, then that is what we will only send back to the user
+            res.status(200).json({success: 0, message: "User Not Found"});
+        }
+    }  else {
+        res.status(200).json({success: false, message: 'User not logged in'});
+    }
+} 

@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers} from './validate.js';
+import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers, findAUser, getSpecifiedUserDetails} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
 import { checkOutBook, getUsersBooks, getSpecificUsersBooks, returnBook, addFine, dueSoon, getOverdueBooks} from './booksApi.js';
 import express from 'express';
@@ -31,6 +31,10 @@ route.get('/logout', async (req, res, next) => {
 //This will be used to get the details of the user that is currently logged in
 route.get('/details', async (req, res, next) => {
     await getUserDetails(req, res, next);
+});
+
+route.post('/details', async (req, res, next) => {
+    await getUserDetails(req, res, next, req.body.userId);
 });
 
 //This is used to get the books under the user that is currently logged in
@@ -73,6 +77,14 @@ route.get('/getOverdueBooks', async (req, res, next) => {
 //This will call the function to get the books due soon for the requesting user
 route.get('/dueSoon', async (req, res, next) => {
     await dueSoon(req.session.user,req, res, next, true); //We make sure to pass the user name and to let the function know that we want to return a response back to the user/client
+});
+
+route.post('/getUser', async (req, res, next) => {
+    await findAUser(req, res, next, req.body.userId);
+});
+
+route.post('/getSpecifiedUserDetails', async (req, res, next) => {
+    await getSpecifiedUserDetails(req, res, next, req.body.userId);
 });
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly

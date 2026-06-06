@@ -2,6 +2,7 @@ let userList = document.getElementById('userList');
 let logoutLink = document.getElementById('logout');
 let loginLink = document.getElementById('login');
 let accountLink = document.getElementById('Account');
+let overlayDetails = document.getElementById('userDetails');
 
 
 
@@ -39,6 +40,9 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                 window.location.href = "indexPage"; //Send user back to home page if they are not logged in
             }
         });
+         if(overlayDetails.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
+            overlayDetails.classList.remove('active'); //This will make the overlay invisible on the page
+        }
     } catch (error) {
         console.error('Error checking login status:', error);
     }
@@ -198,9 +202,194 @@ async function showAllUsers(users){
         }
     }
 
+
     async function fillOverlay(details){
-        alert('User ID has been successfullt extracted and recieved: ', details);
-        
+        alert(`User ID has been successfully extracted and received: ${details}`);
+        let user = await accountStatus(details); //We will store the users account in here
+        let userDetails = document.createElement('div');
+        let userBooks = document.createElement('div');
+        let overdueBooks = document.createElement('div');
+        let dueSoonBooks = document.createElement('div');
+        let userFines = document.createElement('div');
+        userDetails.innerHTML = `
+        <h2><b>User Details</b></h2>
+        <h3>${user.username}</h3>
+        <p>Email: ${user.email}</p>
+        <p>Member Since: ${new Date(user.DateCreated).toLocaleDateString()}</p>
+        `; //This will be used to contain the user details in our overlay block
+
+
+        //We will traverse through various scenarios to see how we want to display our data and what data we have to display in the first place.
+        if(user.success === 1){
+            //This means that we only have the users details and no books to show
+            userBooks.innerHTML = `<p>No books checked out</p>`;
+            dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
+            overdueBooks.innerHTML = `<p>No overdue books</p>`;
+            userFines.innerHTML = `<p>No fines</p>`;
+        } else if(user.success === 2){
+            overdueBooks.innerHTML = `<p>No overdue books</p>`;
+            userFines.innerHTML = `<p>No fines</p>`;
+            for(let book of user.yourBooks){
+                userBooks.innerHTML += `
+                <h3><b>Books Checked Out:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+
+            if(!user.dueSoonBooks.length === 0){
+            for(let book of user.dueSoonBooks){
+                dueSoonBooks.innerHTML += `
+                <h3><b>Books Due Soon:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+            } else {
+                dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
+            }
+        } else if(user.success === 3){
+            userFines.innerHTML = `<p>No fines</p>`;
+            for(let book of user.yourBooks){
+                userBooks.innerHTML += `
+                <h3><b>Books Checked Out:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+
+             if(!user.dueSoonBooks.length === 0){
+            for(let book of user.dueSoonBooks){
+                dueSoonBooks.innerHTML += `
+                <h3><b>Books Due Soon:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+            } else {
+                dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
+            }
+
+            for(let book of user.yourOverdueBooks){
+                overdueBooks.innerHTML += `
+                <h3><b>Overdue Books:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+        } else if(user.success === 4){
+            for(let book of user.yourBooks){
+                userBooks.innerHTML += `
+                <h3><b>Books Checked Out:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+
+             if(!user.dueSoonBooks.length === 0){
+            for(let book of user.dueSoonBooks){
+                dueSoonBooks.innerHTML += `
+                <h3><b>Books Due Soon:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+            } else {
+                dueSoonBooks.innerHTML = `<p>No books due soon</p>`;
+            }
+
+             for(let book of user.yourOverdueBooks){
+                overdueBooks.innerHTML += `
+                <h3><b>Overdue Books:</b></h3>
+                <p>Title: ${book.title}</p> 
+                <p>Author: ${book.author}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Due Date: ${new Date(book.dueDate).toLocaleDateString()}</p>`;
+            }
+
+            for(let fine of user.yourFines){
+                userFines.innerHTML += `
+                <h3><b>Fines:</b></h3>
+                <p>Title: ${book.bookTitle}</p> 
+                <p>Author: ${book.bookAuthor}</p>
+                <p>ISBN: ${book.isbn}</p>
+                <p>Amount: $${fine.amount}</p> 
+                <p>Date Issued: ${new Date(fine.fineDate).toLocaleDateString()}</p>`;
+            }
+        }
+
+        //We are now gonna add all the sections to our overlay block so that the admin can see all of the relevant details for the user that they are interested in
+        overlayDetails.appendChild(userDetails);
+        overlayDetails.appendChild(userBooks);
+        overlayDetails.appendChild(dueSoonBooks);
+        overlayDetails.appendChild(overdueBooks);
+        overlayDetails.appendChild(userFines);
+
+        //Want to add the active class only if the overlay does not already have it
+        if(!overlayDetails.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
+            overlayDetails.classList.add('active'); //This will make the overlay visible on the page
+        }
     }
     
+
+async function accountStatus(details){
+    try {
+        const response = await fetch('users/details', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({userId: details})
+        });
+        const data = await response.json();
+        let userItems = {};
+        if(data.success === 1){
+            userItems = {
+                username: data.user,
+                email: data.email,
+                DateCreated: data.DateCreated,
+                success: 1
+            };
+        } else if(data.success === 2){
+            userItems = {
+                username: data.user,
+                email: data.email,
+                DateCreated: data.DateCreated,
+                yourBooks: data.yourBooks,
+                dueSoonBooks: data.dueSoonBooks,
+                success: 2
+            };
+        } else if(data.success === 3){
+            userItems = {
+                username: data.user,
+                email: data.email,
+                DateCreated: data.DateCreated,
+                yourBooks: data.yourBooks,
+                dueSoonBooks: data.dueSoonBooks,
+                yourOverdueBooks: data.yourOverdueBooks,
+                success: 3
+            };
+        } else if(data.success === 4){
+            userItems = {
+                username: data.user,
+                email: data.email,
+                DateCreated: data.DateCreated,
+                yourBooks: data.yourBooks,
+                dueSoonBooks: data.dueSoonBooks,
+                yourOverdueBooks: data.yourOverdueBooks,
+                yourFines: data.yourFines,
+                success: 4
+            };
+        }
+        return userItems;
+    } catch (err) {
+        console.error('Error in accountStatus:', err);
+        return {};
+    }
+}    
         

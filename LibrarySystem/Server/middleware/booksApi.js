@@ -202,8 +202,8 @@ export async function dueSoon(user,req,res, next, returnRes = false){
         return res.status(200).json({success: false, message: 'User not logged in'});
     } else {
     let today = new Date();
-    const booksChedkedOut = await booksCheckedOutList.find({username: user}).toArray();
-    let dueSoonBooks = booksChedkedOut.filter(book => {
+    const booksCheckedOut = await booksCheckedOutList.find({username: user}).toArray();
+    let dueSoonBooks = booksCheckedOut.filter(book => {
         let timeDiff = book.dueDate.getTime() - today.getTime();
         let daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24)); //Converts the time difference from milliseconds to days and rounds down to the nearest whole number
         return daysDiff > 0 && daysDiff <= 5; //We want to return books that are due within the next 5 days
