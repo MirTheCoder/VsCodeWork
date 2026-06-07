@@ -11,13 +11,21 @@ body {
   background-color: #F8F6F2;
   color: #2B2B2B;
   min-height: 100vh;
+  margin-top: 70px;
 }
 
 /* Navbar */
 .navbar {
+  position: fixed;     /* Fixed to the viewport */
+  top: 0;              /* Stick it to the very top */
+  left: 0;             /* Aligns it to the left edge */
+  width: 100%;         /* Forces it to span the entire width of the screen */
+  z-index: 100;        /* Keeps it on top of other elements while scrolling */
+  
   background-color: #EFE6D8;
   border-bottom: 1px solid #DDD;
-  padding: 16px 40px;
+  padding: 15px 40px;
+  box-sizing: border-box; /* Ensures padding doesn't push the navbar past 100% width */
 }
 
 .nav-links a {

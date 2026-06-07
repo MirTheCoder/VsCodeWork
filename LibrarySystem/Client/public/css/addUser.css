@@ -1,3 +1,7 @@
+body{
+  margin-top: 70px;
+}
+
 /* CSS styling for the navbar */
 .navbar {
   position: fixed;     /* Fixed to the viewport */
