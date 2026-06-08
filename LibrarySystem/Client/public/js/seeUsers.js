@@ -120,9 +120,17 @@ async function getUsersBooks(username){
 async function deleteAUser(){
     if(document.querySelectorAll(".delete")){
         let deleteButtons = document.querySelectorAll(".delete")
-        deleteButtons.forEach(button, (e) => {
-            let userId = e.target.closest('.user-item').querySelector('.userid')
-        } )
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async(e) => {
+                let userId = e.target.closest('.user-item').querySelector('.userid') //Gets the userId of the users account that we want to delete
+                await fetch("users/deleteUser", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({userId: userId})
+            })
+
+            })
+        })
     }
 }
 
@@ -198,6 +206,7 @@ async function showAllUsers(users){
             userList.appendChild(userCardHTML);
         })
         showUserDetails(); //We use this to add event listeners to each users page so that the admin can see more detils about the user if need be
+        deleteAUser(); //This will place event listeners on the delete buttons
     };
 
     //We will use this function to show the details of the user that the admin has chosen to view

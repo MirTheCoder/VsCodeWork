@@ -388,4 +388,14 @@ export async function editBook(req, res){
     }
 }
 
+//This will delete all the books that the specified user checked out based off their 
+//userId
+export async function deleteBooksCheckedOut(userId){
+    await booksCheckedOutList.deleteMany({userId: userId})
+}
+
+//This will delte all the fines pertaining to the user in question
+export async function deleteFines(userId){
+    await finesList.deleteMany({userId: userId})
+}
 

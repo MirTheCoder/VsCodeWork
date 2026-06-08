@@ -3,7 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
 import {sessionLogin, getSessionInfo, getUsersName} from './sessionHandler.js';
-import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines, dueSoon} from './booksApi.js';
+import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines, dueSoon, deleteBooksCheckedOut, deleteFines} from './booksApi.js';
 import bcrypt from 'bcryptjs';
 import { get } from 'http';
 import random from 'random';
@@ -223,5 +223,19 @@ export async function getSpecifiedUserDetails(req, res, next, userId) {
         }
     }  else {
         res.status(200).json({success: false, message: 'User not logged in'});
+    }
+} 
+
+//This will delete the data pertaining to this user
+export async function deleteUser(req, res, userId){
+    try{
+        let user = userList.findOne({userId: userId})
+        let username = user.username 
+        await deleteBooksCheckedOut(userId)
+        await deleteFines(userId)
+        await usersList.deleteOne({userId: userId})
+        res.status(200).json({success: true, message: 'Account successfully deleted: ', username});
+    } catch(err) {
+        res.status(500).json({success: false, message: 'An error occured while trying to delete the account'});
     }
 } 
