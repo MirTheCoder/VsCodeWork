@@ -116,6 +116,16 @@ async function getUsersBooks(username){
     }
 }
 
+//We will use this function to handle and deletions of accounts made by the admin
+async function deleteAUser(){
+    if(document.querySelectorAll(".delete")){
+        let deleteButtons = document.querySelectorAll(".delete")
+        deleteButtons.forEach(button, (e) => {
+            let userId = e.target.closest('.user-item').querySelector('.userid')
+        } )
+    }
+}
+
 
  //This is the function that we will use to display all the users within the database   
 async function showAllUsers(users){
