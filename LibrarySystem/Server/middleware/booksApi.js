@@ -10,6 +10,7 @@ import { getUsersName, getSessionInfo } from "./sessionHandler.js"; //This will 
 import path from 'path';
 import random from 'random';
 import { fileURLToPath } from 'url';
+import { Int32 } from 'mongodb';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -391,11 +392,23 @@ export async function editBook(req, res){
 //This will delete all the books that the specified user checked out based off their 
 //userId
 export async function deleteBooksCheckedOut(userId){
-    await booksCheckedOutList.deleteMany({userId: userId})
-}
+    try{
+        await booksCheckedOutList.deleteMany({userId: new Int32(userId)}) //Make sure to use new Int32 to convert the userId so that it can properly be used to query the databse
+        return true
+    } catch(err) {
+        console.log("Error deleting the users checked out books: ", err)
+        return false
+    }
+}   
 
 //This will delte all the fines pertaining to the user in question
 export async function deleteFines(userId){
-    await finesList.deleteMany({userId: userId})
+    try{
+        await finesList.deleteMany({userId: new Int32(userId)}) //Make sure to use new Int32 to convert the userId so that it can properly be used to query the databse
+        return true;
+    } catch(err){
+        console.log("Error deleting the users checked out books: ", err)
+        return false
+    }
 }
 

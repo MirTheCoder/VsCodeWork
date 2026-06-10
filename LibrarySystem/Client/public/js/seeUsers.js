@@ -122,7 +122,8 @@ async function deleteAUser(){
         let deleteButtons = document.querySelectorAll(".delete")
         deleteButtons.forEach(button => {
             button.addEventListener('click', async(e) => {
-                let userId = e.target.closest('.user-item').querySelector('.userid') //Gets the userId of the users account that we want to delete
+                let userId = e.target.closest('.user-item').querySelector('.userid').textContent //Gets the userId of the users account that we want to delete
+                alert("Here is our users ID: ", userId)
                 await fetch("users/deleteUser", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},

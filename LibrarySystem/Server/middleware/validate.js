@@ -228,14 +228,22 @@ export async function getSpecifiedUserDetails(req, res, next, userId) {
 
 //This will delete the data pertaining to this user
 export async function deleteUser(req, res, userId){
+    console.log(userId)
     try{
-        let user = userList.findOne({userId: userId})
-        let username = user.username 
-        await deleteBooksCheckedOut(userId)
-        await deleteFines(userId)
-        await usersList.deleteOne({userId: userId})
-        res.status(200).json({success: true, message: 'Account successfully deleted: ', username});
+        let user = await usersList.findOne({userId: new Int32(userId)});
+        if(!user){
+            return res.status(404).json({success: false, message: 'User not found'});
+        } else {
+        let username = user.username;
+        if(await deleteBooksCheckedOut(userId)){
+            if(await deleteFines(userId)){
+                await usersList.deleteOne({userId: new Int32(userId)});
+            }
+        }
+        res.status(200).json({success: true, message: 'Account successfully deleted', username});
+        }
     } catch(err) {
+        console.log("Error deleting user: ", err)
         res.status(500).json({success: false, message: 'An error occured while trying to delete the account'});
     }
 } 

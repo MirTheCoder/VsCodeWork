@@ -85,7 +85,7 @@ route.post('/getUser', async (req, res, next) => {
 });
 
 route.post('/deleteUser', async (req,res) => {
-    deleteUser(req,res, req.body.userId)
+    await deleteUser(req,res, req.body.userId);
 })
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
