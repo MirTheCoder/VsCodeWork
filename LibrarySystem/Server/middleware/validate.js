@@ -247,3 +247,19 @@ export async function deleteUser(req, res, userId){
         res.status(500).json({success: false, message: 'An error occured while trying to delete the account'});
     }
 } 
+
+//This will edit the data pertaining to this user
+export async function editUser(req, res, userId){
+    console.log(userId)
+    try{
+        let user = await usersList.findOne({userId: new Int32(userId)});
+        if(!user){
+            return res.status(404).json({success: false, message: 'User not found'});
+        } else {
+       let updatedData = req.body; //This will get us all the fields that the admin updated on behalf of the user
+    } 
+    } catch(err) {
+        console.log("Error editing user: ", err)
+        res.status(500).json({success: false, message: 'An error occured while trying to edit the account'});
+    }
+} 

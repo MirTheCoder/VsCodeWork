@@ -5,6 +5,7 @@ let accountLink = document.getElementById('Account');
 let overlay = document.getElementById('overlay');
 let overlayDetails = document.getElementById('userDetails');
 let closePopup = document.getElementById('closePopup');
+let editOverlay = document.getElementById('editUserOverlay');
 
 
 
@@ -124,11 +125,49 @@ async function deleteAUser(){
             button.addEventListener('click', async(e) => {
                 let userId = e.target.closest('.user-item').querySelector('.userid').textContent //Gets the userId of the users account that we want to delete
                 alert("Here is our users ID: ", userId)
-                await fetch("users/deleteUser", {
+                let response =await fetch("users/deleteUser", {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({userId: userId})
+
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if(data.success){
+                        alert(`${data.message}`);
+                        window.location.href = "seeUsers"; //Reload the page to reflect the changes made
+                    } else {
+                        alert(`${data.message}`);
+                    }   
+            })
+
+            })
+        })
+    }
+}
+
+//This function will allow admin to edit the info on useers accounts
+async function editAUser(){
+    //Want to first make sure that there are edit buttons on the page before we try to add event listeners to them
+     if(document.querySelectorAll(".edit")){
+        let editButtons = document.querySelectorAll(".edit")
+        editButtons.forEach(button => {
+            button.addEventListener('click', async(e) => {
+                let userId = e.target.closest('.user-item').querySelector('.userid').textContent //Gets the userId of the users account that we want to edit
+                //We will use this to first get the users details that we can show to the admin before they edit the user details
+                await fetch("users/getUser", {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({userId: userId})
             })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success){
+                    renderEditOverlay(data.user); //This function will display tehe actual user data form that the admin can edit
+                } else {
+                    alert(`${data.message}`);
+                }
+            })    
 
             })
         })
@@ -208,6 +247,7 @@ async function showAllUsers(users){
         })
         showUserDetails(); //We use this to add event listeners to each users page so that the admin can see more detils about the user if need be
         deleteAUser(); //This will place event listeners on the delete buttons
+        editAUser(); //This will place event listeners on the edit buttons
     };
 
     //We will use this function to show the details of the user that the admin has chosen to view
@@ -227,7 +267,6 @@ async function showAllUsers(users){
 
 
     async function fillOverlay(details){
-        alert(`User ID has been successfully extracted and received: ${details}`);
         let user = await accountStatus(details); //We will store the users account in here
         let userDetails = document.createElement('div');
         let userBooks = document.createElement('div');
@@ -467,4 +506,42 @@ async function accountStatus(details){
         return {};
     }
 }    
-        
+
+
+async function renderEditOverlay(user){
+    //First we will display the actualy edit overlay form for the admin to see and edit
+    if(!editOverlay.classList.contains('active')){
+        editOverlay.classList.add('active');
+    }
+
+    //This will allow us to add logic tot he close button so that the pop up will close if the admin has changed their mind about changng user info
+    const closeEditPopup = document.getElementById('closeEditPopup')
+    if(closeEditPopup){
+        closeEditPopup.addEventListener('click', closeEditOverlay)
+    }    
+    //We will use this to populate the overlay with the users information (using the users info essentially as placeholders)
+    let username = editOverlay.querySelector('#username')
+    username.value = user.username;
+    let email = editOverlay.querySelector('#email')
+    email.value = user.email;
+    let phone = editOverlay.querySelector('#phone')
+    phone.value = user.phone;
+
+    //These are our radio buttons, to ensure that admins only choose from amongst the two available options
+    let role = editOverlay.querySelector(`input[name="accountRole"][value="${user.role}"]`)
+    if(role){
+        role.checked = true;
+    }
+    let accountActive = editOverlay.querySelector(`input[name="accountActive"][value="${user.accountStatus}"]`)
+    //Here we will check the box or radio button according to whether or not the user has an active accoutn status or not
+    if(accountActive){
+        accountActive.checked = true;
+    }
+}    
+
+async function closeEditOverlay(){
+    if(editOverlay.classList.contains('active')){
+        editOverlay.classList.remove('active');
+    }
+    closeEditPopup.removeEventListener('click', closeEditOverlay) //We want to make sure that we do not add multiple event listeners to the close button
+}

@@ -60,7 +60,6 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
 
 // Adding event listeners to trigger respective acts when clicked
 welcome1.addEventListener('click', () => {
-    alert("You choose to click to choose from a variety of books!");
     window.location.href = "bookCheckout";
 });
 
@@ -75,7 +74,6 @@ welcome3.addEventListener('click', () => {
 
 //When this is clicked, it will take the user to the admin page
 welcome4.addEventListener('click', async () => {
-    alert("You choose to click to go to the Admin Page (for admins only)!");
     window.location.href = "admin";
 });
 

@@ -84,6 +84,10 @@ route.post('/getUser', async (req, res, next) => {
     await findAUser(req, res, next, req.body.userId);
 });
 
+route.post('/editUser', async (req,res) => {
+    await editUser(req,res, req.body.userId);
+})
+
 route.post('/deleteUser', async (req,res) => {
     await deleteUser(req,res, req.body.userId);
 })
