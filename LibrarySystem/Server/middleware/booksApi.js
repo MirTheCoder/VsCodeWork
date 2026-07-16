@@ -412,3 +412,27 @@ export async function deleteFines(userId){
     }
 }
 
+export async function updateUserBooksAndFines(userId, newUsername){
+    try {
+  //We will retrieve the promise results to see if the operations were succesfully completed      
+  const [booksResult, finesResult] = await Promise.all([
+    booksCheckedOutList.updateMany(
+      { userId: new Int32(userId) },
+      { $set: { username: newUsername } }
+    ),
+    finesList.updateMany(
+      { userId: new Int32(userId) },
+      { $set: { user: newUsername } }
+    )
+  ]);
+
+  // Ensure both operations were acknowledged by MongoDB
+  const isSuccess = booksResult.acknowledged && finesResult.acknowledged;
+
+  return isSuccess;
+    } catch (error) {
+        console.error("Failed to update related user records:", error);
+        return false;
+    }
+}
+

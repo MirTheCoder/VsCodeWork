@@ -20,15 +20,37 @@
         </div>
     </nav>
 
+    <div class="intro">
+    <h1>Add a User</h1>
+    <p>Fill out the form below to add a new user to the database.</p>
+    </div>
 
     <form id="userForm">
-        <h2 class="addUser">Add a User</h2>
-        <input type="text" id="username" name="username" placeholder="Username" required>
-        <input type="email" id="email" name="email" placeholder="Email" required>
-        <input type="password" id="password" name="password" placeholder="Password" required>
-        <input type="number" id="number" name="number" placeholder="Phone Number" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" required>
-        <button type="submit">Add User</button>
-    </form>
+              <label for="username">Username:</label>
+              <input type="text" id="username" name="username" placeholder="John Doe">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email" placeholder="example@example.com">
+              <label for="phone">Phone:</label>
+              <input type="telephone" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="123-456-7890">
+
+              <h3 class = "radio-group-label"><u>Account Role</u></h3>
+              <div class="radio-options"> 
+              <input type="radio" id="accountRole" name="accountRole" value="admin" class="radio-option">
+              <label for="accountRole">Admin</label>
+              <input type="radio" id="accountRole" name="accountRole" value="user" class="radio-option">
+              <label for="accountRole">User</label>
+              </div>  
+
+              <h3 class = "radio-group-label"><u>Account Status</u></h3>
+              <div class="radio-options">
+              <input type="radio" id="accountActive" name="accountActive" value="active" class="radio-option">
+              <label for="accountActive">Active</label>
+              <input type="radio" id="accountActive" name="accountActive" value="inactive" class="radio-option">
+              <label for="accountActive">Inactive</label>
+              </div> 
+
+              <button type="submit">Add User</button>
+    </form>      
 </body>
 </html>   
     <script defer src="js/addUser.js"></script>

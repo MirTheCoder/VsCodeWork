@@ -3,7 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
 import {sessionLogin, getSessionInfo, getUsersName} from './sessionHandler.js';
-import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines, dueSoon, deleteBooksCheckedOut, deleteFines} from './booksApi.js';
+import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines, dueSoon, deleteBooksCheckedOut, deleteFines, updateUserBooksAndFines} from './booksApi.js';
 import bcrypt from 'bcryptjs';
 import { get } from 'http';
 import random from 'random';
@@ -249,14 +249,21 @@ export async function deleteUser(req, res, userId){
 } 
 
 //This will edit the data pertaining to this user
-export async function editUser(req, res, userId){
-    console.log(userId)
+export async function editUser(req, res){
     try{
-        let user = await usersList.findOne({userId: new Int32(userId)});
+        //First we want to verify that the users account exists before updating anything
+        let user = await usersList.findOne({"userId": new Int32(req.body.userId)});
         if(!user){
             return res.status(404).json({success: false, message: 'User not found'});
         } else {
        let updatedData = req.body; //This will get us all the fields that the admin updated on behalf of the user
+       let isUpdated = await updateUserBooksAndFines(req.body.userId, updatedData.username); //This will update the username across other fields as well that may contain the username of the user whos info was updated
+       if(isUpdated){
+            await usersList.updateOne({userId: new Int32(req.body.userId)}, {$set: {"username": updatedData.username, "email": updatedData.email, "phone": updatedData.phone, "role": updatedData.role, "accountStatus": updatedData.accountStatus}});
+            res.status(200).json({success: true, message: 'Account successfully updated'});
+       } else {
+            res.status(200).json({success: false, message: 'An error occured while trying to update details connected to the account'});
+       }
     } 
     } catch(err) {
         console.log("Error editing user: ", err)

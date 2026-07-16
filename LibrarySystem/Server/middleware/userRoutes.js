@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers, findAUser, getSpecifiedUserDetails, deleteUser} from './validate.js';
+import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers, findAUser, getSpecifiedUserDetails, deleteUser, editUser} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
 import { checkOutBook, getUsersBooks, getSpecificUsersBooks, returnBook, addFine, dueSoon, getOverdueBooks} from './booksApi.js';
 import express from 'express';
@@ -85,7 +85,7 @@ route.post('/getUser', async (req, res, next) => {
 });
 
 route.post('/editUser', async (req,res) => {
-    await editUser(req,res, req.body.userId);
+    await editUser(req,res);
 })
 
 route.post('/deleteUser', async (req,res) => {

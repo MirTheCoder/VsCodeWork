@@ -217,9 +217,9 @@ async function showAllUsers(users){
                     <span class="username">${user.username}</span>
                     <span class="userid">${user.userId}</span>
                 </div>
-                <span class="status-badge status-active">Active</span> 
-                </div>
-            
+                ${user.accountStatus.toLowerCase() == "active" ? `<span class="status-badge status-active">${user.accountStatus}</span>` : `<span class="status-badge status-suspended">${user.accountStatus}</span>`}
+            </div>
+
             <div class="user-details-grid">
                 <div class="detail-group">
                     <span class="detail-label">$Email</span>
@@ -516,6 +516,7 @@ async function renderEditOverlay(user){
 
     //This will allow us to add logic tot he close button so that the pop up will close if the admin has changed their mind about changng user info
     const closeEditPopup = document.getElementById('closeEditPopup')
+    const editUserForm = document.getElementById('editUserForm')
     if(closeEditPopup){
         closeEditPopup.addEventListener('click', closeEditOverlay)
     }    
@@ -537,6 +538,10 @@ async function renderEditOverlay(user){
     if(accountActive){
         accountActive.checked = true;
     }
+    if(editUserForm){
+        editUserForm.addEventListener('submit', (e) => submitEdits(e, user))
+    }
+
 }    
 
 async function closeEditOverlay(){
@@ -544,4 +549,36 @@ async function closeEditOverlay(){
         editOverlay.classList.remove('active');
     }
     closeEditPopup.removeEventListener('click', closeEditOverlay) //We want to make sure that we do not add multiple event listeners to the close button
+    editUserForm.removeEventListener('submit', (e) => submitEdits(e)) //We want to make sure that we do not add multiple event listeners to the form submit button
+}
+
+async function submitEdits(e, user){
+     e.preventDefault();
+     //Getting the data from the form and passing it to our backend
+     formData = new FormData(editUserForm);
+            const updatedUser = {
+                userId: user.userId,
+                username: formData.get('username'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                role: editOverlay.querySelector('input[name="accountRole"]:checked').value,
+                accountStatus: editOverlay.querySelector('input[name="accountActive"]:checked').value
+            };
+            try{
+                const response = await fetch('users/editUser', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(updatedUser)
+                });
+                const data = await response.json();
+                if(data.success){
+                    alert('User info updated successfully')
+                    window.location.reload(); //Reload the page once the users info has been succesfully edited
+                } else {
+                    alert('Unable to update user info at this time, please try again later')
+                }
+            } catch(error){
+                console.log("Error updating user: ", error);
+                alert("Error while updating user info, please try again later")
+            }
 }
