@@ -54,7 +54,7 @@ export async function validateUserLogin(req, res, next) {
     const {username, password} = req.body;
     let person = await usersList.findOne({username: username});
     if(person){
-        let response = await sessionLogin(req, username); //This will generate a brand new session for the user when they login
+        let response = await sessionLogin(req, username, password); //This will generate a brand new session for the user when they login
         if(response){
             res.status(200).json({message: 'Login successful!', success: true});
         } else {

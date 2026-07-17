@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Miracle's Library </title>
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="icon" href="static/libraryIcon.png" type="image/png">
+
+
+  <link rel="stylesheet" href="css/reviews.css">
+</head>
+
+<!-- This index page will be our initial landing page for users whether they be logged in or not -->
+<body>
+  <!-- This will be our navigation bar -->
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="login" id="login">Login</a>
+      <a href="register">Register</a>
+      <a href="about">About Us</a>
+      <a href="account" id="Account">My Account</a>
+      <a id="logout">Logout</a> <!-- Logout functionality will be handled by hte js file accompanied to this file -->
+    </div>
+  </nav>
+
+    <div class="introSect">
+        <h2>Review Books</h2>
+        <p>Select a book from </p>
+    </div>
+
+  <div class="booksToReview" id="bookResults">
+
+  </div>
+
+  <!-- This will contain all the reviews users have made -->
+  <div class="seeReviews" id="seeReviews">
+
+  </div>
+
+  <script src="./js/reviews.js"></script>
+  <!-- This global script will be put all required html files to handle the login logic -->
+  <script defer src="js/global.js"></script>
+</body>
+</html>

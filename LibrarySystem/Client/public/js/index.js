@@ -47,6 +47,7 @@ welcome1.addEventListener('click', () => {
 
 welcome2.addEventListener('click', () => {
     alert("You choose to click to see Reviews on your favorite books!");
+    window.location.href = "/reviews";
 });
 
 welcome3.addEventListener('click', () => {

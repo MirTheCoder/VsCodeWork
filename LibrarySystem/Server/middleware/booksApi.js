@@ -11,6 +11,7 @@ import path from 'path';
 import random from 'random';
 import { fileURLToPath } from 'url';
 import { Int32 } from 'mongodb';
+import { time } from "console";
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
@@ -21,6 +22,7 @@ const overdueBooksList = await getCollection('overdueBooks')
 const booksCheckedOutList = await getCollection('booksCheckedOut')
 const finesList = await getCollection('fines')
 const usersList = await getCollection('Users')
+const reviewsList = await getCollection('reviews');
 
 
 //This is the schema for our image uploads, structuring how we will be uploading images to our database
@@ -436,3 +438,22 @@ export async function updateUserBooksAndFines(userId, newUsername){
     }
 }
 
+//This will allow users to add reviews to a book
+export async function addReview(req, res){
+    //Want to first check and see if they are logged in since the review has to be tied to a users account so that we can know who left the review
+    let response = await getSessionInfo(req, res, next);
+    if(response.loggedIn){
+        let userId = response.userId;
+        let user = usersList.findOne({"userId": userId});
+        let review = {
+            "userId": userId,
+            "username": user.username,
+            "reviewContent": req.body.content, //Store the text thhe user wrote regarding the book
+            "date": new Date(), // Store the date when the user was created
+            "bookISBN": req.body.isbn,
+            "bookTitle": req.body.title
+        }
+    } else {
+        res.status(200).json({"success": false, "message": "You must be logged in, in order to leave a review"})
+    }
+}

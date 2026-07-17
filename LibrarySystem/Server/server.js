@@ -50,6 +50,12 @@ app.get('/indexPage', (req, res) => {
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });  
 
+//This will route users who request for the reviews page to the reviews.html file
+app.get('/reviews', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'reviews.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});  
+
 //This will help us serve the login page when requested
 app.get('/login', (req, res) => {
     res.status(200).sendFile(path.join(clientRoot, 'public', 'Login.html'));
