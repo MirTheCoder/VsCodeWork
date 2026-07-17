@@ -27,27 +27,9 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                     welcome.id = "userWelcome";
                     welcome.className = "Welcome";
                 }
-                if(loginLink){
-                    loginLink.style.visibility = "hidden";
-                }
-                if(accountLink){
-                    accountLink.style.visibility = "visible";
-                }
-                if(logoutLink){
-                    logoutLink.style.visibility = "visible";
-                }
             } else {
                 if(document.getElementById('userWelcome')){
                     document.getElementById('userWelcome').remove();
-                }
-                if(loginLink){
-                    loginLink.style.visibility = "visible";
-                }
-                if(accountLink){
-                    accountLink.style.visibility = "hidden";
-                }
-                if(logoutLink){
-                    logoutLink.style.visibility = "hidden";
                 }
             }
         });
