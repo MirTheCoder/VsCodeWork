@@ -92,7 +92,8 @@ body{
 /* Input Fields (Text, Email, Telephone) */
 #userForm input[type="text"],
 #userForm input[type="email"],
-#userForm input[type="telephone"] {
+#userForm input[type="telephone"],
+#userForm input[type="password"] {
   width: 100%;
   padding: 10px 14px;
   font-family: 'Inter', sans-serif;

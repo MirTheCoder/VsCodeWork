@@ -92,7 +92,8 @@ export async function AdminAddUser(req,res){
                 accountStatus: accountStatus
             }
 
-            await userList.insertOne(newUser);
+            await usersList.insertOne(newUser);
+            res.status(200).json({success: true, message: 'User added successfully!'});
         } catch(err){
             console.log("Error adding the user from admin side: ", err);
             res.status(500).json({success: false, message: 'An error occured while trying to add the user'});
