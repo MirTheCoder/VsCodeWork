@@ -1,5 +1,12 @@
 body{
   margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.hide{
+  display: none;
 }
 
 /* CSS styling for the navbar */
@@ -35,8 +42,25 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
   margin-bottom: 30px;
+}
+
+.intro h1 {
+  font-family: "Bevan", serif;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 3.5rem;
+  color: #5B3E2B;
+  margin-bottom: 5px;
+  padding: 0;
+}
+
+.intro p {
+  font-family: "Kameron", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-size: 1.2rem;
+  color: #2B2B2B;
 }
 
 
@@ -48,6 +72,10 @@ body{
   flex-direction: column;
   gap: 12px;
   margin-bottom: 20px;
+  background: #D2B48C;
+  padding: 40px;
+  border-radius: 7px;
+  width: 600px;
 }
 
 /* Label Styling */

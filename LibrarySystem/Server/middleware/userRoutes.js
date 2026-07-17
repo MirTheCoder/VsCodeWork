@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
-import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers, findAUser, getSpecifiedUserDetails, deleteUser, editUser} from './validate.js';
+import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers, findAUser, getSpecifiedUserDetails, deleteUser, editUser, AdminAddUser} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
 import { checkOutBook, getUsersBooks, getSpecificUsersBooks, returnBook, addFine, dueSoon, getOverdueBooks} from './booksApi.js';
 import express from 'express';
@@ -90,6 +90,10 @@ route.post('/editUser', async (req,res) => {
 
 route.post('/deleteUser', async (req,res) => {
     await deleteUser(req,res, req.body.userId);
+})
+
+route.post('/adminAddUser', async (req,res) => {
+    await AdminAddUser(req, res);
 })
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly

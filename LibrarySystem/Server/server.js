@@ -89,6 +89,7 @@ app.get('/bookCheckout', (req, res) => {
 //Any routes that start with /users will be handled in userRoutes.js (handles user related tasks)
 app.use('/users', userRoutes)
 
+//Any routes starting with /api will be handeled by the apiRoutes file
 app.use('/api', apiRoutes)
 
 //This is the route to the manage books page for admins to access

@@ -65,6 +65,43 @@ export async function validateUserLogin(req, res, next) {
     }
 }  
 
+//This is like the validate registration but from the admin side of things
+export async function AdminAddUser(req,res){
+    var newId = '';
+    let idUnique = false;
+    const {username, email, phone, password, role, accountStatus} = req.body;
+    //We want to first make sure that there isn't already a user with teh same password and username combonation
+    let person = await usersList.findOne({username: username, password: password});
+    if(!person){
+        try{
+            //Generates a unique ID for the user
+            while(!idUnique){
+                newId = await generateUserId();
+                let idCheck = await usersList.findOne({userId: newId});
+                if(!idCheck){
+                    idUnique = true;
+                }
+            }
+            let newUser = {
+                userId: newId,
+                username: username,
+                password: password,
+                email: email,
+                phone: phone,
+                role: role,
+                accountStatus: accountStatus
+            }
+
+            await userList.insertOne(newUser);
+        } catch(err){
+            console.log("Error adding the user from admin side: ", err);
+            res.status(500).json({success: false, message: 'An error occured while trying to add the user'});
+        }    
+    } else {
+        res.status(200).json({success: false, message: 'User already exists with the provided username and password.'});
+    }
+}
+
 export async function getUserDetails(req, res, next) {
     //Here we are going to try and get the info of the current user in session
     let response = await getSessionInfo(req, res, next);
