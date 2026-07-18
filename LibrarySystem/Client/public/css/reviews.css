@@ -169,3 +169,91 @@ body{
     padding: 10px;
     gap: 30px;
   }
+
+ /* This logic wll handle the overlay section for hwere users will write their review on a book before adding the review */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(43, 43, 43, 0.5); /* Semi-transparent dark gray */
+  backdrop-filter: blur(4px);               /* Beautiful modern frosted-glass effect */
+  z-index: 1000;                            /* Forces it to stay on top of everything else */
+  
+  /* Flexbox settings to perfectly center the popup box */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Hidden by default until toggled via JS */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* This class will be added/removed by JavaScript to show/hide the popup */
+.overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* The actual popup card box */
+.popup {
+  background-color: #FFFFFF;
+  width: 90%;
+  max-width: 500px;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid #E2DED6;
+  
+  /* Subtle scale animation when appearing */
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+/* Animate the inner popup scale up when active */
+.overlay.active .popup {
+  transform: scale(1);
+}
+
+/* Popup Header Styling */
+.popup h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: #4A3322;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #E2DED6;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+/* Dynamic details injection area inside the popup */
+#addReviewsPanel {
+  margin-bottom: 25px;
+  font-family: 'Inter', sans-serif;
+  color: #2B2B2B;
+  height: 300px;
+  overflow-y: auto; /* Allows scrolling if content exceeds height */
+}
+
+/* Close Button styled identically to your other secondary buttons */
+#closePopup {
+  display: block;
+  width: 100%; /* Spans across the bottom of the card */
+  padding: 11px;
+  background-color: #EFE6D8;
+  color: #5B3E2B;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid #C9BFB5;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.2s;
+}
+
+#closePopup:hover {
+  background-color: #E3D5C4;
+  transform: translateY(-1px);
+}

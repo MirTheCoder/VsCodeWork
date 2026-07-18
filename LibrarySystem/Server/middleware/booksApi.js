@@ -439,21 +439,46 @@ export async function updateUserBooksAndFines(userId, newUsername){
 }
 
 //This will allow users to add reviews to a book
-export async function addReview(req, res){
+export async function addReview(req, res, next){
     //Want to first check and see if they are logged in since the review has to be tied to a users account so that we can know who left the review
     let response = await getSessionInfo(req, res, next);
     if(response.loggedIn){
-        let userId = response.userId;
-        let user = usersList.findOne({"userId": userId});
-        let review = {
-            "userId": userId,
-            "username": user.username,
-            "reviewContent": req.body.content, //Store the text thhe user wrote regarding the book
-            "date": new Date(), // Store the date when the user was created
-            "bookISBN": req.body.isbn,
-            "bookTitle": req.body.title
-        }
+        try{
+            //Here we will create a review that is tagged to the user and book, and then add it to our reviews list
+            let userId = response.userId;
+            let user = usersList.findOne({"userId": userId});
+            let review = {
+                "userId": userId,
+                "username": user.username,
+                "reviewContent": req.body.content, //Store the text thhe user wrote regarding the book
+                "date": new Date(), // Store the date when the user was created
+                "bookISBN": req.body.isbn,
+                "bookTitle": req.body.title
+            }
+            await reviewsList.insertOne(review)
+            res.status(200).json({"success": true, "message": "Review has been succesfully added...Hooray"})
+        }  catch(err){
+           res.status(500).json({"success": false, message: `Error while saving review: ${err}`})
+        }  
+
+
     } else {
         res.status(200).json({"success": false, "message": "You must be logged in, in order to leave a review"})
+    }
+}
+
+//This will get us a book by cross refencing the isbn number
+export async function getABook(req,res, next){
+    let response = await getSessionInfo(req, res, next)
+    if(response.loggedIn){
+        try{
+            let isbn = req.body.isbn
+            let book = await booksList.findOne({"isbn": isbn});
+            res.status(200).json({"success": true, "message": "We have successfully retrieved the book", "book": book})
+        } catch(err){
+            res.status(500).json({"success": false, "message": `error while trying to retrieve the book of interest: ${err}`})
+        }    
+    } else {
+        res.status(200).json({"success": false, "message": "User is not logged in"})
     }
 }

@@ -1,5 +1,7 @@
 let results = document.getElementById('bookResults');
-let seeReviews = document.getElementById('seeReviews')
+let seeReviews = document.getElementById('seeReviews');
+let addReviewOverlay = document.getElementById('overlay');
+let closeAddReview = document.getElementById('closePopup');
 
 document.addEventListener('DOMContentLoaded', async () => {
       await fetch('/api/getBooks')
@@ -56,8 +58,32 @@ async function addButtonListeners(){
     if(document.querySelectorAll('.add-button')){
         let addList = document.querySelectorAll('.add-button')
         addList.forEach(button => {
-            button.addEventListener('click', (e) => {
-                alert('you clicked an add button')
+            button.addEventListener('click', async (e) => {
+                let isbn = e.target.closest(".book-item").querySelector('small').textContent.trim().replace("ISBN: ", ''); //Gets us the isbn of the book corresponding to the add review button that was clicked
+                try{
+                    //First we have to get the book that the user is reviewing so that we can tie its title and isbn tot he review
+                    const response = await fetch('/users/currentBooks', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ "isbn": isbn })
+                    });
+                    let data = await response.json()
+                    if(data.success){
+                        alert("It worked")
+                    } else {
+                        alert("it did not work")
+                    }
+
+                    if(!addReviewOverlay.classList.contains('active')){
+                        addReviewOverlay.classList.add('active');
+                    }
+                    closeAddReview.addEventListener('click', closeTheOverlay);
+
+                } catch(err){
+                    console.log("An issue occured while trying to save your review, please try again: ", err)
+                }
             })
         })
     }    
@@ -73,4 +99,11 @@ async function seeButtonListeners(){
                 })
             })
         }
+}
+
+async function closeTheOverlay(){
+    if(addReviewOverlay.classList.contains('active')){
+        addReviewOverlay.classList.remove('active');
+    }
+    closeAddReview.removeEventListener('click', closeTheOverlay) //We want to make sure that there are no event listeners straggling around, only have it when necessary
 }

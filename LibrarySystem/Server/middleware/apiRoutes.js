@@ -1,7 +1,7 @@
 import express from 'express';
 const route = express.Router();
 import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
-import {getBooks, saveImageData, getImage, addBook, deleteBook, editBook} from './booksApi.js'
+import {getBooks, saveImageData, getImage, addBook, deleteBook, editBook, getABook} from './booksApi.js'
 
 
 
@@ -40,6 +40,10 @@ route.post('/addBook', upload.single('image'), addBook);
 route.post('/editBook', upload.single('image'), editBook); //Route used to edit the details of a specified book
 
 route.post('/deleteBook', deleteBook); //Route used to delete books from our database
+
+route.post('/getABook', async(req,res,next) => {
+    await getABook(req,res,next)
+})
 
 
 
