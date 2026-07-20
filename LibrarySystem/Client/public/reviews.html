@@ -33,24 +33,35 @@
         <p>Select a book from </p>
     </div>
 
+  <div class="reviewSects">  
   <div class="booksToReview" id="bookResults">
 
   </div>
 
-  <!-- This will contain all the reviews users have made -->
-  <div class="seeReviews" id="seeReviews">
+   <!-- This will contain all the reviews users have made -->
+  <div class="seeReviews hide" id="seeReviews">
 
   </div>
+  </div>
+
+
+
 
   <div class="overlay" id="overlay">
         <div class="popup">
           <h3>Add Review</h3>
-          <div id="addReviewPanel">
-            <!-- User details will be displayed here -->
-          </div>
-          <button id="closePopup">Close</button>
+          <form id="reviewForm">
+            <div id="addReviewPanel">
+              <!-- Book details plus review text box will be displayed here -->
+            </div>
+          <div id="buttonSect">  
+            <button id="closePopup">Close</button>
+            <button type="submit" id="submitButton">Submit Review</button>
+          </div>  
+          </form>
         </div>
     </div>
+
 
 
   <script src="./js/reviews.js"></script>

@@ -54,7 +54,6 @@ body{
 
  /* Results Section */
 .booksToReview {
-    max-width: 900px;
     margin: 0 auto 80px;
     margin-top: 50px;
     padding: 20px;
@@ -211,6 +210,7 @@ body{
   /* Subtle scale animation when appearing */
   transform: scale(0.9);
   transition: transform 0.3s ease;
+  align-items: center;
 }
 
 /* Animate the inner popup scale up when active */
@@ -230,15 +230,31 @@ body{
 }
 
 /* Dynamic details injection area inside the popup */
-#addReviewsPanel {
+#addReviewPanel {
   margin-bottom: 25px;
   font-family: 'Inter', sans-serif;
   color: #2B2B2B;
   height: 300px;
   overflow-y: auto; /* Allows scrolling if content exceeds height */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* Close Button styled identically to your other secondary buttons */
+#addReviewPanel p{
+  text-align: left;
+}
+
+#addReviewPanel h4{
+  border-bottom: 2px solid brown;
+  margin-bottom: 5px;
+}
+
+#addReviewPanel h5{
+  margin-top: 2px;
+}
+
+/* Close Button and Submit Button styled identically to your other secondary buttons */
 #closePopup {
   display: block;
   width: 100%; /* Spans across the bottom of the card */
@@ -253,7 +269,77 @@ body{
   transition: background-color 0.25s, transform 0.2s;
 }
 
+#submitButton {
+  display: block;
+  width: 100%; /* Spans across the bottom of the card */
+  padding: 11px;
+  background-color: #EFE6D8;
+  color: #855A3F;
+  font-weight: 600;
+  font-size: 14px;
+  border: 1px solid #C9BFB5;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.25s, transform 0.2s;
+}
+
+#buttonSect{
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
 #closePopup:hover {
   background-color: #E3D5C4;
   transform: translateY(-1px);
+}
+
+#submitButton:hover {
+  background-color: #FAF5EE;
+  transform: translateY(-1px);
+}
+
+/* This css is for the review box that the users type into */
+.reviewBox {
+  border: 5px solid burlywood;
+  border-radius: 7px;
+  padding: 15px;
+}
+
+.reviewSects{
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  gap: 50px;
+}
+
+.seeReviews{
+  background-color: #4A3322;
+  padding: 15px;
+  height: 100%;
+  border-radius: 7px;
+  margin-top: 50px;
+  background-color: #D2B48C;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.seeReviews p {
+    text-align: center;
+    opacity: 0.6;
+    font-style: italic;
+    
+}
+
+.seeReviews .book-info {
+    text-align: center;
+    opacity: 0.6;
+    font-style: italic;
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+.hide{
+  display: none;
 }

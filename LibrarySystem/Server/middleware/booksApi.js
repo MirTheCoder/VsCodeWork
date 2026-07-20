@@ -446,7 +446,7 @@ export async function addReview(req, res, next){
         try{
             //Here we will create a review that is tagged to the user and book, and then add it to our reviews list
             let userId = response.userId;
-            let user = usersList.findOne({"userId": userId});
+            let user = await usersList.findOne({"userId": userId});
             let review = {
                 "userId": userId,
                 "username": user.username,
@@ -481,4 +481,16 @@ export async function getABook(req,res, next){
     } else {
         res.status(200).json({"success": false, "message": "User is not logged in"})
     }
+}
+
+//This will allow us to get all the reviews for a particular book
+export async function getReviews(req, res, next){
+        try{
+            let isbn = req.body.isbn
+            let reviews = await reviewsList.find({"bookISBN": isbn}).toArray(); //We are asking our system to give us all the reviews on the book that holds this isbn number
+            res.status(200).json({'success': true, 'message': "We succesfully have obtained the reviews ",'reviews': reviews})
+        } catch(err){
+            res.status(500).json({'success': false, 'message': `Error while trying to get list of reviews: ${err}`})
+        }    
+    
 }

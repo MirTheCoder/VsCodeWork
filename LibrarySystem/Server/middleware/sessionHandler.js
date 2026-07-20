@@ -1,6 +1,8 @@
 import fs from 'fs';
 import path from 'path';
 import session from 'express-session'; //Used to generate and manage sessions
+import { getCollection } from './db.js';
+const usersList = await getCollection('Users')
 
 export async function sessionLogin(req, username, password) {
     //We are storing our code in a promise so that the whole process finishes before we send back a response
@@ -15,7 +17,7 @@ export async function sessionLogin(req, username, password) {
         })
     req.session.user = username;
     req.session.role = 'user'; // Set user role to user by default    
-    let user = userList.findOne({"username": username, "password": password}) 
+    let user = await usersList.findOne({"username": username, "password": password})
     req.session.userId = user.userId //Gonna store the userId in the req.session so that we can get the userId more easily for the actvie user across other functions
     return {success: true, message: "Successfully Logged in"}                
 }
