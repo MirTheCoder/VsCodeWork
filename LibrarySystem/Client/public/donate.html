@@ -46,13 +46,39 @@
   <div class="donateBody">
     <form class="donateForm" id="donateForm">
      <div class="formText">
-        <img src="./static/donateLogo.jpeg" height="50px" width="50px"/>
+        <img src="./static/donateLogo.jpeg" height="50px" width="80px"/>
         <div class="formInnerText">
           <h5>Book Information</h5>
           <p>please provide accurate details about the book you want to donate</p>
         </div>
-     </div> 
+    </div> 
 
+    <div class="inputSect">
+      <label for="title">Book Title</label>
+      <input type="text" name="title" placeholder="Type in the book title here" required/>
+    </div>
+    
+     <div class="inputSect">
+      <label for="title">Author</label>
+      <input type="text" name="author" placeholder="Type in the authors name here" required/>
+    </div>  
+
+     <div class="inputSect">
+      <label for="genre">Genre</label>
+      <input type="text" name="genre" placeholder="Type in the genre of the book" required/>
+    </div>
+    
+     <div class="inputSect">
+      <label for="year">Year</label>
+      <input type="text" name="year" placeholder="Type in the publish year of the book" required/>
+    </div>  
+
+     <div class="upload">
+      <label for="file">Upload File</label>
+      <input type="file" name="file" accept="application/pdf, .pdf" required />
+    </div>  
+
+    <button type="submit" class="donateBtn">Donate</button>
     </form>
   </div>
 
