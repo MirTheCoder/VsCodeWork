@@ -52,16 +52,6 @@ body {
   margin-left: 40px;
 }
 
-.welcomeHolder::before {
-  content: "Welcome back";
-  display: block;
-  font-family: 'Playfair Display', serif;
-  font-size: 28px;
-  color: #5B3E2B;
-  opacity: 0.9;
-  margin-bottom: 5px;
-}
-
 /* Account container */
 .account-container {
   max-width: 520px;

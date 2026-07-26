@@ -46,10 +46,42 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                         logoutLink.classList.add('hide')
                     }
                 }
-                window.location.href = "indexPage"; //Send user back to home page if they are not logged in
+                //Send them back to index page only if they aren't on the index page to begin with
+                if(window.location.pathname != "/indexPage"){
+                    window.location.href = "indexPage"; //Send user back to home page if they are not logged in
+                }
             }
         });
     } catch (error) {
         console.error('Error checking login status:', error);
     }
 });
+
+if(logoutLink) {
+//This function will handle the logout process if the logout link is clicked    
+    logoutLink.addEventListener('click', async (e) => {
+    e.preventDefault();
+                await fetch('users/logout', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(async response => {
+                    if(response.status === 400){
+                        alert('You are not logged in!');
+                    } else {
+                        return await response.json();
+                    }
+                })
+                .then(data => {
+                    if(data.success){
+                        alert(`${data.message}`);
+                        window.location.href = "indexPage";
+                    } else {
+                        alert(`${data.message}`);
+                    }
+                });
+    });  
+}
+              

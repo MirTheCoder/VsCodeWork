@@ -131,7 +131,7 @@ export async function getUserDetails(req, res, next) {
                             res.status(200).json({success: 4, user: user.username ? user.username : null, 
                             role: user.role ? user.role : null, email:user.email ? user.email : null, 
                             phone:user.phone ? user.phone : null, 
-                            memberSince: user.memberSince ? user.memberSince : null,
+                            memberSince: user.DateCreated ? user.DateCreated : null,
                             dueSoonBooks: dueSoonBooks,
                             yourBooks: booksCheckedOut,
                             yourOverdueBooks: overdueBooks,
@@ -142,7 +142,7 @@ export async function getUserDetails(req, res, next) {
                         res.status(200).json({success: 3, user: user.username ? user.username : null, 
                             role: user.role ? user.role : null, email:user.email ? user.email : null, 
                             phone:user.phone ? user.phone : null, 
-                            memberSince: user.memberSince ? user.memberSince : null,
+                            memberSince: user.DateCreated ? user.DateCreated : null,
                             dueSoonBooks: dueSoonBooks,
                             yourOverdueBooks: overdueBooks,
                             yourBooks: booksCheckedOut}); 
@@ -153,12 +153,12 @@ export async function getUserDetails(req, res, next) {
                     res.status(200).json({success: 2, user: user.username ? user.username : null, 
                         role: user.role ? user.role : null, email:user.email ? user.email : null, 
                         phone:user.phone ? user.phone : null, 
-                        memberSince: user.memberSince ? user.memberSince : null,
+                        memberSince: user.DateCreated ? user.DateCreated : null,
                         dueSoonBooks: dueSoonBooks,
                         yourBooks: booksCheckedOut});
                     }    
             } else {
-                    res.status(200).json({success: 1, user: user.username ? user.username : null, role: user.role ? user.role : null, email:user.email ? user.email : null, phone:user.phone ? user.phone : null, memberSince: user.memberSince ? user.memberSince : null});    
+                    res.status(200).json({success: 1, user: user.username ? user.username : null, role: user.role ? user.role : null, email:user.email ? user.email : null, phone:user.phone ? user.phone : null, memberSince: user.DateCreated ? user.DateCreated : null});    
             }    
         } else {
                 //If Just the users info is found, then that is what we will only send back to the user
@@ -226,7 +226,7 @@ export async function getSpecifiedUserDetails(req, res, next, userId) {
                             res.status(200).json({success: 4, user: user.username ? user.username : null, 
                             role: user.role ? user.role : null, email:user.email ? user.email : null, 
                             phone:user.phone ? user.phone : null, 
-                            memberSince: user.memberSince ? user.memberSince : null,
+                            memberSince: user.DateCreated ? user.DateCreated : null,
                             dueSoonBooks: dueSoonBooks,
                             yourBooks: booksCheckedOut,
                             yourOverdueBooks: overdueBooks,
@@ -237,7 +237,7 @@ export async function getSpecifiedUserDetails(req, res, next, userId) {
                         res.status(200).json({success: 3, user: user.username ? user.username : null, 
                             role: user.role ? user.role : null, email:user.email ? user.email : null, 
                             phone:user.phone ? user.phone : null, 
-                            memberSince: user.memberSince ? user.memberSince : null,
+                            memberSince: user.DateCreated ? user.DateCreated : null,
                             dueSoonBooks: dueSoonBooks,
                             yourOverdueBooks: overdueBooks,
                             yourBooks: booksCheckedOut}); 
@@ -248,12 +248,12 @@ export async function getSpecifiedUserDetails(req, res, next, userId) {
                     res.status(200).json({success: 2, user: user.username ? user.username : null, 
                         role: user.role ? user.role : null, email:user.email ? user.email : null, 
                         phone:user.phone ? user.phone : null, 
-                        memberSince: user.memberSince ? user.memberSince : null,
+                        memberSince: user.DateCreated ? user.DateCreated : null,
                         dueSoonBooks: dueSoonBooks,
                         yourBooks: booksCheckedOut});
                     }    
             } else {
-                    res.status(200).json({success: 1, user: user.username ? user.username : null, role: user.role ? user.role : null, email:user.email ? user.email : null, phone:user.phone ? user.phone : null, memberSince: user.memberSince ? user.memberSince : null});    
+                    res.status(200).json({success: 1, user: user.username ? user.username : null, role: user.role ? user.role : null, email:user.email ? user.email : null, phone:user.phone ? user.phone : null, memberSince: user.DateCreated ? user.DateCreated : null});    
             }    
         } else {
                 //If Just the users info is found, then that is what we will only send back to the user

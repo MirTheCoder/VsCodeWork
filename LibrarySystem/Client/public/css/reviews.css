@@ -315,7 +315,7 @@ body{
 
 .seeReviews{
   background-color: #4A3322;
-  padding: 15px;
+  padding: 85px;
   height: 100%;
   border-radius: 7px;
   margin-top: 50px;
@@ -342,4 +342,49 @@ body{
 
 .hide{
   display: none;
+}
+
+/* This will be the css for each review that is left */
+.theReview {
+  background: #964B00;
+  padding: 20px;
+  border-radius: 12px;
+  border: solid 3px burlywood;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  align-items: center;
+  overflow-y:auto;
+  max-width: 500px;
+}
+
+.theReview p{
+  margin-top: 0px;
+  text-align: left;
+  font-family: "Smooch Sans", sans-serif;
+  font-optical-sizing: auto;
+}
+
+.h2Park{
+  font-size: 1.2rem;
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.close-reviews{
+  background: maroon;
+  padding: 10px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  color: tan;
+  margin-top: 20px;
+}
+
+.close-reviews:hover{
+  background: #4A0E17;
+  transition: color 0.3s, text-shadow 0.3s;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transform: translateY(-1px);
 }

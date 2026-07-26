@@ -4,7 +4,6 @@ let searchBar = document.getElementById('searchBar')
 let filterForm = document.getElementById('filterForm')
 var searchTerm = ""
 let searchButton = document.getElementById('searchButton')
-let logoutLink = document.getElementById('logout')
 //This will reset our event listeners so that we don't have duplicate event listeners for the same buttons
 //If they happened to be rendered multiple times at one time for some reason
 document.addEventListener('DOMContentLoaded', async () => {
@@ -29,34 +28,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }  
     fetchBooks() // we will use this to fetch all the books in the database  
 })
-
-if(logoutLink) {
-//This function will handle the logout process if the logout link is clicked    
-    logoutLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-                await fetch('users/logout', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(async response => {
-                    if(response.status === 400){
-                        alert('You are not logged in!');
-                    } else {
-                        return await response.json();
-                    }
-                })
-                .then(data => {
-                    if(data.success){
-                        alert(`${data.message}`);
-                        window.location.href = "indexPage";
-                    } else {
-                        alert(`${data.message}`);
-                    }
-                });
-    });  
-}
 
 
 //Function we use to fetch books within our library database

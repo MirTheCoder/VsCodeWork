@@ -4,6 +4,7 @@ let addReviewOverlay = document.getElementById('overlay');
 let closeAddReview = document.getElementById('closePopup');
 let AddReviewPanel = document.getElementById('addReviewPanel')
 let reviewForm = document.getElementById('reviewForm');
+let closeReviewList = ''
 
 document.addEventListener('DOMContentLoaded', async () => {
       await fetch('/api/getBooks')
@@ -40,7 +41,7 @@ async function imgSources(books){
               <p class="book-isbn"><small>ISBN: ${element.isbn}</small></p>
               <div id="admin-buttons">
                 <button class="add-button" id="edit">Add Review</button>
-                <button class="see-button" id="delete">See Review</button>
+                <button class="see-button" id="delete">See Reviews</button>
               </div>
           </div>
           `;
@@ -105,6 +106,7 @@ async function seeButtonListeners(){
     //We first want to make sure that there is at least one see review button available on our page
         if(document.querySelectorAll('.see-button')){
             let addList = document.querySelectorAll('.see-button')
+            seeReviews.innerHTML = '' //Reset the box every time to load up new reviews 
             addList.forEach(button => {
                 button.addEventListener('click', async (e) => {
                     alert('you clicked a see button')
@@ -156,17 +158,28 @@ async function seeButtonListeners(){
                             let reviewList = data.reviews
                             reviewList.forEach(review => {
                                 let reviewSect = document.createElement('div')
-                                reviewSect.innerHTML = `<p>${review.reviewContent}</p>`
+                                reviewSect.innerHTML = `<div class="theReview">
+                                    <h4>"${review.reviewContent}"</h4>
+                                    <p>${timeFixer(review.date)}</p>
+                                </div>`
                                 seeReviews.appendChild(reviewSect)
                             })
 
                         } else {
                             //If no reviews for the book, we will have a message saying so
                             let reviewSect = document.createElement('div')
-                            reviewSect.innerHTML = `<h2>There are no reviews for this book currently, check back later to see if any reviews pop up</h2>`
+                            reviewSect.innerHTML = `
+                            <div class="theReview">
+                                <h2 class="h2Park">There are no reviews for this book currently, <br>check back later to see if any reviews pop up</h2>
+                            </div>
+                            `
                             seeReviews.appendChild(reviewSect)
                         }
                     }
+
+                    seeReviews.innerHTML += `<button type='button' class='close-reviews' id="closeReviews">Close</button>`
+                    closeReviewList = document.getElementById('closeReviews');document.getElementById('closeReviews')
+                    closeReviewList.addEventListener('click', closeReviews)
 
                     if(seeReviews.classList.contains('hide')){
                         seeReviews.classList.remove('hide');
@@ -218,4 +231,28 @@ async function saveReview(e, book){
         alert('It did not work due to an error')
         console.log("Error: ", err)
     }    
+}
+
+//This will help convert our string date into a date that can be dispalyed on the screen for out users to see and witness
+function timeFixer(date){
+    const reviewDate = new Date(date);
+
+    const formatted = reviewDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit'
+    }); 
+
+    return formatted;
+}
+
+//This will handle closing the review list for us
+function closeReviews(){
+    if(!seeReviews.classList.contains('hide')){
+        seeReviews.classList.add('hide')
+    }
+    closeReviewList.removeEventListener('click', closeReviews);
 }

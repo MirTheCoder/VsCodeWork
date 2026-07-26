@@ -56,6 +56,12 @@ app.get('/reviews', (req, res) => {
     console.log(`Type: ${req.method} \n Url: ${req.url}`);
 });  
 
+//This will route us to the donation page for users to donate books
+app.get('/donate', (req, res) => {
+    res.status(200).sendFile(path.join(clientRoot, 'public', 'donate.html'));
+    console.log(`Type: ${req.method} \n Url: ${req.url}`);
+});  
+
 //This will help us serve the login page when requested
 app.get('/login', (req, res) => {
     res.status(200).sendFile(path.join(clientRoot, 'public', 'Login.html'));

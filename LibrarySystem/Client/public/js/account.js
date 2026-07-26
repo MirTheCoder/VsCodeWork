@@ -2,8 +2,6 @@
 let udisplay = document.getElementById('usernameDisplay')
 let edisplay = document.getElementById('emailDisplay')
 let msdisplay = document.getElementById('memberSinceDisplay')
-let logoutLink = document.getElementById('logout');
-let loginLink = document.getElementById('login');
 let books1 = document.getElementById('books1')
 let books1Holder = document.getElementById('booksHolder')
 let welcomeBack = document.getElementById('welcomeBack')
@@ -32,12 +30,6 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
                     welcome.id = "userWelcome";
                     welcome.className = "Welcome";
                 }
-                if(loginLink){
-                    loginLink.style.visibility = "hidden";
-                }
-                if(logoutLink){
-                    logoutLink.style.visibility = "visible";
-                }
             } else {
                 if(document.getElementById('userWelcome')){
                     document.getElementById('userWelcome').remove();
@@ -63,24 +55,24 @@ async function accountStatus(){
         if(data.success === 1){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
-            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
+            msdisplay.textContent = timeFixer(data.memberSince) ? timeFixer(data.memberSince) : "None"
         } else if(data.success === 2){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
-            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
+            msdisplay.textContent = timeFixer(data.memberSince) ? timeFixer(data.memberSince) : "None"
             addYourBooks(data.yourBooks) //Used to insert the books that the user has checked out
             dueSoon(data.dueSoonBooks); //Used to insert the books that are due soon for the user
         } else if(data.success === 3){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
-            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
+            msdisplay.textContent = timeFixer(data.memberSince) ? timeFixer(data.memberSince) : "None"
             addYourBooks(data.yourBooks)
             showOverdueBooks(data.yourOverdueBooks);
             dueSoon(data.dueSoonBooks);
         } else if(data.success === 4){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
-            msdisplay.textContent = data.DateCreated ? data.DateCreated : "None"
+            msdisplay.textContent = timeFixer(data.memberSince) ? timeFixer(data.memberSince) : "None"
             addYourBooks(data.yourBooks)
             showOverdueBooks(data.yourOverdueBooks);
             showFines(data.yourFines);
@@ -89,41 +81,13 @@ async function accountStatus(){
     })    
 }
 
-if(logoutLink) {
-//This function will handle the logout process if the logout link is clicked    
-    logoutLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-                await fetch('users/logout', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(async response => {
-                    if(response.status === 400){
-                        alert('You are not logged in!');
-                    } else {
-                        return await response.json();
-                    }
-                })
-                .then(data => {
-                    if(data.success){
-                        alert(`${data.message}`);
-                        window.location.href = "indexPage";
-                    } else {
-                        alert(`${data.message}`);
-                    }
-                });
-    });  
-}
-
 async function addYourBooks(books){ 
     books1.innerHTML = ``
     books.forEach(element => {
         books1.innerHTML += `<section class="account-details" style="margin-top: 20px;">
       <p><strong>Name:</strong> <span>${element.title}</span></p>
       <p><strong>Author:</strong><span>${element.author}</span></p>
-      <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
+      <p><strong>Due Date:</strong><span>${timeFixer(element.dueDate)}</span></p>
     </section>`
     });
 }
@@ -150,8 +114,8 @@ async function showFines(fines){
       <p><strong>Book Name:</strong> <span>${element.bookTitle}</span></p>
       <p><strong>Book Author:</strong><span>${element.bookAuthor}</span></p>
       <p><strong>Fine Amount:</strong><span>${element.amount}</span></p>
-      <p><strong>Date Fined:</strong><span>${new Date(element.fineDate).toLocaleDateString()}</span></p>
-      <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
+      <p><strong>Date Fined:</strong><span>${timeFixer(element.fineDate)}</span></p>
+      <p><strong>Due Date:</strong><span>${timeFixer(element.fineDate)}</span></p>
     </section>`
     });
     }
@@ -166,7 +130,7 @@ if(books.length > 0){
         overdueHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
       <p><strong>Book Name:</strong> <span>${element.title}</span></p>
       <p><strong>Book Author:</strong><span>${element.author}</span></p>
-      <p><strong>Due Date:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
+      <p><strong>Due Date:</strong><span>${timeFixer(element.dueDate)}</span></p>
     </section>`
     });
     }
@@ -180,8 +144,24 @@ if(books.length > 0){
         dueSoonHolder.innerHTML += `<section class="account-details" style="margin-top: 20px;">
       <p><strong>Book Name:</strong> <span>${element.title}</span></p>
       <p><strong>Book Author:</strong><span>${element.author}</span></p>
-      <p><strong>Fine Amount:</strong><span>${new Date(element.dueDate).toLocaleDateString()}</span></p>
+      <p><strong>Fine Amount:</strong><span>${timeFixer(element.dueDate)}</span></p>
     </section>`
     });
     }
+}
+
+//This will help convert our string date into a date that can be dispalyed on the screen for out users to see and witness
+function timeFixer(date){
+    const reviewDate = new Date(date);
+
+    const formatted = reviewDate.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit'
+    }); 
+
+    return formatted;
 }

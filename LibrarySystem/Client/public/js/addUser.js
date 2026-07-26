@@ -1,6 +1,3 @@
-let logoutLink = document.getElementById('logout');
-let loginLink = document.getElementById('login');
-let accountLink = document.getElementById('account');
 let addUserForm = document.getElementById('userForm');
 
 //We will use this to get the user data and 

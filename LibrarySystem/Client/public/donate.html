@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Miracle's Library</title>
+
+
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&family=Pacifico&display=swap" rel="stylesheet">
+  <link rel="icon" href="static/libraryIcon.png" type="image/png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+
+
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/donate.css">
+</head>
+
+<!-- This index page will be our initial landing page for users whether they be logged in or not -->
+<body>
+  <!-- This will be our navigation bar -->
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="/">Home</a>  
+      <a href="login" id="login">Login</a>
+      <a href="register">Register</a>
+      <a href="about">About Us</a>
+      <a href="account" id="Account">My Account</a>
+      <a id="logout">Logout</a> <!-- Logout functionality will be handled by hte js file accompanied to this file -->
+    </div>
+  </nav>
+
+  <div class="donateIntro">
+    <div class="introText">
+      <h4>Donate A Book</h4>
+      <h2>Share Knowledge <br> Inspire Millions</h2>
+      <p>Donate your pdf books to help build a free and accesible library for everyone</p>
+    </div>
+    <img src="./static/bookImage.jpeg" alt="Donate Image" width="400px" height="400px"/>
+  </div>
+
+  <div class="donateBody">
+    <form class="donateForm" id="donateForm">
+     <div class="formText">
+        <img src="./static/donateLogo.jpeg" height="50px" width="50px"/>
+        <div class="formInnerText">
+          <h5>Book Information</h5>
+          <p>please provide accurate details about the book you want to donate</p>
+        </div>
+     </div> 
+
+    </form>
+  </div>
+
+  
+
+  <!-- This global script will be put all required html files to handle the login logic -->
+  <script defer src="js/global.js"></script>
+</body>
+</html>

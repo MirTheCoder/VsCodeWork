@@ -1,7 +1,4 @@
 let userList = document.getElementById('userList');
-let logoutLink = document.getElementById('logout');
-let loginLink = document.getElementById('login');
-let accountLink = document.getElementById('Account');
 let overlay = document.getElementById('overlay');
 let overlayDetails = document.getElementById('userDetails');
 let closePopup = document.getElementById('closePopup');
@@ -12,37 +9,6 @@ let editOverlay = document.getElementById('editUserOverlay');
 //Here we will hcekc to see if the user is logged in or not and display a welcome message accordingly
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
     try{
-        await fetch('users/checkLogin', {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.loggedIn){
-                if(loginLink){
-                    loginLink.style.visibility = "hidden";
-                }
-                if(accountLink){
-                    accountLink.style.visibility = "visible";
-                }
-                if(logoutLink){
-                    logoutLink.style.visibility = "visible";
-                }
-            } else {
-                if(loginLink){
-                    loginLink.style.visibility = "visible";
-                }
-                if(accountLink){
-                    accountLink.style.visibility = "hidden";
-                }
-                if(logoutLink){
-                    logoutLink.style.visibility = "hidden";
-                }
-                window.location.href = "indexPage"; //Send user back to home page if they are not logged in
-            }
-        });
         overlayDetails.innerHTML = ''; //Clear the overlay of any previous data that may be there from a previous user that the admin may have viewed
          if(overlay && overlay.classList.contains('active')){ //This is to check if the overlay is already active and visible on the page
             overlay.classList.remove('active'); //This will make the overlay invisible on the page
@@ -51,36 +17,6 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
         console.error('Error checking login status:', error);
     }
 });
-
-//This is needed to avoid errors if the logout link is not present on the page
-if(logoutLink) {
-//This function will handle the logout process if the logout link is clicked    
-    logoutLink.addEventListener('click', async (e) => {
-    e.preventDefault();
-                await fetch('users/logout', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(async response => {
-                    if(response.status === 400){
-                        alert('You are not logged in!');
-                    } else {
-                        return await response.json();
-                    }
-                })
-                .then(data => {
-                    if(data.success){
-                        alert(`${data.message}`);
-                        window.location.href = "indexPage";
-                    } else {
-                        alert(`${data.message}`);
-                    }
-                });
-    });  
-}
-
 
 
 //This will ensure tht we retrieve all users when the page loads
