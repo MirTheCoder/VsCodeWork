@@ -106,6 +106,43 @@ async function savePdf(bucket, fileObject, userId, bookIsbn) {
   });
 }
 
+//Function that will get our pdf for us using the pdfId method
+export async function getPdf(req, res) {
+    let isbn  = req.body.isbn;
+    let bookData = booksList.findOne({'isbn': isbn});
+    let pdfId = bookData.pdfId
+
+    try {
+        //Initiate the real time connection to our database
+        const bucket = await initGridFS();
+
+        //This will convert an id into a usable mongoId
+        const fileId = new mongoose.Types.ObjectId(
+            pdfId
+        );
+
+        //Tells our front end the type of content that it is recieving 
+         res.set(
+            'Content-Type',
+            'application/pdf'
+        );
+
+        //Will be used to download the pdf data from the database to our computer end
+        const downloadStream =
+            bucket.openDownloadStream(fileId);
+
+        //This will send the bytes for the pdf to our browser
+        downloadStream.pipe(res);
+    }
+    catch(err){
+        console.error(err);
+        res.status(404).json({
+            success:false,
+            error:'PDF not found'
+        });
+    }
+}
+
 //This function will alow us to get the cover image for a book if it has one
 export async function getImage(req, res){
     let name = decodeURIComponent(req.params.name); //This will get the name that is passed within the request, we dencode it for the mongodb to query it properly

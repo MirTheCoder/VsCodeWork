@@ -3,7 +3,7 @@ import fs from 'fs';
 import os from 'os';
 import {validateUserRegistration, validateUserLogin, getUserDetails, collectUsers, findAUser, getSpecifiedUserDetails, deleteUser, editUser, AdminAddUser} from './validate.js';
 import {checkIfLoggedIn, sessionLogout} from './sessionHandler.js';
-import { checkOutBook, getUsersBooks, getSpecificUsersBooks, returnBook, addFine, dueSoon, getOverdueBooks, addReview, addBookDonation} from './booksApi.js';
+import { checkOutBook, getUsersBooks, getSpecificUsersBooks, returnBook, addFine, dueSoon, getOverdueBooks, addReview, addBookDonation, getPdf} from './booksApi.js';
 import express from 'express';
 const route = express.Router();
 
@@ -99,6 +99,9 @@ route.post('/adminAddUser', async (req,res) => {
 route.post('/addReview', async(req,res, next) => {
     await addReview(req, res, next);
 })
+
+//This will be used to get the actual pdf file for the user to read
+route.post('/pdf', getPdf(req,res));
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
 export default route;

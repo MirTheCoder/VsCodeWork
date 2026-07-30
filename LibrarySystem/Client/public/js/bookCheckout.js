@@ -93,24 +93,44 @@ async function imgSources(books){
         `;
         //We will add a option to return a book if the user already has it checked out
         } else {
-            results.innerHTML += `<div class="book-item">
-            <div class="book-cover">
-                <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
-            </div>
+            if(element.pdfId){
+                results.innerHTML += `<div class="book-item">
+                <div class="book-cover">
+                    <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
+                </div>
 
-            <div class="book-info">
-                <h3 name='title'>${element.title}</h3>
-                <p class="author">${element.author}</p>
+                <div class="book-info">
+                    <h3 name='title'>${element.title}</h3>
+                    <p class="author">${element.author}</p>
+                </div>
+                <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
+                <div class="sideBySide">
+                    <button class="buddy-button">Return</button>
+                    <button class="pdf-button">Read Pdf</button> 
+                </div>
             </div>
-            <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
-            <button class="return-button">Return</button>
-        </div>
-        `;
+            `;
+            } else {
+                results.innerHTML += `<div class="book-item">
+                <div class="book-cover">
+                    <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
+                </div>
+
+                <div class="book-info">
+                    <h3 name='title'>${element.title}</h3>
+                    <p class="author">${element.author}</p>
+                </div>
+                <p style="display: none;" name="isbn">${element.isbn}</p> <!-- We want to add isbn to each book without displaying the isbn -->
+                <button class="return-button">Return</button>
+            </div>
+            `;
+            } 
         }
         });
         checkOutBook() //We are calling the function here to make sure that the event listeners
         //are added after the checkout buttons are rendered on the page
         returnBook() //We are calling this function here to make sure that the event listeners for the return buttons are added after they are rendered on the page
+        readPdfClicker() //This function will add event listeners on all the read pdf buttons in case their are any read pdf buttons
     } catch(err){
         console.error("Error rendering books:", err);
     }
@@ -244,3 +264,22 @@ let returns = document.querySelectorAll('.return-button');
         });
     }  
 }   
+
+//Function will handle the fetch request for the pdf for the books
+async function readPdfClicker(){
+    if(document.querySelectorAll('.pdf-button')){
+        let buttons = document.querySelectorAll('.pdf-button')
+        //Adding an event listener for each button
+        buttons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+                //We will use the isbn of the book to get the info on the backend of the system in order to find a pdf match
+                let bookISBN = e.target.closest('.book-item').querySelector('p[name="isbn"]');
+                await fetch('/users/getPdf', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ isbn: bookISBN})
+                })
+            })
+        })
+    }
+}
