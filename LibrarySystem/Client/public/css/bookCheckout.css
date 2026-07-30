@@ -303,7 +303,8 @@ body {
     background: white;
     padding: 28px 32px;
     border-radius: 14px;
-    width: 340px;
+    width: auto;
+    height: auto;
     box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     transform: scale(0.9);
     transition: transform 0.25s ease;
@@ -315,10 +316,29 @@ body {
 
   /* This will set up our iframe so that it can render properly for our pdf document */
   .popup iframe {
-    width: 100%;
-    height: 100%;
+    width: 800px;
+    height: 540px;
     border-radius: 8px;
     border: 1px solid var(--border-color);
     background: #f8fafc;
+    justify-content: center; /* We want to center the pdf document*/
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  /* Handles styling for our close button that will close the pdf view*/
+  .closePdf {
+    padding: 10px;
+    border-radius: 7px;
+    color: #C9BFB5;
+    background-color: maroon;
+    border: #4A2F1E 2px solid;
+    font-size: 1.3rem;
+  }
+
+  .closePdf:hover{
+    background-color: #A24857;
+    transform: translateY(-1px);
+    cursor: pointer;
   }
 

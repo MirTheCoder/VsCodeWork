@@ -593,7 +593,7 @@ export async function addBookDonation(req, res, next) {
         let bookDetails = req.body;
 
         const bookDonation = {
-            isbn: isbn,
+            isbn: isbn.toString(), //We are storing the isbn as a string value to make 
             title: bookDetails.title,
             author: bookDetails.author,
             genre: bookDetails.genre,

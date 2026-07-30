@@ -5,6 +5,7 @@ let filterForm = document.getElementById('filterForm')
 var searchTerm = ""
 let searchButton = document.getElementById('searchButton')
 let overlaypdf = document.getElementById('overlay')
+let btn = document.createElement('button');// global btn that we will use to close the pdf viewer
 let pdfPopUp = document.getElementById('pdfPopUp') //This is where we will render our pdf
 //This will reset our event listeners so that we don't have duplicate event listeners for the same buttons
 //If they happened to be rendered multiple times at one time for some reason
@@ -280,10 +281,20 @@ async function readPdfClicker(){
                 let element = document.createElement('div') 
                 element.innerHTML = `<iframe src="/users/pdf/${bookISBN}" width="100%" height="600px" style="border:none;" id="pdfViewer"></iframe>` //We will call the route to have the backend directly populate our iframe with the pdf data
                 pdfPopUp.appendChild(element) //After, we will add the pdf to our pop up
+                btn.innerHTML = `<button id="closePdf" class="closePdf">Close</button>`
+                pdfPopUp.appendChild(btn)
                 if(!overlaypdf.classList.contains('active')){
                     overlaypdf.classList.add('active'); //This will render the pop up and overlay for us to see and view
                 }
+                btn.addEventListener('click', closePdfView)
             })
         })
     }
+}
+
+function closePdfView(){
+    if(overlaypdf.classList.contains('active')){
+        overlaypdf.classList.remove('active')
+    }
+    btn.removeEventListener('click', closePdfView);
 }
