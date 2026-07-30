@@ -101,7 +101,9 @@ route.post('/addReview', async(req,res, next) => {
 })
 
 //This will be used to get the actual pdf file for the user to read
-route.post('/pdf', getPdf(req,res));
+route.get('/pdf/:isbn', async(req,res,next) => {
+    getPdf(req,res)
+});
 
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
 export default route;

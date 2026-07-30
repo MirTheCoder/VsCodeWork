@@ -4,6 +4,8 @@ let searchBar = document.getElementById('searchBar')
 let filterForm = document.getElementById('filterForm')
 var searchTerm = ""
 let searchButton = document.getElementById('searchButton')
+let overlaypdf = document.getElementById('overlay')
+let pdfPopUp = document.getElementById('pdfPopUp') //This is where we will render our pdf
 //This will reset our event listeners so that we don't have duplicate event listeners for the same buttons
 //If they happened to be rendered multiple times at one time for some reason
 document.addEventListener('DOMContentLoaded', async () => {
@@ -246,7 +248,7 @@ let returns = document.querySelectorAll('.return-button');
                     }
                 });
 
-                let bookISBN = e.target.parentElement.querySelector('p[name="isbn"]').textContent;
+                let bookISBN = e.target.parentElement.querySelector('p[name="isbn"]').textContent; //Use this to get the isbn number
                 await fetch('/users/returnBook', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
@@ -272,13 +274,15 @@ async function readPdfClicker(){
         //Adding an event listener for each button
         buttons.forEach(button => {
             button.addEventListener('click', async (e) => {
+                pdfPopUp.innerHTML = '' //Make sure to reset the popup section every time a pdf request is made
                 //We will use the isbn of the book to get the info on the backend of the system in order to find a pdf match
-                let bookISBN = e.target.closest('.book-item').querySelector('p[name="isbn"]');
-                await fetch('/users/getPdf', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ isbn: bookISBN})
-                })
+                let bookISBN = e.target.closest('.book-item').querySelector('p[name="isbn"]').textContent; //Use this to get the isbn number
+                let element = document.createElement('div') 
+                element.innerHTML = `<iframe src="/users/pdf/${bookISBN}" width="100%" height="600px" style="border:none;" id="pdfViewer"></iframe>` //We will call the route to have the backend directly populate our iframe with the pdf data
+                pdfPopUp.appendChild(element) //After, we will add the pdf to our pop up
+                if(!overlaypdf.classList.contains('active')){
+                    overlaypdf.classList.add('active'); //This will render the pop up and overlay for us to see and view
+                }
             })
         })
     }

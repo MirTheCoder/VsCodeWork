@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <head>
+  <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +14,7 @@
 
   <link rel="stylesheet" href="css/bookCheckout.css">
   <!-- We need the global css in order to hide the login button when needed, same wit hiding the logout button as well-->
-  <link rel="stylesheet" href="css/global.css"
+  <link rel="stylesheet" href="css/global.css">
 </head>
 
 <body>
@@ -56,6 +56,12 @@
   <div class="resultList" id="resultList">
     <p>All results will appear here, feel free to use the filters to find a book</p>
   </div>
+
+  <div class="overlay" id="overlay">
+        <div class="popup" id="pdfPopUp">
+          <iframe width="100%" height="600px" style="border:none;" id="pdfViewer"></iframe>
+        </div>
+      </div>
 
 <script src="./js/bookCheckout.js"></script>
 <script src="./js/global.js"></script>

@@ -108,8 +108,8 @@ async function savePdf(bucket, fileObject, userId, bookIsbn) {
 
 //Function that will get our pdf for us using the pdfId method
 export async function getPdf(req, res) {
-    let isbn  = req.body.isbn;
-    let bookData = booksList.findOne({'isbn': isbn});
+    let isbn = decodeURIComponent(req.params.isbn); //Here we will get the isbn value
+    let bookData = await booksList.findOne({'isbn': isbn});
     let pdfId = bookData.pdfId
 
     try {
@@ -173,7 +173,7 @@ export async function addBook(req, res){
             }
         }
         const newBook = {
-            isbn: isbn,
+            isbn: isbn.toString(),
             title: req.body.title,
             author: req.body.author,
             genre: req.body.genre,

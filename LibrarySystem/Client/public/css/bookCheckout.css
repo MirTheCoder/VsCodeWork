@@ -279,3 +279,46 @@ body {
   gap: 20px;
 }
 
+
+/* Overlay logic for our iframe for users to be able to view the pdf and read it */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1000;
+  }
+  
+  .overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .popup {
+    background: white;
+    padding: 28px 32px;
+    border-radius: 14px;
+    width: 340px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  
+  .overlay.active .popup {
+    transform: scale(1);
+  }
+
+  /* This will set up our iframe so that it can render properly for our pdf document */
+  .popup iframe {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #f8fafc;
+  }
+
