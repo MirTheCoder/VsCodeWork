@@ -1,6 +1,6 @@
 //Client used to connect to our mongo DB
 
-import { MongoClient } from 'mongodb';
+import { MongoClient, GridFSBucket} from 'mongodb';
 
 // MongoDB connection URI
 const MONGO_URI = 'mongodb://localhost:27017';
@@ -43,4 +43,15 @@ export async function getDB(){
 export async function getCollection(collectionName){
     const database = await getDB();
     return database.collection(collectionName);
+}
+
+//This function will help us create the bucket we need in our database to save pdf files
+export async function initGridFS() {
+  const db = await getDB(); //This will get us our database connection
+  
+  // Creates a bucket named "fs" by default (fs.files and fs.chunks)
+  const bucket = new GridFSBucket(db); 
+  
+  // Custom names can be applied using: new GridFSBucket(db, { bucketName: 'myCustomBucket' })
+  return bucket;
 }

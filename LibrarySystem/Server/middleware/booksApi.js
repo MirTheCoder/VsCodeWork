@@ -3,14 +3,15 @@
 
 import mongoose from "mongoose"
 import fs from 'fs'
-import { getCollection } from './db.js';
+import { getCollection, initGridFS } from './db.js';
+import { Readable } from 'stream'; //This is so that we can create the mechanism for our databse to read the pdf data
 import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
 import { fileTypeFromBuffer, fileTypeFromFile, fileTypeFromStream } from 'file-type';
 import { getUsersName, getSessionInfo } from "./sessionHandler.js"; //This will allow us to get the name of the user in session
 import path from 'path';
 import random from 'random';
 import { fileURLToPath } from 'url';
-import { Int32 } from 'mongodb';
+import { Int32, GridFSBucket } from 'mongodb'; //We are importing gridFSBucket in order to handle the storage of pdf files
 import { time } from "console";
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
@@ -23,6 +24,7 @@ const booksCheckedOutList = await getCollection('booksCheckedOut')
 const finesList = await getCollection('fines')
 const usersList = await getCollection('Users')
 const reviewsList = await getCollection('reviews');
+const pdfIdList = await getCollection('pdfId') 
 
 
 //This is the schema for our image uploads, structuring how we will be uploading images to our database
@@ -53,7 +55,8 @@ export async function getBooks(req, res){
 
 
 //We will be using this function to upload images to the mongo database
-export async function saveImageData(image, title) {
+export async function saveImageData(image, title, isbn) {
+
     try{
         const imgData = image.buffer; // Reads the image file as binary data/ turns image into binary data
         const type = await fileTypeFromBuffer(imgData); // Detects the file type (MIME type) from the binary data
@@ -61,16 +64,49 @@ export async function saveImageData(image, title) {
         const img = ({
             name: title,  // Give your image a name
             data: imgData,        // Store the binary data
-            contentType: type.mime // Set the MIME type to whatever image has been uploaded
+            contentType: type.mime, // Set the MIME type to whatever image has been uploaded
+            bookId: isbn
         });
 
         await bookImages.insertOne(img); //Saves the image to the database
+        return true;
         
     } catch(error){
         console.log(error)
+        return false;
     }
+
 };
 
+//This function will be used to upload pdfs from the front end to our database
+async function savePdf(bucket, fileObject, userId, bookIsbn) {
+  return new Promise(async (resolve, reject) => {
+    // Open the GridFS (essentially a writable pipeline that connects directly to your mongodb) write stream using the original filename from the frontend
+    const uploadStream = bucket.openUploadStream(fileObject.originalname, {
+      metadata: { 
+        contentType: fileObject.mimetype, // gets the exact type of file that we are dealing with
+        uploadedBy: userId,
+        bookId: bookIsbn //So that we can know which book the pdf belongs to 
+      }
+    });
+
+    // Convert the Multer memory buffer (turning the data into raw bytes) into a readable stream (a mechanism for reading data)
+    const readableFileStream = new Readable();
+    readableFileStream.push(fileObject.buffer);
+    readableFileStream.push(null); // Signals the end of the stream
+
+    // Pipe the frontend data directly into MongoDB GridFS
+    readableFileStream.pipe(uploadStream)
+      .on('error', (error) => resolve({'success': false, 'error': error}))
+      .on('finish', () => {
+        // Resolve with the newly created MongoDB File ID and the success turn out
+      });
+    resolve({'success': true, 'uploadId': uploadStream.id}) //We will send the uploadId back to teh function that is calling it as well as a notice of success
+
+  });
+}
+
+//This function will alow us to get the cover image for a book if it has one
 export async function getImage(req, res){
     let name = decodeURIComponent(req.params.name); //This will get the name that is passed within the request, we dencode it for the mongodb to query it properly
     let image = await bookImages.findOne({ name: name }) //This will get the image from the database that matches the provided name
@@ -87,7 +123,7 @@ export async function getImage(req, res){
 //This function will be used to allow users to add books to the library
 export async function addBook(req, res){
     let isValid = false; //We will have it initially false until the isbn num we generated is proven to be unique
-    const image = req.file //This gets the image that was uploaded and then stored in RAM temporarily by multer
+    const image = req.files.image[0] //This gets the image that was uploaded and then stored in RAM temporarily by multer
     try{
         let isbn = generateISBN()
         //Ensures that we keep generting isbn numbers until we get a unique one that isn't found within the database
@@ -107,9 +143,15 @@ export async function addBook(req, res){
             year: req.body.year,
             available: true //Used to see whether or not the books is currently available
         }
-        await booksList.insertOne(newBook) //Inserts the new book into the collection
-        saveImageData(image, req.body.title) //Saves image to the database
-        res.status(200).json({success: true, message: 'Book added successfully'})
+        let status = await saveImageData(image, req.body.title, isbn) //Saves image to the database
+        await booksList.insertOne(newBook) //Make sure to add the book to our database
+
+        //Checking to see if the image data was also saved successfully
+        if(status){
+            res.status(200).json({success: true, message: 'Book added successfully'})
+        } else {
+            res.status(200).json({success: fale, message: 'Book added succesfully, but image failed to be saved '})
+        }    
     } catch(err){
         console.error(err)
         res.status(200).json({success: false, error: 'Server error occurred'})
@@ -493,4 +535,69 @@ export async function getReviews(req, res, next){
             res.status(500).json({'success': false, 'message': `Error while trying to get list of reviews: ${err}`})
         }    
     
+}
+
+//This function will handle book donations (we will eventually mash up regular book adds and donations together, just keeping it seperate for now since we added the pdf aspeect of it)
+export async function addBookDonation(req, res, next) {
+    let isValid = false //First we need to make is valid false, ensuring that our isbn generator will generate isbn numbers until a unique one is made
+    let response = await getSessionInfo(req, res, next)
+    try{
+        let isbn = generateISBN();
+        //Ensures that we keep generting isbn numbers until we get a unique one that isn't found within the database
+        while (!isValid){
+            let isbnFound = await booksList.findOne({isbn: isbn})
+            if(isbnFound){
+                isbn = generateISBN() //If we found a book with the same isbn, then we will generate a new one and check again until we find a unique one
+            } else {
+                isValid = true; //We have found a unique isbn, so we can exit the loop
+            }
+        }
+
+        let bookDetails = req.body;
+
+        const bookDonation = {
+            isbn: isbn,
+            title: bookDetails.title,
+            author: bookDetails.author,
+            genre: bookDetails.genre,
+            year: bookDetails.year,
+            available: true
+        }
+
+
+        //Next we initiate the result variable for the image and the pdf
+        let imageResult = "No image detected"; 
+        let pdfResult = "No pdf detected";
+
+        //Only attempt to save a book cover image if an image has been uploaded
+        if(req.files.image[0]){
+            const image = req.files.image[0];
+            let result = saveImageData(image, req.body.title, isbn) //Saves cover image to the database
+
+            //Our response message will depend on the status of our save image process
+            if(result){
+                imageResult =  'image was succesfully saved'
+            } else {
+                imageResult = 'an issue occured while saving the cover image'
+            }    
+        }
+        
+        //Only attemps to save a pdf if a pdf has been uploaded
+        if(req.files.pdf[0]){
+            const bucket = await initGridFS();
+            let result = await savePdf(bucket, req.files.pdf[0] ,response.userId, isbn) //We will pass the bucket along with the users id and the actual pdf as well
+            
+            //Our response message will depend on the status of our save pdf process
+            if(result.success){
+                pdfResult = 'PDF was successfully saved'
+                bookDonation.pdfId = result.uploadId //We want to store the pdfId alongside the bookDonation to ensure that we can find the right pdf for the book
+            } else {
+                pdfResult = 'an issue occured while saving the pdf'
+            }
+        }
+        await booksList.insertOne(bookDonation) //Inserts the new book into the collection
+        
+    } catch(err){
+        console.log('Error while trying to add a book donation: ', err);
+    }
 }

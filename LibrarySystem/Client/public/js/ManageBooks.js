@@ -58,7 +58,7 @@ closeBtn.addEventListener("click", () => {
 bookForm.addEventListener('submit', async (e) => {
     e.preventDefault();
   
-    const formData = new FormData(bookForm); // keep it as FormData
+    const formData = new FormData(bookForm); // keep it as FormData in order for multer to process it 
   
     try {
       await fetch('/api/addBook', {

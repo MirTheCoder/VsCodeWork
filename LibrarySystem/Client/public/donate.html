@@ -73,9 +73,14 @@
       <input type="text" name="year" placeholder="Type in the publish year of the book" required/>
     </div>  
 
+    <div class="upload">
+      <label for="image">Upload Cover Image</label>
+      <input type="file" name="image" accept="image/*" required />
+    </div> 
+
      <div class="upload">
       <label for="file">Upload File</label>
-      <input type="file" name="file" accept="application/pdf, .pdf" required />
+      <input type="file" name="pdf" accept="application/pdf, .pdf" required />
     </div>  
 
     <button type="submit" class="donateBtn">Donate</button>
@@ -86,5 +91,6 @@
 
   <!-- This global script will be put all required html files to handle the login logic -->
   <script defer src="js/global.js"></script>
+  <script defer src="js/donate.js"></script>
 </body>
 </html>

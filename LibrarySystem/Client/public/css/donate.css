@@ -122,8 +122,9 @@ body{
 }
 
 .inputSect input{
-  padding: 5px;
+  padding: 10px;
   border-radius: 5px;
+  border: #5B3E2B solid 4px;
 }
 
 .formText img{
