@@ -27,7 +27,17 @@
         <input type="text" id="author" name="author" placeholder="Author" required>
         <input type="text" id="genre" name="genre" placeholder="Genre" required>
         <input type="number" id="year" name="year" placeholder="Publication Year" required>
-        <input type="file" id="image" name="image" accept="image/" required placeholder="Book Cover Image">
+          
+        <div class="upload">
+        <label for="image">Upload Cover Image</label>
+        <input type="file" name="image" accept="image/*" required />
+        </div> 
+
+        <div class="upload">
+        <label for="file">Upload File</label>
+        <input type="file" name="pdf" accept="application/pdf, .pdf" required />
+        </div> 
+        
         <button type="submit">Add Book</button>
       </form>
 

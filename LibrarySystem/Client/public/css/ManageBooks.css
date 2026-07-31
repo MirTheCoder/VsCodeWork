@@ -43,8 +43,7 @@
   
   /* Inputs */
   #bookForm input[type="text"],
-  #bookForm input[type="number"],
-  #bookForm input[type="file"] {
+  #bookForm input[type="number"] {
     padding: 12px 14px;
     border-radius: 8px;
     border: 1px solid #DDD;
@@ -292,4 +291,24 @@
 .nav-links a:hover {
   color: #5B3E2B;
   text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);
+}
+
+.upload{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 40px;
+  background: #CEB389;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-radius: 7px;
+  border:#463626 solid 3px;
+  text-align: center;
+  align-items: center;
+}
+
+.upload input{
+  margin-left: 70px;
 }

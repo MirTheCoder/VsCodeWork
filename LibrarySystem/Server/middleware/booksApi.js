@@ -158,9 +158,11 @@ export async function getImage(req, res){
 }
 
 //This function will be used to allow users to add books to the library
-export async function addBook(req, res){
+export async function addBook(req, res, next){
+    let response = await getSessionInfo(req,res,next); //We need this to get the userId pertaining to this upload
     let isValid = false; //We will have it initially false until the isbn num we generated is proven to be unique
     const image = req.files.image[0] //This gets the image that was uploaded and then stored in RAM temporarily by multer
+    const pdf = req.files.pdf[0] //This will grab for us the pdf document that was uploaded
     try{
         let isbn = generateISBN()
         //Ensures that we keep generting isbn numbers until we get a unique one that isn't found within the database
@@ -180,7 +182,15 @@ export async function addBook(req, res){
             year: req.body.year,
             available: true //Used to see whether or not the books is currently available
         }
-        let status = await saveImageData(image, req.body.title, isbn) //Saves image to the database
+
+        //Only if the admin has uploaded an image to go with the book
+        if(image){
+            let status = await saveImageData(image, req.body.title, isbn) //Saves image to the database
+        }
+
+        if(pdf){
+            let result = await savePdf(bucket, req.files.pdf[0] ,response.userId, isbn)
+        }
         await booksList.insertOne(newBook) //Make sure to add the book to our database
 
         //Checking to see if the image data was also saved successfully
@@ -601,40 +611,49 @@ export async function addBookDonation(req, res, next) {
             available: true
         }
 
+        //We want to make sure that we aren't donating a book that is already within our system
+        let bookCopy = await booksList.findOne({'title': bookDetails.title, 'author': bookDetails.author})
+        if(!bookCopy){
 
-        //Next we initiate the result variable for the image and the pdf
-        let imageResult = "No image detected"; 
-        let pdfResult = "No pdf detected";
+            //Next we initiate the result variable for the image and the pdf
+            let imageResult = "No image detected"; 
+            let pdfResult = "No pdf detected";
 
-        //Only attempt to save a book cover image if an image has been uploaded
-        if(req.files.image[0]){
-            const image = req.files.image[0];
-            let result = saveImageData(image, req.body.title, isbn) //Saves cover image to the database
+            //Only attempt to save a book cover image if an image has been uploaded
+            if(req.files.image[0]){
+                const image = req.files.image[0];
+                let result = saveImageData(image, req.body.title, isbn) //Saves cover image to the database
 
-            //Our response message will depend on the status of our save image process
-            if(result){
-                imageResult =  'image was succesfully saved'
-            } else {
-                imageResult = 'an issue occured while saving the cover image'
-            }    
-        }
-        
-        //Only attemps to save a pdf if a pdf has been uploaded
-        if(req.files.pdf[0]){
-            const bucket = await initGridFS();
-            let result = await savePdf(bucket, req.files.pdf[0] ,response.userId, isbn) //We will pass the bucket along with the users id and the actual pdf as well
-            
-            //Our response message will depend on the status of our save pdf process
-            if(result.success){
-                pdfResult = 'PDF was successfully saved'
-                bookDonation.pdfId = result.uploadId //We want to store the pdfId alongside the bookDonation to ensure that we can find the right pdf for the book
-            } else {
-                pdfResult = 'an issue occured while saving the pdf'
+                //Our response message will depend on the status of our save image process
+                if(result){
+                    imageResult =  'image was succesfully saved'
+                } else {
+                    imageResult = 'an issue occured while saving the cover image'
+                }    
             }
-        }
-        await booksList.insertOne(bookDonation) //Inserts the new book into the collection
+            
+            //Only attemps to save a pdf if a pdf has been uploaded
+            if(req.files.pdf[0]){
+                const bucket = await initGridFS();
+                let result = await savePdf(bucket, req.files.pdf[0] ,response.userId, isbn) //We will pass the bucket along with the users id and the actual pdf as well
+                
+                //Our response message will depend on the status of our save pdf process
+                if(result.success){
+                    pdfResult = 'PDF was successfully saved'
+                    bookDonation.pdfId = result.uploadId //We want to store the pdfId alongside the bookDonation to ensure that we can find the right pdf for the book
+                } else {
+                    pdfResult = 'an issue occured while saving the pdf'
+                }
+            }
+            await booksList.insertOne(bookDonation) //Inserts the new book into the collection
+
+            res.status(200).json({'success': true, 'message': 'Your donation was a success', 'pdfResult': pdfResult, 'imageResult': imageResult });
+        } else {
+            res.status(200).json({'success': false, 'message': 'It appears that the book you are trying to donate is already in our system', });
+        }    
         
     } catch(err){
         console.log('Error while trying to add a book donation: ', err);
+        res.status(200).json({'success': false, 'message': "An error occured during the donation process: ", err})
     }
 }
