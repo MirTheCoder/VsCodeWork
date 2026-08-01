@@ -219,6 +219,23 @@
       transform: translateY(-1px);
   }
 
+  .pdf-button {
+      padding: 10px 16px;
+      background-color: burlywood;
+      color: #F1E5AC;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.25s, transform 0.2s;
+      align-self: center;
+  }
+  
+  .pdf-button:hover {
+      background-color: #8b654e;
+      transform: translateY(-1px);
+  }
+
  /* We want the admin buttons to be lined horizontally */
   .admin-buttons{
     display: flex;
@@ -312,3 +329,65 @@
 .upload input{
   margin-left: 70px;
 }
+
+/* Overlay logic for our iframe for users to be able to view the pdf and read it */
+.overlayPdf {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1000;
+  }
+  
+  .overlayPdf.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .popupPdf {
+    background: white;
+    padding: 28px 32px;
+    border-radius: 14px;
+    width: auto;
+    height: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  
+  .overlayPdf.active .popupPdf {
+    transform: scale(1);
+  }
+
+  /* This will set up our iframe so that it can render properly for our pdf document */
+  .popupPdf iframe {
+    width: 800px;
+    height: 540px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #f8fafc;
+    justify-content: center; /* We want to center the pdf document*/
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  /* Handles styling for our close button that will close the pdf view*/
+  .closePdf {
+    padding: 10px;
+    border-radius: 7px;
+    color: #C9BFB5;
+    background-color: maroon;
+    border: #4A2F1E 2px solid;
+    font-size: 1.3rem;
+  }
+
+  .closePdf:hover{
+    background-color: #A24857;
+    transform: translateY(-1px);
+    cursor: pointer;
+  }

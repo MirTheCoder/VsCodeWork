@@ -268,6 +268,13 @@ let returns = document.querySelectorAll('.return-button');
     }  
 }   
 
+async function closePdfView(){
+    if(overlaypdf.classList.contains('active')){
+        overlaypdf.classList.remove('active')
+    }
+    btn.removeEventListener('click', closePdfView);
+}
+
 //Function will handle the fetch request for the pdf for the books
 async function readPdfClicker(){
     if(document.querySelectorAll('.pdf-button')){
@@ -290,11 +297,4 @@ async function readPdfClicker(){
             })
         })
     }
-}
-
-function closePdfView(){
-    if(overlaypdf.classList.contains('active')){
-        overlaypdf.classList.remove('active')
-    }
-    btn.removeEventListener('click', closePdfView);
 }

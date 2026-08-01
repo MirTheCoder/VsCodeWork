@@ -4,6 +4,9 @@ let results = document.getElementById('resultList')
 const closeBtn = document.getElementById("closePopup");
 const overlay = document.getElementById("overlay");
 const bookEditor = document.getElementById("EditForm");
+let overlaypdf = document.getElementById('overlayPdf') //The overlay for the pdf viewer
+let btn = document.createElement('button') //Used for the pdf viewer close button
+let pdfPopUp = document.getElementById('pdfPopUp') //This will hold the pdf document for the user to read
 
 
 
@@ -39,7 +42,7 @@ function addEditorListener(isbnNum){
             });
         });
     }
-}    
+}
 
 
 closeBtn.addEventListener("click", () => {
@@ -96,11 +99,28 @@ bookForm.addEventListener('submit', async (e) => {
   
 async function imgSources(books){
     results.innerHTML = '' //Clear any previous results
-  
       //This will render every book that is found within the database
       try{
         //We will render all the books in our catalog with edit and delete buttons
-          books.forEach(element => {
+          books.forEach(element => {    
+            if(element.pdfId){
+                results.innerHTML += `<div class="book-item">
+              <div class="book-cover">
+                  <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
+              </div>
+  
+              <div class="book-info">
+                  <h3>${element.title}</h3>
+                  <p class="author">by ${element.author}</p>
+              </div>
+              <p class="book-isbn"><small>ISBN: ${element.isbn}</small></p>
+              <div id="admin-buttons">
+              <button class="edit-button" id="edit">Edit</button>
+              <button class="delete-button" id="delete">Delete</button>
+              <button class="pdf-button" id="readPdf">Read PDF</button>
+              </div>
+          </div>`
+            } else {
               results.innerHTML += `<div class="book-item">
               <div class="book-cover">
                   <img src="/api/getImage/${encodeURIComponent(element.title)}" alt="${element.title}"> <!-- Encoding the title to ensure special characters are handled correctly -->
@@ -117,7 +137,10 @@ async function imgSources(books){
               </div>
           </div>
           `;
+            }
           });
+
+          await readPdfClicker() //This will allow us to hear for when the admin wants to read the pdf of a book in stock
           //We will add a option to return a book if the user already has it checked out
       } catch(err){
           console.error("Error rendering books:", err);
@@ -158,3 +181,34 @@ async function imgSources(books){
             }
         };
   });
+
+  //Function will handle the fetch request for the pdf for the books
+async function readPdfClicker(){
+    if(document.querySelectorAll('.pdf-button')){
+        let buttons = document.querySelectorAll('.pdf-button')
+        //Adding an event listener for each button
+        buttons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+                pdfPopUp.innerHTML = '' //Make sure to reset the popup section every time a pdf request is made
+                //We will use the isbn of the book to get the info on the backend of the system in order to find a pdf match
+                let isbnNum = e.target.closest('.book-item').querySelector('.book-isbn small').textContent.replace('ISBN: ', '').trim(); //Use this to get the isbn number, we use replace to ensure we get the raw isbn number with no add ons
+                let element = document.createElement('div') 
+                element.innerHTML = `<iframe src="/users/pdf/${isbnNum}" width="100%" height="600px" style="border:none;" id="pdfViewer"></iframe>` //We will call the route to have the backend directly populate our iframe with the pdf data
+                pdfPopUp.appendChild(element) //After, we will add the pdf to our pop up
+                btn.innerHTML = `<button id="closePdf" class="closePdf">Close</button>`
+                pdfPopUp.appendChild(btn)
+                if(!overlaypdf.classList.contains('active')){
+                    overlaypdf.classList.add('active'); //This will render the pop up and overlay for us to see and view
+                }
+                btn.addEventListener('click', closePdfView)
+            })
+        })
+    }
+}
+
+async function closePdfView(){
+    if(overlaypdf.classList.contains('active')){
+        overlaypdf.classList.remove('active')
+    }
+    btn.removeEventListener('click', closePdfView);
+}

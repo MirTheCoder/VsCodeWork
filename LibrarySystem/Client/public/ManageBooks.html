@@ -30,12 +30,12 @@
           
         <div class="upload">
         <label for="image">Upload Cover Image</label>
-        <input type="file" name="image" accept="image/*" required />
+        <input type="file" name="image" accept="image/*" />
         </div> 
 
         <div class="upload">
         <label for="file">Upload File</label>
-        <input type="file" name="pdf" accept="application/pdf, .pdf" required />
+        <input type="file" name="pdf" accept="application/pdf, .pdf" />
         </div> 
         
         <button type="submit">Add Book</button>
@@ -60,6 +60,12 @@
             <button id="saveEdits" type="submit">Save</button>
             <button id="closePopup">Close</button>
           </form>
+        </div>
+      </div>
+
+      <div class="overlayPdf" id="overlayPdf">
+        <div class="popupPdf" id="pdfPopUp">
+          <iframe width="100%" height="600px" style="border:none;" id="pdfViewer" style="align-items: center;"></iframe>
         </div>
       </div>
 

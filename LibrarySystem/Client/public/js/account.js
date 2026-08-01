@@ -84,11 +84,21 @@ async function accountStatus(){
 async function addYourBooks(books){ 
     books1.innerHTML = ``
     books.forEach(element => {
-        books1.innerHTML += `<section class="account-details" style="margin-top: 20px;">
-      <p><strong>Name:</strong> <span>${element.title}</span></p>
-      <p><strong>Author:</strong><span>${element.author}</span></p>
-      <p><strong>Due Date:</strong><span>${timeFixer(element.dueDate)}</span></p>
-    </section>`
+        //Only adding a read pdf option of the book has a pdf id which would indicate that it has a pdf attached to it
+        if(element.pdfId){
+                books1.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+            <p><strong>Name:</strong> <span>${element.title}</span></p>
+            <p><strong>Author:</strong><span>${element.author}</span></p>
+            <p><strong>Due Date:</strong><span>${timeFixer(element.dueDate)}</span></p>
+            <button class="pdf-button" id="readPdf">Read PDF</button>
+            </section>`
+        } else {    
+            books1.innerHTML += `<section class="account-details" style="margin-top: 20px;">
+        <p><strong>Name:</strong> <span>${element.title}</span></p>
+        <p><strong>Author:</strong><span>${element.author}</span></p>
+        <p><strong>Due Date:</strong><span>${timeFixer(element.dueDate)}</span></p>
+        </section>`
+        }
     });
 }
 

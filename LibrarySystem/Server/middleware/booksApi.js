@@ -190,6 +190,7 @@ export async function addBook(req, res, next){
 
         if(pdf){
             let result = await savePdf(bucket, req.files.pdf[0] ,response.userId, isbn)
+            newBook.pdfId = result.uploadId //We have to make sure to add the pdf upload Id to our book instance
         }
         await booksList.insertOne(newBook) //Make sure to add the book to our database
 
@@ -315,6 +316,7 @@ export async function checkOutBook(req, res, next){
         let response = await getSessionInfo(req, res, next);
         let isBookCheckedOut = await booksCheckedOutList.findOne({isbn: req.body.isbn}) //We will first check to see if the book is already checked out by another user
         if(!isBookCheckedOut){
+        let theBook = bookList.findOne({isbn: req.body.isbn}) //We will need this to verify whether or not the book has a pdfId
         let bookRequested = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: false}}) // This will change the availability of the book in question to false so that users will know that it is not available
         let name = await getUsersName(req, res);
         name = name ? name.replace(/['"]+/g, '').trim() : null;
@@ -337,6 +339,10 @@ export async function checkOutBook(req, res, next){
             isbn: bookISBN,
             dueDate: dueDate
         }
+
+        if(theBook.pdfId){
+            checkoutInfo.pdfId = theBook.pdfId //This willmake it easier for us to render the book for the user to read when they check their account page for books checked out
+        }     
 
         await booksCheckedOutList.insertOne(checkoutInfo)
         res.status(200).json({success: true, message: `${bookTitle} has been checked out successfully!`})
