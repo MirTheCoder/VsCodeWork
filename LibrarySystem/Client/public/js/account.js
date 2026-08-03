@@ -8,6 +8,9 @@ let welcomeBack = document.getElementById('welcomeBack')
 let finesHolder = document.getElementById('books4')
 let overdueHolder = document.getElementById('books2')
 let dueSoonHolder = document.getElementById('books3')
+let overlaypdf = document.getElementById('overlayPdf') //The overlay for the pdf viewer
+let btn = document.createElement('button') //Used for the pdf viewer close button
+let pdfPopUp = document.getElementById('pdfPopUp') //This will hold the pdf document for the user to read
 
 
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
@@ -91,15 +94,19 @@ async function addYourBooks(books){
             <p><strong>Author:</strong><span>${element.author}</span></p>
             <p><strong>Due Date:</strong><span>${timeFixer(element.dueDate)}</span></p>
             <button class="pdf-button" id="readPdf">Read PDF</button>
+             <p style="display: none;" id="isbn">${element.isbn}</p> <!-- We will use this to let our backend system locate the book in question -->
             </section>`
         } else {    
             books1.innerHTML += `<section class="account-details" style="margin-top: 20px;">
         <p><strong>Name:</strong> <span>${element.title}</span></p>
         <p><strong>Author:</strong><span>${element.author}</span></p>
         <p><strong>Due Date:</strong><span>${timeFixer(element.dueDate)}</span></p>
+        <p style="display: none;" id="isbn">${element.isbn}</p> <!-- We will use this to let our backend system locate the book in question -->
         </section>`
         }
     });
+
+    readPdfClicker(); //Call the function to set up the pdf viewer
 }
 
 //This will have our system check to see if any fines need to be added to hte users account
@@ -174,4 +181,35 @@ function timeFixer(date){
     }); 
 
     return formatted;
+}
+
+ //Function will handle the fetch request for the pdf for the books
+async function readPdfClicker(){
+    if(document.querySelectorAll('.pdf-button')){
+        let buttons = document.querySelectorAll('.pdf-button')
+        //Adding an event listener for each button
+        buttons.forEach(button => {
+            button.addEventListener('click', async (e) => {
+                pdfPopUp.innerHTML = '' //Make sure to reset the popup section every time a pdf request is made
+                //We will use the isbn of the book to get the info on the backend of the system in order to find a pdf match
+                let isbnNum = e.target.closest('.book-item').querySelector('#isbn').textContent; //Use this to get the isbn number, we use replace to ensure we get the raw isbn number with no add ons
+                let element = document.createElement('div') 
+                element.innerHTML = `<iframe src="/users/pdf/${isbnNum}" width="100%" height="600px" style="border:none;" id="pdfViewer"></iframe>` //We will call the route to have the backend directly populate our iframe with the pdf data
+                pdfPopUp.appendChild(element) //After, we will add the pdf to our pop up
+                btn.innerHTML = `<button id="closePdf" class="closePdf">Close</button>`
+                pdfPopUp.appendChild(btn)
+                if(!overlaypdf.classList.contains('active')){
+                    overlaypdf.classList.add('active'); //This will render the pop up and overlay for us to see and view
+                }
+                btn.addEventListener('click', closePdfView)
+            })
+        })
+    }
+}
+
+async function closePdfView(){
+    if(overlaypdf.classList.contains('active')){
+        overlaypdf.classList.remove('active')
+    }
+    btn.removeEventListener('click', closePdfView);
 }

@@ -234,3 +234,150 @@ html {
       background-color: #8b654e;
       transform: translateY(-1px);
   }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1000;
+  }
+  
+  .overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .popup {
+    background: white;
+    padding: 28px 32px;
+    border-radius: 14px;
+    width: 340px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  
+  .overlay.active .popup {
+    transform: scale(1);
+  }
+    .popup h3 {
+        margin-bottom: 16px;
+        font-size: 20px;
+        color: #5B3E2B;
+        text-align: center;
+    }
+    
+/* CSS styling for the navbar */
+.navbar {
+  position: fixed;     /* Fixed to the viewport */
+  top: 0;              /* Stick it to the very top */
+  left: 0;             /* Aligns it to the left edge */
+  width: 100%;         /* Forces it to span the entire width of the screen */
+  z-index: 100;        /* Keeps it on top of other elements while scrolling */
+  
+  background-color: #EFE6D8;
+  border-bottom: 1px solid #DDD;
+  padding: 15px 40px;
+  box-sizing: border-box; /* Ensures padding doesn't push the navbar past 100% width */
+}
+
+.nav-links a {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #2B2B2B;
+  font-weight: 500;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.nav-links a:hover {
+  color: #5B3E2B;
+  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);
+}
+
+.upload{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 40px;
+  background: #CEB389;
+  padding-right: 20px;
+  padding-left: 20px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  border-radius: 7px;
+  border:#463626 solid 3px;
+  text-align: center;
+  align-items: center;
+}
+
+.upload input{
+  margin-left: 70px;
+}
+
+/* Overlay logic for our iframe for users to be able to view the pdf and read it */
+.overlayPdf {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 1000;
+  }
+  
+  .overlayPdf.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  .popupPdf {
+    background: white;
+    padding: 28px 32px;
+    border-radius: 14px;
+    width: auto;
+    height: auto;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    transform: scale(0.9);
+    transition: transform 0.25s ease;
+  }
+  
+  .overlayPdf.active .popupPdf {
+    transform: scale(1);
+  }
+
+  /* This will set up our iframe so that it can render properly for our pdf document */
+  .popupPdf iframe {
+    width: 800px;
+    height: 540px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background: #f8fafc;
+    justify-content: center; /* We want to center the pdf document*/
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  /* Handles styling for our close button that will close the pdf view*/
+  .closePdf {
+    padding: 10px;
+    border-radius: 7px;
+    color: #C9BFB5;
+    background-color: maroon;
+    border: #4A2F1E 2px solid;
+    font-size: 1.3rem;
+  }
+
+  .closePdf:hover{
+    background-color: #A24857;
+    transform: translateY(-1px);
+    cursor: pointer;
+  }

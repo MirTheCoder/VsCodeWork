@@ -316,7 +316,7 @@ export async function checkOutBook(req, res, next){
         let response = await getSessionInfo(req, res, next);
         let isBookCheckedOut = await booksCheckedOutList.findOne({isbn: req.body.isbn}) //We will first check to see if the book is already checked out by another user
         if(!isBookCheckedOut){
-        let theBook = bookList.findOne({isbn: req.body.isbn}) //We will need this to verify whether or not the book has a pdfId
+        let theBook = await booksList.findOne({isbn: req.body.isbn}) //We will need this to verify whether or not the book has a pdfId
         let bookRequested = await booksList.updateOne({isbn: req.body.isbn}, {$set: {available: false}}) // This will change the availability of the book in question to false so that users will know that it is not available
         let name = await getUsersName(req, res);
         name = name ? name.replace(/['"]+/g, '').trim() : null;

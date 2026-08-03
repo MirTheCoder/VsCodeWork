@@ -219,6 +219,7 @@ export async function getSpecifiedUserDetails(req, res, next, userId) {
         //Setting success levels to numerical values to show how many categories are pertaining to the user in question
         if(user){
             if(booksCheckedOut.length > 0){
+                
                 //Overdue books is just an aggregation of booksCheckedOut to see if any of them have a due date that is less than the 
                 //current date
                 if(overdueBooks.length > 0){
