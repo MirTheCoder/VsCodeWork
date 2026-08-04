@@ -1,3 +1,5 @@
+import 'dotenv/config'; // <-- MUST BE LINE 1
+
 // Required libraries and modules that we need to install in our server file
 import express from 'express';
 const app = express();

@@ -192,7 +192,7 @@ async function readPdfClicker(){
             button.addEventListener('click', async (e) => {
                 pdfPopUp.innerHTML = '' //Make sure to reset the popup section every time a pdf request is made
                 //We will use the isbn of the book to get the info on the backend of the system in order to find a pdf match
-                let isbnNum = e.target.closest('.book-item').querySelector('#isbn').textContent; //Use this to get the isbn number, we use replace to ensure we get the raw isbn number with no add ons
+                let isbnNum = e.target.closest('.account-details').querySelector('#isbn').textContent; //Use this to get the isbn number, we use replace to ensure we get the raw isbn number with no add ons
                 let element = document.createElement('div') 
                 element.innerHTML = `<iframe src="/users/pdf/${isbnNum}" width="100%" height="600px" style="border:none;" id="pdfViewer"></iframe>` //We will call the route to have the backend directly populate our iframe with the pdf data
                 pdfPopUp.appendChild(element) //After, we will add the pdf to our pop up

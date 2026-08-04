@@ -1,10 +1,22 @@
+//Allows us to use our environment variables from our .env file
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 //Client used to connect to our mongo DB
 
-import { MongoClient, GridFSBucket} from 'mongodb';
+import { MongoClient, GridFSBucket, ServerApiVersion} from 'mongodb';
+
+
+// Access them using process.env
+const dbUser = process.env.MONGODB_USERNAME;
+const dbPassword = process.env.MONGODB_PASSWORD;
+const MONGO_URI = process.env.MONGODB_URI;
+const DB_NAME = process.env.DB_NAME;
 
 // MongoDB connection URI
-const MONGO_URI = 'mongodb://localhost:27017';
-const DB_NAME = 'Miracles_Library';
+//const MONGO_URI = 'mongodb://localhost:27017';
+//const DB_NAME = 'Miracles_Library';
 
 // Singleton client instance
 let client = null;
@@ -20,7 +32,14 @@ export async function connect() {
     // to the database
 
     try{
-        client = new MongoClient(MONGO_URI);
+        new MongoClient(process.env.MONGO_URI, {
+            //We are using serverApi to ensure that we are using the latest version of the mongoDB server, and to avoid any issues if atlas were to do any updates
+            serverApi: {
+                version: ServerApiVersion.v1,
+                strict: true,
+                deprecationErrors: true,
+            }
+        });
         await client.connect();
         db = client.db(DB_NAME);
         return db;

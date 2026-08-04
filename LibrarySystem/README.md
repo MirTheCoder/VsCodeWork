@@ -11,6 +11,8 @@ mongodb (MongoDB driver)
 mongoose (ODM for MongoDB)
 multer (file upload handling)
 nodemon (auto-restart on changes)
+npm install dotenv(for our environment variables to securley connect us to the outsourced database)
+GridFS(to help save pdf books)
 
 
 
@@ -20,6 +22,7 @@ mongodb
 - Run 'brew install mongodb-community' to install the latest version of mongodb-community
 - Run 'brew services start mongodb-community' in order to actually run the mongodb so that you can begin connecting to the database
 - Use'brew services list" to check and make sure that the mongodb is running on your device
+- We also will be using atlas compass to host our databse for us as well
 
 
 SIDE NOTES
