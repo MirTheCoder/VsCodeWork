@@ -1,0 +1,60 @@
+body{
+  margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Navbar */
+.navbar {
+  position: fixed;     /* Fixed to the viewport */
+  top: 0;              /* Stick it to the very top */
+  left: 0;             /* Aligns it to the left edge */
+  width: 100%;         /* Forces it to span the entire width of the screen */
+  z-index: 100;        /* Keeps it on top of other elements while scrolling */
+  
+  background-color: #EFE6D8;
+  border-bottom: 1px solid #DDD;
+  padding: 15px 40px;
+  box-sizing: border-box; /* Ensures padding doesn't push the navbar past 100% width */
+}
+
+.nav-links a {
+  margin-right: 20px;
+  text-decoration: none;
+  color: #2B2B2B;
+  font-weight: 500;
+  transition: color 0.3s, text-shadow 0.3s;
+}
+
+.nav-links a:hover {
+  color: #5B3E2B;
+  text-shadow: 0 0 8px rgba(91, 62, 43, 0.4);
+}
+
+h2{
+    font-size: 3.2rem;
+}
+
+.overdue-books-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  width: 90%;
+  background: #EFE6D8;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* The styling for each overdue book element*/
+.overdueBook{
+    display: flex;
+    flex-direction: column;
+}
+
+.bookDetails{
+    display: flex;
+    text-align: left;
+    gap: 5px;
+}

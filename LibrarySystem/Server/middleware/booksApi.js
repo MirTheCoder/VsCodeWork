@@ -227,6 +227,25 @@ export async function getOverdueBooks(user, req, res, next, returnRes = false) {
     }
 }
 
+export async function getAllOverdueBooks(req, res) {
+    try{
+        let overdueBooks = await booksCheckedOutList.aggregate([
+            {
+                $match: {
+                    dueDate: { $lt: new Date() }   // Finds dates in the past (overdue)
+                }
+            }
+        ]).toArray();
+        res.status(200).json({success: true, books: overdueBooks})
+    } catch(err){
+        console.log("Error detected while getting all overdue books: ", err)
+        res.status(200).json({success: false, error: 'Error occurred while trying to get overdue books'})
+    }    
+
+}
+
+
+
 //This will get us all the fines that the user has currently accumulated
 export async function getFines(user, req, res, next, returnRes = false){
     let response = await getSessionInfo(req, res, next);

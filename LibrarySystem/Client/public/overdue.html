@@ -1,0 +1,36 @@
+<!-- This page will allow admin to see all the users in the database along with info about them-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>See Users</title>
+    <link rel="icon" href="static/libraryIcon.png" type="image/png">
+    <link rel="stylesheet" href="css/overdue.css">
+    <link rel="stylesheet" href="css/global.css">
+</head>
+<body>
+    <!-- This is our navigation bar -->
+  <nav class="navbar">
+    <div class="nav-links">
+      <a href="login" id="login">Login</a>
+      <a href="indexPage" id="indexPage">Home</a>
+      <a href="register">Register</a>
+      <a href="about">About Us</a>
+      <a href="account" id="Account">My Account</a>
+      <a id="logout">Logout</a> <!-- Logout functionality will be handled by hte js file accompanied to this file -->
+    </div>
+  </nav>
+ 
+  <h2>Overdue Books</h2>
+  
+  <!-- This will hold all the overdue books within our system -->
+  <div id="overdueBooksContainer" class="overdue-books-container">
+    <p style="text-align: center" id="overdueBooksHolder">There are currently no overdue books</p>
+
+  </div>
+   
+</body>
+<script defer src="js/overdue.js"></script>
+<script defer src="js/global.js"></script>
+</html>
