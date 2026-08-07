@@ -14,6 +14,9 @@ const dbPassword = process.env.MONGODB_PASSWORD;
 const MONGO_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME;
 
+console.log("MONGO_URI:", MONGO_URI);
+console.log("DB_NAME:", DB_NAME);
+
 // MongoDB connection URI
 //const MONGO_URI = 'mongodb://localhost:27017';
 //const DB_NAME = 'Miracles_Library';
@@ -32,7 +35,7 @@ export async function connect() {
     // to the database
 
     try{
-        new MongoClient(process.env.MONGO_URI, {
+        client = new MongoClient(MONGO_URI, {
             //We are using serverApi to ensure that we are using the latest version of the mongoDB server, and to avoid any issues if atlas were to do any updates
             serverApi: {
                 version: ServerApiVersion.v1,

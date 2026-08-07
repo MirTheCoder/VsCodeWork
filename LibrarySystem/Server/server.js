@@ -1,4 +1,6 @@
-import 'dotenv/config'; // <-- MUST BE LINE 1
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Required libraries and modules that we need to install in our server file
 import express from 'express';
@@ -19,6 +21,9 @@ import apiRoutes from './middleware/apiRoutes.js' //Includes the routes regardin
 //Let db start of as null
 let db = null;
 
+const MONGO_URI = process.env.MONGODB_URI; // URI used to connect to our databse in order to store a session within that database
+console.log("MONGO_URI:", MONGO_URI); //Test to see if the mongo_uri is being returned from our .env file
+
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(clientRoot, 'public')));
 // Used to allow us to parse and read json data and URL-encoded data
@@ -31,7 +36,7 @@ app.use(session({
     resave: false, //Don't save session if unmodified
     saveUninitialized: true, //Save uninitialized session
     store: MongoStore.create({
-        mongoUrl: 'mongodb://localhost:27017/Miracles_Library'  //Allows us to connect to our MongoDB database to store session data
+        mongoUrl: MONGO_URI  //Allows us to connect to our MongoDB database to store session data
     }),
     cookie: {
         maxAge: 1000 * 60 * 30, //This will keep the session alive for 30 minutes

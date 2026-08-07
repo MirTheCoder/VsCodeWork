@@ -159,10 +159,12 @@ export async function getImage(req, res){
 
 //This function will be used to allow users to add books to the library
 export async function addBook(req, res, next){
+    let bucket = await initGridFS(); //This will get us the bucket that we need to store our pdfs in
     let response = await getSessionInfo(req,res,next); //We need this to get the userId pertaining to this upload
     let isValid = false; //We will have it initially false until the isbn num we generated is proven to be unique
     const image = req.files.image[0] //This gets the image that was uploaded and then stored in RAM temporarily by multer
     const pdf = req.files.pdf[0] //This will grab for us the pdf document that was uploaded
+    let status = false; //The initial setting for status
     try{
         let isbn = generateISBN()
         //Ensures that we keep generting isbn numbers until we get a unique one that isn't found within the database

@@ -13,6 +13,8 @@ multer (file upload handling)
 nodemon (auto-restart on changes)
 npm install dotenv(for our environment variables to securley connect us to the outsourced database)
 GridFS(to help save pdf books)
+import dotenv from 'dotenv'
+dotenv.config()
 
 
 
