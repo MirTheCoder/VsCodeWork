@@ -355,9 +355,11 @@ export async function checkOutBook(req, res, next){
         let checkoutInfo = {
             userId: personId,
             username: personName,
+            email: person.email,
             title: bookTitle,
             author: bookAuthor,
             isbn: bookISBN,
+            dateChecked: new Date(), //We will use this to record when the user checked out the book
             dueDate: dueDate
         }
 
