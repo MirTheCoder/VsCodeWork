@@ -105,5 +105,15 @@ route.get('/pdf/:isbn', async(req,res,next) => {
     getPdf(req,res)
 });
 
+
+//Use this to get the role of a user before allowing them to access certain pages
+route.get('/checkRole', async(req,res,next) => {
+    if(req.session.role){
+        res.status(200).json({'success': true, 'role': req.session.role});
+    } else {
+        res.status(200).json({success: false, role: 'user'});
+    }
+});    
+
 //Exporting the route to be used in server.js, make sure that it is the default export in order to use the routing system properly
 export default route;

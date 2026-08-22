@@ -1,4 +1,7 @@
 let overdueList = document.getElementById('overdueBooksContainer'); //THis will get us the container where we will display all overdue boks along with the users for each overdue book
+let numOverdue = document.getElementById('overdue-num'); //This will be where we put the total number of overdue books
+let booksCheckedNum = document.getElementById('booksChecked-num'); //This is where te total number of books checked out will go
+let borrowedNum = document.getElementById('borrowed-num'); //This is where te total number of books checked out will go
 
 
 //We will use this function to first get all the users so that we can get all the overdue books that belong to them
@@ -10,9 +13,27 @@ document.addEventListener('DOMContentLoaded', async () => {
                 'Content-Type': 'application/json'
             }
         });
+
+        let answer = await fetch('/api/numCheckedOut', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        let solution = await fetch('/api/numBorrowers', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+
         let data = await response.json();
-        if(data.success){
-            showOverdue(data.books);
+        let result = await answer.json();
+        let product = await solution.json();
+        if(data.success && result.success && product.success){
+            showOverdue(data.books, result.books, product.count);
         }
         
     } catch(err){
@@ -21,7 +42,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 })
 
 //Function that we will use to actually display the overdue books
-async function showOverdue(list){
+async function showOverdue(list, booksChecked, borrowers){
+    numOverdue.innerHTML = `${list.length}`
+    booksCheckedNum.innerHTML = `${booksChecked.length}`
+    borrowedNum.innerHTML = `${borrowers}`
+    console.log("Number of borrowers is: ", borrowers)
     overdueList.innerHTML = ''
     if(list.length > 0){
         list.forEach(element => {

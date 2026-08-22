@@ -15,9 +15,9 @@ export async function sessionLogin(req, username, password) {
             };
           };
         })
-    req.session.user = username;
-    req.session.role = 'user'; // Set user role to user by default    
+    req.session.user = username;   
     let user = await usersList.findOne({"username": username, "password": password})
+    req.session.role = user.role ? user.role : 'user'; //Here we will set the users role to whatever they're role is, else we will just set it to default user
     req.session.userId = user.userId //Gonna store the userId in the req.session so that we can get the userId more easily for the actvie user across other functions
     return {success: true, message: "Successfully Logged in"}                
 }

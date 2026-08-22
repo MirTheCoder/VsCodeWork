@@ -54,12 +54,19 @@ export async function validateUserLogin(req, res, next) {
     const {username, password} = req.body;
     let person = await usersList.findOne({username: username});
     if(person){
-        let response = await sessionLogin(req, username, password); //This will generate a brand new session for the user when they login
-        if(response){
-            res.status(200).json({message: 'Login successful!', success: true});
+        let activeStatus = person.accountStatus; //Using this to see if the account is active or has it been changed to being inactive
+
+        if(activeStatus !== 'active'){
+            return res.status(200).json({error: 'Account is inactive, please contact an admin for assistance', success: false}); //If the users account is set to inactive, thenw e will alert the user about that
         } else {
-            res.status(200).json({error: 'Error creating session during login.', success: false});
-        }
+            let response = await sessionLogin(req, username, password); //This will generate a brand new session for the user when they login
+            if(response){
+                res.status(200).json({message: 'Login successful!', success: true});
+            } else {
+                res.status(200).json({error: 'Error creating session during login.', success: false});
+            }
+        }    
+
     } else {
         res.status(200).json({error: 'Invalid Login credentials, please try again', success: false});
     }

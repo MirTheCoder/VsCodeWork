@@ -2,7 +2,7 @@ import express from 'express';
 const route = express.Router();
 import multer from 'multer'; //This is needed in order to handle multipart/form-data, which is used for file uploads (hence we decode images properly to store into mongodb)
 import { Readable } from 'stream'
-import {getBooks, saveImageData, getImage, addBook, deleteBook, editBook, getABook, addReview, getReviews, addBookDonation, getAllOverdueBooks} from './booksApi.js'
+import {getBooks, saveImageData, getImage, addBook, deleteBook, editBook, getABook, addReview, getReviews, addBookDonation, getAllOverdueBooks, getBooksCheckedOut, numBorrowers} from './booksApi.js'
 
 
 
@@ -69,6 +69,14 @@ route.post('/getReviews', async(req,res,next) => {
 
 route.get('/getAllOverdue', async(req,res) => {
     await getAllOverdueBooks(req,res)
+})
+
+route.get('/numCheckedOut', async(req,res) => {
+    await getBooksCheckedOut(req,res)
+})
+
+route.get('/numBorrowers', async(req,res) => {
+    await numBorrowers(req,res)
 })
 
 

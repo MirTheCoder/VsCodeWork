@@ -686,3 +686,26 @@ export async function addBookDonation(req, res, next) {
         res.status(200).json({'success': false, 'message': "An error occured during the donation process: ", err})
     }
 }
+
+//This will get us the total number of books checked out
+export async function getBooksCheckedOut(req,res){
+    let books = await booksCheckedOutList.find({}).toArray();
+    res.status(200).json({'success': true, 'books': books})
+}
+
+//Gets us the amount of users who have checked out at least one book
+export async function numBorrowers(req,res){
+    let count = 0; //Start of wit zero and add one for every user who has at least one book checked out
+    let users = await usersList.find({}).toArray();
+    let books = await booksCheckedOutList.find({}).toArray();
+    users.forEach(user => {
+        for(const val of books) {
+            if(user.userId === val.userId){
+                count += 1;
+                break; //We want to stop the for loop and move to te next user once we find a book under the users name
+            }
+        } 
+    });
+
+    res.status(200).json({'success': true, 'count': count});
+}

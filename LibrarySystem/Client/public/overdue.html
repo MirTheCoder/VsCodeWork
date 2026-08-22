@@ -23,7 +23,37 @@
   </nav>
  
   <h2>Overdue Books</h2>
-  
+  <!-- We will use this to give an overview of the amount of books overdue and other important statuses -->
+  <div class="overdueOverview"> 
+    <div class="amount">
+      <img src="./static/emphasis.png" width="100px" height="100px"/>
+      <div class="details">
+      <h3 id="overdue-num"></h3>
+      <p>Overdue Books</p>
+      </div>
+    </div>
+
+    <div class="amount">
+      <img src="./static/books.png" width="100px" height="100px"/>
+      <div class="details">
+      <h3 id="booksChecked-num"></h3>
+      <p>Books Checked Out</p>
+      </div>
+    </div>
+
+    <div class="amount">
+      <img src="./static/userIcon.png" width="100px" height="100px"/>
+      <div class="details">
+      <h3 id="borrowed-num"></h3>
+      <p>Number of Borrowers</p>
+      </div>
+    </div>
+  </div>
+
+
+  </div>
+
+
   <!-- This will hold all the overdue books within our system -->
   <div id="overdueBooksContainer" class="overdue-books-container">
     <p style="text-align: center" id="overdueBooksHolder">There are currently no overdue books</p>

@@ -165,7 +165,7 @@ async function showAllUsers(users){
                     <span class="detail-label">Phone</span>
                     <span class="detail-value">${user.phone}</span>
                 </div>
-                <span class="user-role-badge">Admin</span>
+                <span class="user-role-badge">${user.role || 'user'}</span> <!-- Used to display the role of the user, but if we have no role in store, we assume that they have just a user role -->
                 <div class="detail-group text-right">
                     <span class="detail-label">Created</span>
                     <span class="detail-value">${new Date(user.DateCreated).toLocaleDateString()}</span>
