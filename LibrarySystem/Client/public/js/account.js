@@ -11,6 +11,7 @@ let dueSoonHolder = document.getElementById('books3')
 let overlaypdf = document.getElementById('overlayPdf') //The overlay for the pdf viewer
 let btn = document.createElement('button') //Used for the pdf viewer close button
 let pdfPopUp = document.getElementById('pdfPopUp') //This will hold the pdf document for the user to read
+let deleteAccountBtn = document.getElementById('deleteAccount') //This will be used to delete the users account
 
 
 document.addEventListener('DOMContentLoaded', async function loginStatus(){
@@ -46,6 +47,29 @@ document.addEventListener('DOMContentLoaded', async function loginStatus(){
         console.error('Error checking login status:', error);
     }
 });
+//We will use this function to help facilatate the deletion of the user account if the users wants to do so
+deleteAccountBtn.addEventListener('click', async () => {
+    if(confirm("Are you sure you want to delete your account? This action cannot be undone.")){
+        try {
+            const response = await fetch('users/deleteAccount', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const data = await response.json();
+            if(data.success){
+                alert("Your account has been deleted successfully.");
+                window.location.href = "login"; // Redirect to login page after account deletion
+            } else {
+                alert("Failed to delete account. Please try again.");
+            }
+        } catch (error) {
+            console.error('Error deleting account:', error);
+            alert("An error occurred while trying to delete your account. Please try again later.");
+        }
+    }
+});
 
 //This function will handle getting the user details for us pertaining to the user who is requesting the details
 async function accountStatus(){
@@ -64,14 +88,14 @@ async function accountStatus(){
             edisplay.textContent = data.email ? data.email : "None"
             msdisplay.textContent = timeFixer(data.memberSince) ? timeFixer(data.memberSince) : "None"
             addYourBooks(data.yourBooks) //Used to insert the books that the user has checked out
-            dueSoon(data.dueSoonBooks); //Used to insert the books that are due soon for the user
+            showBooksDueSoon(data.dueSoonBooks); //Used to insert the books that are due soon for the user
         } else if(data.success === 3){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"
             msdisplay.textContent = timeFixer(data.memberSince) ? timeFixer(data.memberSince) : "None"
             addYourBooks(data.yourBooks)
             showOverdueBooks(data.yourOverdueBooks);
-            dueSoon(data.dueSoonBooks);
+            showBooksDueSoon(data.dueSoonBooks);
         } else if(data.success === 4){
             udisplay.textContent = data.user ? data.user : "None"
             edisplay.textContent = data.email ? data.email : "None"

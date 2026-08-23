@@ -2,8 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import os from 'os';
 import {getCollection} from './db.js';
-import {sessionLogin, getSessionInfo, getUsersName} from './sessionHandler.js';
-import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines, dueSoon, deleteBooksCheckedOut, deleteFines, updateUserBooksAndFines} from './booksApi.js';
+import {sessionLogin, getSessionInfo, getUsersName, sessionLogout} from './sessionHandler.js';
+import {getSpecificUsersBooks, getOverdueBooks, getBooks, getFines, dueSoon, deleteBooksCheckedOut, deleteFines, updateUserBooksAndFines, massBookReturn} from './booksApi.js';
 import bcrypt from 'bcryptjs';
 import { get } from 'http';
 import random from 'random';
@@ -316,3 +316,21 @@ export async function editUser(req, res){
         res.status(500).json({success: false, message: 'An error occured while trying to edit the account'});
     }
 } 
+
+export async function deleteUserAccount(req, res, next){
+    let response = await getSessionInfo(req,res, next); //Want to make sure that the user is logged into an account before we delete the account
+    if(response.loggedIn){
+        let userId = response.userId; //We need the id to delete certain data in our system pertaining to the user
+        try{
+            await massBookReturn(userId); //We need to return all the books that the user has checked out before we delete their account
+            await deleteBooksCheckedOut(userId); //We need to delete the records showing that they have any books checked out
+            await deleteFines(userId); //We need to delete the records showing that they have any fines
+            await sessionLogout(req, res); //We want to log the user out of their account before we delete it
+            await usersList.deleteOne({userId: new Int32(userId)}); //Putting this at the very end so that we don't delete the account and have all these books checked out and fines handed out under a random name
+            res.status(200).json({success: true, message: 'Account successfully deleted'});
+        }catch(err){
+            console.log("Error deleting user account: ", err)
+            res.status(500).json({success: false, message: 'An error occured while trying to delete the account'});
+        }
+    }
+}

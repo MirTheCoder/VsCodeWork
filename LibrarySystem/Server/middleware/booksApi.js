@@ -521,6 +521,17 @@ export async function deleteBooksCheckedOut(userId){
     }
 }   
 
+//We are using this to automatically return all the books a user checked out if their account so happens to be deleted 
+export async function massBookReturn(userId){
+    let returnBooks = await booksCheckedOutList.find({userId: new Int32(userId)}).toArray() //We will get all the books that the user has checked out
+    returnBooks.forEach(async (book) => {
+        //Update only the books belonging to that specific user so that others can check it out if they want to
+        if(book.userId == userId){
+            await booksList.updateOne({isbn: book.isbn}, {$set: {available: true}}) //This will set the availability of the book to true so that other users can check it out
+        }
+    })
+}
+
 //This will delte all the fines pertaining to the user in question
 export async function deleteFines(userId){
     try{
